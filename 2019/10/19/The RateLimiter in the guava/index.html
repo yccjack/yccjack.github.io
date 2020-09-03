@@ -1,0 +1,1951 @@
+<!DOCTYPE html>
+<html>
+<head hexo-theme='https://github.com/volantis-x/hexo-theme-volantis/tree/4.0.0-rc.2'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+  <title>限流原理解读之guava中的RateLimiter - MysticalYcc</title>
+  
+    <meta name="keywords" content="Guava">
+  
+
+  
+    <meta name="description" content="缓存，降级和限流是大型分布式系统中的三把利剑。目前限流主要有漏桶和令牌桶两种算法。">
+  
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14/css/all.min.css">
+
+  
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+  
+
+  
+
+  
+    <link rel="shortcut icon" type='image/x-icon' href="https://gschaos.club/ico/favicon.ico">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+  
+
+  
+
+  <!-- import link -->
+  
+
+  
+  
+    
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+</head>
+
+<body>
+  <header class="l_header auto shadow blur" style='opacity: 0' >
+  <div class='container'>
+  <div class='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h m-phone' id="pjax-header-nav-list">
+        <li><a class="s-comment fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+            <img no-lazy class='logo' src='https://gschaos.club/ico/me.jpg'/>
+          
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h m-pc'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h m-phone'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+  <div class="l_body">
+    <div class="l_cover">
+
+  
+  
+      <div class='cover-wrapper post focus' style="display: none;">
+        
+          <div class='cover-bg lazyload placeholder' data-bg="https://s1.ax1x.com/2018/10/01/i1rcWj.jpg"></div>
+        
+        <div class='cover-body'>
+  <div class='top'>
+    
+      <img no-lazy class='logo' src='https://gschaos.club/ico/me.jpg'/>
+    
+    
+      <p class="title">MysticalYcc</p>
+    
+    
+      <p class="subtitle">浮华三千里，逍遥独一人。</p>
+    
+  </div>
+  <div class='bottom'>
+    <div class='menu navigation'>
+      <div class='list-h'>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+        <div class="scroll-down" style="display: none;"><i class="fa fa-chevron-down scroll-down-effects"></i></div>
+      </div>
+  
+
+</div>
+
+    <div class='safearea'>
+      <div class='body-wrapper' id="pjax-container">
+        
+          <!--此文件用来存放一些不方便取值的变量-->
+<!--思路大概是将值藏到重加载的区域内-->
+
+
+
+<div id="pjax-data" style="display: none">
+  <div id="pjax-ispage">true</div>
+  <div id="pjax-pageTitle">限流原理解读之guava中的RateLimiter</div>
+  <div id="pjax-enable-cover">true</div>
+  <div id="pjax-comment-path"></div>
+  <div id="pjax-comment-placeholder"></div>
+</div>
+
+
+<script>
+  // 处理封面 此时 jquery 还没加载
+  if ("none" == "none") { // 移除封面
+    document.getElementsByClassName('cover-wrapper')[0].style.display = "none";
+    document.getElementsByClassName('l_header', 'cover-wrapper')[0].classList.add("show");
+  } else {
+    if ("none" == "half") { // 半屏
+      document.getElementsByClassName('cover-wrapper')[0].setAttribute('id', 'half');
+      document.getElementsByClassName('scroll-down')[0].style.display = "none";
+    } else if ("none" == "full") { // 全屏
+      document.getElementsByClassName('cover-wrapper')[0].setAttribute('id', 'full');
+      document.getElementsByClassName('scroll-down')[0].style.display = "";
+    }
+    document.getElementsByClassName('cover-wrapper')[0].style.display = "";
+    document.getElementsByClassName('l_header', 'cover-wrapper')[0].classList.remove("show");
+  }
+</script>
+
+
+        
+        
+
+<div class='l_main'>
+  <article class="article post white-box reveal md floatable article-type-post" id="post" itemscope itemprop="blogPost">
+  
+
+
+  
+  <div class="article-meta" id="top">
+    
+    
+    
+      <h1 class="title">
+        限流原理解读之guava中的RateLimiter
+      </h1>
+      <div class='new-meta-box'>
+        
+          
+            
+<div class='new-meta-item author'>
+  <a class='author' href="https://gschaos.club/ico/favicon.ico" rel="nofollow">
+    <img no-lazy src="">
+    <p>MysticalYcc</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class='new-meta-item category'>
+    <a class='notlink'>
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <a class="category-link" href="/categories/RateLimiter%E9%99%90%E6%B5%81/">RateLimiter限流</a>
+    </a>
+  </div>
+
+
+          
+        
+          
+        
+          
+            
+  <div class="new-meta-item browse leancloud">
+    <a class='notlink'>
+      
+      <div id="lc-pv" data-title="限流原理解读之guava中的RateLimiter" data-path="/2019/10/19/The%20RateLimiter%20in%20the%20guava/">
+        <i class="fas fa-eye fa-fw" aria-hidden="true"></i>
+        <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+        次浏览
+      </div>
+    </a>
+  </div>
+
+
+          
+        
+      </div>
+    
+  </div>
+
+
+  
+  
+  <p>[TOC]</p>
+<h1 id="限流原理解读之guava中的RateLimiter"><a href="#限流原理解读之guava中的RateLimiter" class="headerlink" title="限流原理解读之guava中的RateLimiter"></a><font color= #EE82EE>限流原理解读之guava中的RateLimiter</font></h1><p>RateLimiter有两种新建的方式</p>
+<ol>
+<li>创建Bursty方式</li>
+<li>创建WarmingUp方式</li>
+</ol>
+<blockquote>
+<p>以下源码来自 guava-17.0</p>
+</blockquote>
+<h1 id="Bursty"><a href="#Bursty" class="headerlink" title="Bursty"></a><font color= #EE82EE>Bursty</font></h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//初始化</span></span><br><span class="line">RateLimiter r = RateLimiter.create(<span class="number">1</span>); </span><br><span class="line"><span class="comment">//不阻塞</span></span><br><span class="line">r.tryAcquire();</span><br><span class="line"><span class="comment">//阻塞</span></span><br><span class="line">r.acquire()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>RateLimiter.create做了两件事情创建Bursty对象和设置了速率,至次初始化过程结束</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RateLimiter rateLimiter = <span class="keyword">new</span> Bursty(ticker, <span class="number">1.0</span> <span class="comment">/* maxBurstSeconds */</span>); <span class="comment">//ticker默认使用自己定义的</span></span><br><span class="line">rateLimiter.setRate(permitsPerSecond);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>新建Bursty对象。它指定的是能够存储的最大时间是多长，比如设置的时间是<font color= #EE82EE>1s</font>,那么假设允许每秒钟发放的令牌数量为<font color= #EE82EE>2</font>，能存储的最大量为<font color= #EE82EE>2</font>；</p>
+</li>
+<li><p>setRate。 内部通过私有锁来保证速率的修改是线程安全的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">synchronized</span> (mutex) &#123;</span><br><span class="line">  <span class="comment">//1：查看当前的时间是否比预计下次可发放令牌的时间要大，如果大，更新下次可发放令牌的时间为当前时间</span></span><br><span class="line">  resync(readSafeMicros());</span><br><span class="line">  <span class="comment">//2：计算两次发放令牌之间的时间间隔，比如1s中需要发放5个，那它就是 200000.0微秒</span></span><br><span class="line">  <span class="keyword">double</span> stableIntervalMicros = TimeUnit.SECONDS.toMicros(<span class="number">1L</span>) / permitsPerSecond;</span><br><span class="line">  <span class="keyword">this</span>.stableIntervalMicros = stableIntervalMicros;</span><br><span class="line">  <span class="comment">//3：设置maxPermits和storedPermits</span></span><br><span class="line">  doSetRate(permitsPerSecond, stableIntervalMicros);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<blockquote>
+<p>resync源码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">resync</span><span class="params">(<span class="keyword">long</span> nowMicros)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 查看当前的时间是否比预计下次可发放令牌的时间要大，如果大，更新下次可发放令牌的时间为当前时间</span></span><br><span class="line">  <span class="keyword">if</span> (nowMicros &gt; nextFreeTicketMicros) &#123;</span><br><span class="line">    storedPermits = Math.min(maxPermits,</span><br><span class="line">        storedPermits + (nowMicros - nextFreeTicketMicros) / stableIntervalMicros);</span><br><span class="line">    nextFreeTicketMicros = nowMicros;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>doSetRate源码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Overridevoid</span> doSetRate(<span class="keyword">double</span> permitsPerSecond, <span class="keyword">double</span> stableIntervalMicros) &#123;</span><br><span class="line"> <span class="keyword">double</span> oldMaxPermits = <span class="keyword">this</span>.maxPermits;</span><br><span class="line"> maxPermits = maxBurstSeconds * permitsPerSecond;</span><br><span class="line"> storedPermits = (oldMaxPermits == <span class="number">0.0</span>)</span><br><span class="line">     ? <span class="number">0.0</span> <span class="comment">// 初始条件存储的是没有</span></span><br><span class="line">    storedPermits * maxPermits / oldMaxPermits;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>在整个的初始化过程中，关键信息是：</p>
+<ul>
+<li><font color=  #00FF7F >nextFreeTicketMicros</font> 预计下次发放令牌的时间, stableIntervalMicros 两次发放令牌之间的时间间隔</li>
+<li><font color=  #00FF7F>maxPermits</font> 最大能存储的令牌的数量 storedPermits 已经存储的令牌数</li>
+</ul>
+<h2 id="为什么是nextFreeTicketMicros"><a href="#为什么是nextFreeTicketMicros" class="headerlink" title="为什么是nextFreeTicketMicros?"></a><font color= #EE82EE>为什么是nextFreeTicketMicros?</font></h2><p>最简单的维持QPS速率的方式就是记住最后一次请求的时间，然后确保再次有请求过来的时候，已经经过了 1/QPS 秒。比如QPS是5 次/秒，只需要确保两次请求时间经过了200ms即可，如果刚好在100ms到达，就会再等待100ms,也就是说，如果一次性需要15个令牌，需要的时间为为3s。但是对于一个长时间没有请求的系统，这样的的设计方式有一定的不合理之处。考虑一个场景：如果一个RateLimiter,每秒产生1个令牌,它一直没有使用过，突然来了一个需要100个令牌的请求，选择等待100s再执行这个请求，显得不太明智，更好的处理方式为立即执行它，然后把接下来的请求推迟100s。</p>
+<p>因而RateLimiter本身并不记下最后一次请求的时间，而是记下下一次期望运行的时间（nextFreeTicketMicros）。</p>
+<blockquote>
+<p>这种方式带来的一个好处是，可以去判断等待的超时时间是否大于下次运行的时间，以使得能够执行，如果等待的超时时间太短，就能立即返回。</p>
+</blockquote>
+<h2 id="为什么会有一个标记代表存储了多少令牌？"><a href="#为什么会有一个标记代表存储了多少令牌？" class="headerlink" title="为什么会有一个标记代表存储了多少令牌？"></a><font color= #EE82EE>为什么会有一个标记代表存储了多少令牌？</font></h2><p>同样的考虑长时间没有使用的场景。如果长时间没有请求，突然间来了，这个时候是否应该立马放行这些请求？长时间没有使用可能意味着两件事：</p>
+<ol>
+<li>很多资源是存在空闲的情况，比如说网络请求长时间没有，它的缓冲区很有可能是空的，此时是可以加速传输，提高它的利用率</li>
+<li>一些时候，瞬间的爆发会导致溢出，比如说服务上的缓存过期了，需要去查询库，这个花销是非常“昂贵”的，过多的请求会导致数据库撑不住</li>
+</ol>
+<p>RateLimiter就使用storedPermits来给过去请求的不充分程度建模。它的存储规则如下： 假设RateLimiter每秒产生一个令牌,每过去一秒如果没有请求，RateLimter也就没有消费，就使storedPermits增长1。假设10s之内都没有请求过来,storedPermits就变成了10（假设maxPermits&gt;10），此时如果要获取3个令牌，会使用storedPermits来中的令牌来处理，然后它的值变为了7，片刻之后，如果调用了acquire(10),部分的会从storedPermits拿到7个权限，剩余的3个则需要重新产生。</p>
+<p>总的来说RateLimiter提供了一个<font color=  #00FF7F>storedPermits</font>变量，当资源利用充分的时候，它就是0，最大可以增长到 <font color=  #00FF7F>maxStoredPermits</font>。请求所需的令牌来自于两个地方：stored permits(空闲时存储的令牌)和fresh permits（现有的令牌）</p>
+<h2 id="怎么衡量从storedPermits中获取令牌这个过程？"><a href="#怎么衡量从storedPermits中获取令牌这个过程？" class="headerlink" title="怎么衡量从storedPermits中获取令牌这个过程？"></a><font color= #EE82EE>怎么衡量从storedPermits中获取令牌这个过程？</font></h2><p>同样假设每秒RateLimiter只生产一个令牌，正常情况下，如果一次来了3个请求，整个过程会持续3秒钟。考虑到长时间没有请求的场景：</p>
+<ol>
+<li>资源空闲。这种时候系统是能承受住一定量的请求的，当然希望在承受范围之内能够更快的提供请求，也就是说，如果有存储令牌，相比新产生令牌，此时希望能够更快的获取令牌，也就是此时从存储令牌中获取令牌的时间消耗要比产生新令牌要少，从而更快相应请求</li>
+<li>瞬时流量过大。这时候就不希望过快的消耗存储的令牌，希望它能够相比产生新的令牌的时间消耗大些，从而能够使请求相对平缓。</li>
+</ol>
+<p>分析可知，针对不同的场景，需要对获取storedPermits做不同的处理，Ratelimiter的实现方式就是 storedPermitsToWaitTime 函数，它建立了从storedPermits中获取令牌和时间花销的模型函数,而衡量时间的花销就是通过对模型函数进行积分计算，比如原来存储了10个令牌，现在需要拿3个令牌，还剩余7个，那么所需要的时间花销就是该函数从7-10区间中的积分。</p>
+<blockquote>
+<p>这种方式保证了任何获取令牌方式所需要的时间都是一样的，好比 每次拿一个和先拿两个再拿一个，从时间上来讲并没有分别。</p>
+</blockquote>
+<h2 id="storedPermitsToWaitTime实现原理"><a href="#storedPermitsToWaitTime实现原理" class="headerlink" title="storedPermitsToWaitTime实现原理"></a><font color= #EE82EE>storedPermitsToWaitTime实现原理</font></h2><p>storedPermits本身是用来衡量没有使用的时间的。在没有使用令牌的时候存储，存储的速率（单位时间内存储的令牌的个数）是 每没用1次就存储1次: rate=permites/time 。也就是说 1 / rate = time / permits，那么可得到 (1/rate)*permits 就可以来衡量时间花销。</p>
+<p>选取(1/rate)作为基准线</p>
+<ul>
+<li>如果选取一条在它之上的线，就做到了比从fresh permits中获取要慢；</li>
+<li>如果在基准线之下，则是比从fresh permits中获取要快；</li>
+<li>刚好是基准线，那么从storedPermits中获取和新产生的速率一模一样；</li>
+</ul>
+<h2 id="Bursty的storedPermitsToWaitTime函数实现"><a href="#Bursty的storedPermitsToWaitTime函数实现" class="headerlink" title="Bursty的storedPermitsToWaitTime函数实现"></a><font color= #EE82EE>Bursty的storedPermitsToWaitTime函数实现</font></h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">long</span> <span class="title">storedPermitsToWaitTime</span><span class="params">(<span class="keyword">double</span> storedPermits, <span class="keyword">double</span> permitsToTake)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0L</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>它直接返回了0，也就是在基准线之下，获取storedPermits的速率比新产生要快，立即能够拿到存储的量</p>
+<h1 id="WarmingUp"><a href="#WarmingUp" class="headerlink" title="WarmingUp"></a><font color= #EE82EE>WarmingUp</font></h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//初始化</span></span><br><span class="line">RateLimiter r =RateLimiter.create(<span class="number">1</span>,<span class="number">1</span>,TimeUnit.SECONDS);</span><br><span class="line"><span class="comment">//不阻塞</span></span><br><span class="line">r.tryAcquire();</span><br><span class="line"><span class="comment">//阻塞</span></span><br><span class="line">r.acquire()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>create方法创建了WarmingUp对象，并这只了对应的速率</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RateLimiter rateLimiter = <span class="keyword">new</span> WarmingUp(ticker, warmupPeriod, unit);</span><br><span class="line">rateLimiter.setRate(permitsPerSecond);</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+
+<p>相比Bursty，它多了个参数warmupPeroid,它会以提供的unit为时间单位，转换成微秒存储。setRate类似于Bursty，只是在doSetRate提供不同的实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">doSetRate</span><span class="params">(<span class="keyword">double</span> permitsPerSecond, <span class="keyword">double</span> stableIntervalMicros)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">double</span> oldMaxPermits = maxPermits;</span><br><span class="line">  <span class="comment">//1:最大的存储个数为需要预热的时间除以两个请求的时间间隔，比如设定预热时间为1s,每秒有5个请求，那么最大的存储个数为1000ms/200ms=5个</span></span><br><span class="line">  maxPermits = warmupPeriodMicros / stableIntervalMicros; </span><br><span class="line">  <span class="comment">//2:计算最大存储permits的一半</span></span><br><span class="line">  halfPermits = maxPermits / <span class="number">2.0</span>;</span><br><span class="line">  <span class="comment">//3:初始化稳定时间间隔的3倍作为冷却时间间隔</span></span><br><span class="line">  <span class="keyword">double</span> coldIntervalMicros = stableIntervalMicros * <span class="number">3.0</span>;</span><br><span class="line">  <span class="comment">//4:设置基准线的斜率</span></span><br><span class="line">  slope = (coldIntervalMicros - stableIntervalMicros) / halfPermits;</span><br><span class="line">  <span class="keyword">if</span> (oldMaxPermits == Double.POSITIVE_INFINITY) &#123;</span><br><span class="line">    storedPermits = <span class="number">0.0</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    storedPermits = (oldMaxPermits == <span class="number">0.0</span>)</span><br><span class="line">        ? maxPermits <span class="comment">// 初始条件下，认为就是存储满的，以达到缓慢消费的效果</span></span><br><span class="line">        : storedPermits * maxPermits / oldMaxPermits;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在这个过程中可以看到Warmup方式新增了一个halfPermits的设计，以及通过公式 <code>slope=(coldIntervalMicros-stableIntervalMicros)/halfPermits</code>，他们在函数 storedPermitsToWaitTime中得到了运用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Overridelong</span> storedPermitsToWaitTime(<span class="keyword">double</span> storedPermits, <span class="keyword">double</span> permitsToTake) &#123;</span><br><span class="line">  <span class="comment">//1:计算储存的令牌中超过了最大令牌一半的数量</span></span><br><span class="line">  <span class="keyword">double</span> availablePermitsAboveHalf = storedPermits - halfPermits;</span><br><span class="line">  <span class="keyword">long</span> micros = <span class="number">0</span>;</span><br><span class="line">  <span class="comment">// 计算超过一半的部分所需要的时间花销(对于函数来说，就是积分计算)</span></span><br><span class="line">  <span class="keyword">if</span> (availablePermitsAboveHalf &gt; <span class="number">0.0</span>) &#123;</span><br><span class="line">    <span class="keyword">double</span> permitsAboveHalfToTake = Math.min(availablePermitsAboveHalf, permitsToTake);</span><br><span class="line">    micros = (<span class="keyword">long</span>) (permitsAboveHalfToTake * (permitsToTime(availablePermitsAboveHalf)</span><br><span class="line">        + permitsToTime(availablePermitsAboveHalf - permitsAboveHalfToTake)) / <span class="number">2.0</span>);</span><br><span class="line">    permitsToTake -= permitsAboveHalfToTake;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 计算函数的尚未超过一半的部分所需要的时间花销</span></span><br><span class="line">  micros += (stableIntervalMicros * permitsToTake);</span><br><span class="line">  <span class="keyword">return</span> micros;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">double</span> <span class="title">permitsToTime</span><span class="params">(<span class="keyword">double</span> permits)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> stableIntervalMicros + permits * slope;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="WarmingUp的设计理念"><a href="#WarmingUp的设计理念" class="headerlink" title="WarmingUp的设计理念"></a><font color= DarkSlateGray1 >WarmingUp的设计理念</font></h2><p>WarmingUp对时间花销衡量方式为下图</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">*          ^ throttling</span><br><span class="line">*          |</span><br><span class="line">* <span class="number">3</span>*stable +                  /</span><br><span class="line">* interval |                 /.</span><br><span class="line">*  (cold)  |                / .</span><br><span class="line">*          |               /  .   &lt;-- <span class="string">&quot;warmup period&quot;</span> is the area of the trapezoid between</span><br><span class="line">* <span class="number">2</span>*stable +              /   .       halfPermits and maxPermits</span><br><span class="line">* interval |             /    .</span><br><span class="line">*          |            /     .</span><br><span class="line">*          |           /      .</span><br><span class="line">*   stable +----------/  WARM . &#125;</span><br><span class="line">* interval |          .   UP  . &#125; &lt;-- <span class="function"><span class="keyword">this</span> <span class="title">rectangle</span> <span class="params">(from <span class="number">0</span> to maxPermits, and</span></span></span><br><span class="line"><span class="function"><span class="params">*          |          . PERIOD. &#125;     height == stableInterval)</span> defines the cooldown period,</span></span><br><span class="line"><span class="function">*          |          .       . &#125;     and we want cooldownPeriod </span>== warmupPeriod</span><br><span class="line">*          |---------------------------------&gt; storedPermits</span><br><span class="line">*              (halfPermits) (maxPermits)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>横轴表示存储的令牌个数，纵轴表示时间，这样函数的积分就可以表示所要消耗的时间。<br>在程序刚开始运行的时候，warmingup方式会存满所有的令牌，而根据从存储令牌中的获取方式，可以实现从存储最大令牌中到降到一半令牌所需要的时间为存储同量令牌时间的2倍，从而使得刚开始的时候发放令牌的速度比较慢，等消耗一半之后，获取的速率和生产的速率一致，从而也就实现了一个‘热身’的概念</p>
+</blockquote>
+<p>从storedPermits中获取令牌所需要的时间，它分为两部分，以maxPetmits的一半为分割点</p>
+<ul>
+<li>storedPermits &lt;= halfPermits 的时候,存储和消费storedPermits的速率与产生的速率一模一样</li>
+<li>storedPermits&gt;halfPermits, 存储storePermites所需要的时间和产生的速率保持一致，但是消费storePermites从maxPermits到halfPermits所需要的时间为从halfPermits增长到maxPermits所需要时间的2被，也就是比新令牌产生要慢 为什么在分隔点计算还有斜率方面选了3倍和一半的位置 对函数做积分计算(图形面积)，刚好可以保证，超过一半的部分，如果要拿掉一半的存储令牌所需要的时间恰好是存储同样量（或者说是新令牌产生）时间花销的两倍，对应场景如果过了很长一段时间没有使用(存储的令牌会达到maxPermits),刚开始能接收请求的速率相对比较慢，然后再增长到稳定的消费速率</li>
+</ul>
+<blockquote>
+<p>关键在于存储的速率是和新令牌产生的速率一样，但是消费的速率，当存储的超过一半时，会慢于新令牌产生的速率，小于一半则速率是一样的</p>
+</blockquote>
+<h1 id="TryAcquire"><a href="#TryAcquire" class="headerlink" title="TryAcquire"></a><font color= #EE82EE>TryAcquire</font></h1><p>它会尝试去获取令牌，如果无法获取就立即返回，否则再超时时间之内返回给定的令牌。 源码如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">tryAcquire</span><span class="params">(<span class="keyword">int</span> permits, <span class="keyword">long</span> timeout, TimeUnit unit)</span> </span>&#123;</span><br><span class="line">  <span class="comment">//1：使用微秒来转换超时时间</span></span><br><span class="line">  <span class="keyword">long</span> timeoutMicros = unit.toMicros(timeout);</span><br><span class="line">  checkPermits(permits);</span><br><span class="line">  <span class="keyword">long</span> microsToWait;</span><br><span class="line">  <span class="keyword">synchronized</span> (mutex) &#123;</span><br><span class="line">    <span class="keyword">long</span> nowMicros = readSafeMicros();</span><br><span class="line">    <span class="comment">//2.1：如果下次能够获取令牌的时间超过超时时间范围，立马返回；</span></span><br><span class="line">    <span class="keyword">if</span> (nextFreeTicketMicros &gt; nowMicros + timeoutMicros) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">//2.2：获取需要等待的时间，本次获取的时间肯定不会超时</span></span><br><span class="line">      microsToWait = reserveNextTicket(permits, nowMicros);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//3：实行等待</span></span><br><span class="line">  ticker.sleepMicrosUninterruptibly(microsToWait);</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>第一次运行的时候，nextFreeTicketMicros是创建时候的时间，必定小于当前时间，所以第一次肯定会放过，允许执行，只是需要计算要等待的时间。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">long</span> <span class="title">reserveNextTicket</span><span class="params">(<span class="keyword">double</span> requiredPermits, <span class="keyword">long</span> nowMicros)</span> </span>&#123;</span><br><span class="line">  <span class="comment">//1：如果下次可以获取令牌的时间在过去，更新</span></span><br><span class="line">  resync(nowMicros);</span><br><span class="line">  <span class="comment">//2：计算距离下次获取令牌需要的时间，如果nextFreeTikcetMicros&gt;nowMicros，这个时间段必定在超时时间之内,假如入超时时间是0，那么必定是microsToNextFreeTicket趋近于0，也就是立马能够放行；</span></span><br><span class="line">  <span class="keyword">long</span> microsToNextFreeTicket = Math.max(<span class="number">0</span>, nextFreeTicketMicros - nowMicros);</span><br><span class="line">  <span class="comment">//3：计算需要消耗的存储的令牌</span></span><br><span class="line">  <span class="keyword">double</span> storedPermitsToSpend = Math.min(requiredPermits, <span class="keyword">this</span>.storedPermits);</span><br><span class="line">  <span class="comment">//4：计算需要新产生的令牌</span></span><br><span class="line">  <span class="keyword">double</span> freshPermits = requiredPermits - storedPermitsToSpend;</span><br><span class="line">  <span class="comment">//5：计算消耗存储令牌所需要的时间和新产生令牌所需要的时间。对于Bursty来讲，消耗存储的令牌所需要时间为0，WarmingUp方式则是需要根据不同的场景有不同的结果</span></span><br><span class="line">  <span class="keyword">long</span> waitMicros = storedPermitsToWaitTime(<span class="keyword">this</span>.storedPermits, storedPermitsToSpend)</span><br><span class="line">      + (<span class="keyword">long</span>) (freshPermits * stableIntervalMicros);</span><br><span class="line">  <span class="comment">//6：下次能够获取令牌的时间，需要延迟当前已经等待的时间，也就是说，如果立马有请求过来会放行，但是这个等待时间将会影响后续的请求访问，也就是说，这次的请求如果当前的特别的多，下一次能够请求的能够允许的时间必定会有很长的延迟</span></span><br><span class="line">  <span class="keyword">this</span>.nextFreeTicketMicros = nextFreeTicketMicros + waitMicros;</span><br><span class="line">  <span class="comment">//7：扣除消耗的存储令牌</span></span><br><span class="line">  <span class="keyword">this</span>.storedPermits -= storedPermitsToSpend;</span><br><span class="line">  <span class="comment">//8：返回本次要获取令牌所需要的时间,它肯定不会超过超时时间</span></span><br><span class="line">  <span class="keyword">return</span> microsToNextFreeTicket;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="Acquire"><a href="#Acquire" class="headerlink" title="Acquire"></a><font color= #EE82EE>Acquire</font></h1><p>它会阻塞知道允许放行，返回值为阻塞的时长 源码如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">acquire</span><span class="params">(<span class="keyword">int</span> permits)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">long</span> microsToWait = reserve(permits); <span class="comment">//也就是调用reserveNextTicket</span></span><br><span class="line">  ticker.sleepMicrosUninterruptibly(microsToWait); <span class="comment">//阻塞住需要等待的时长</span></span><br><span class="line">  <span class="keyword">return</span> <span class="number">1.0</span> * microsToWait / TimeUnit.SECONDS.toMicros(<span class="number">1L</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="TryAcquire-运行案例"><a href="#TryAcquire-运行案例" class="headerlink" title="TryAcquire 运行案例"></a><font color= #EE82EE>TryAcquire 运行案例</font></h1><p>程序设置10个线程,使得并发数为10，模拟线上的场景,任务内容如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyTask</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> CountDownLatch latch;</span><br><span class="line">    <span class="keyword">private</span> RateLimiter limiter;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyTask</span><span class="params">(CountDownLatch latch, RateLimiter limiter)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.latch = latch;</span><br><span class="line">        <span class="keyword">this</span>.limiter = limiter;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span>    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//使得线程同时触发            </span></span><br><span class="line">           latch.await();</span><br><span class="line">            System.out.println(<span class="string">&quot;time &quot;</span>+System.currentTimeMillis()+<span class="string">&quot;ms :&quot;</span>+limiter.tryAcquire());</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="Bursty-TryAcquire"><a href="#Bursty-TryAcquire" class="headerlink" title="Bursty-TryAcquire"></a><font color= DarkSlateGray1 >Bursty-TryAcquire</font></h2><p>这里设置限制每秒的流量为5，也就是说第一次请求过后，下次请求需要等200ms</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">RateLimiter r =RateLimiter.create(<span class="number">5</span>);</span><br><span class="line">ExecutorService service = Executors.newFixedThreadPool(<span class="number">10</span>);</span><br><span class="line">CountDownLatch latch = <span class="keyword">new</span> CountDownLatch(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    service.submit(<span class="keyword">new</span> MyTask(latch, r));</span><br><span class="line">    latch.countDown();</span><br><span class="line">    System.out.println(<span class="string">&quot;countdown:&quot;</span> + latch.getCount());</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(<span class="string">&quot;countdown over&quot;</span>);</span><br><span class="line">service.shutdown();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>结果如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">countdown:<span class="number">9</span></span><br><span class="line">countdown:<span class="number">8</span></span><br><span class="line">countdown:<span class="number">7</span></span><br><span class="line">countdown:<span class="number">6</span></span><br><span class="line">countdown:<span class="number">5</span></span><br><span class="line">countdown:<span class="number">4</span></span><br><span class="line">countdown:<span class="number">3</span></span><br><span class="line">countdown:<span class="number">2</span></span><br><span class="line">countdown:<span class="number">1</span></span><br><span class="line">countdown:<span class="number">0</span></span><br><span class="line">countdown over</span><br><span class="line">time <span class="number">1538487195698</span>ms :<span class="keyword">true</span></span><br><span class="line">time <span class="number">1538487195699</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487195699</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487195699</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487195699</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487195699</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487195699</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487195698</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487195698</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487195699</span>ms :<span class="keyword">false</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果使得线程等待401ms,那么程序会存储的令牌为2个</p>
+<blockquote>
+<p>注意刚开始存储的时候，不是慢的，这里的存储量是慢慢增长，并且能够立马拿到</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">RateLimiter r =RateLimiter.create(<span class="number">5</span>);</span><br><span class="line">ExecutorService service = Executors.newFixedThreadPool(<span class="number">10</span>);</span><br><span class="line">CountDownLatch latch = <span class="keyword">new</span> CountDownLatch(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    service.submit(<span class="keyword">new</span> MyTask(latch, r));</span><br><span class="line">    <span class="keyword">if</span> (i==<span class="number">9</span>)&#123;</span><br><span class="line">        TimeUnit.MILLISECONDS.sleep(<span class="number">401</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;sleep 10 seconds over&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    latch.countDown();</span><br><span class="line">    System.out.println(<span class="string">&quot;countdown:&quot;</span> + latch.getCount());</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(<span class="string">&quot;countdown over&quot;</span>);</span><br><span class="line">service.shutdown();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>运行结果刚好允许3个运行</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">countdown:<span class="number">9</span></span><br><span class="line">countdown:<span class="number">8</span></span><br><span class="line">countdown:<span class="number">7</span></span><br><span class="line">countdown:<span class="number">6</span></span><br><span class="line">countdown:<span class="number">5</span></span><br><span class="line">countdown:<span class="number">4</span></span><br><span class="line">countdown:<span class="number">3</span></span><br><span class="line">countdown:<span class="number">2</span></span><br><span class="line">countdown:<span class="number">1</span></span><br><span class="line">sleep <span class="number">10</span> seconds over</span><br><span class="line">countdown:<span class="number">0</span></span><br><span class="line">countdown over</span><br><span class="line">time <span class="number">1538487297981</span>ms :<span class="keyword">true</span></span><br><span class="line">time <span class="number">1538487297981</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487297981</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487297981</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487297981</span>ms :<span class="keyword">true</span></span><br><span class="line">time <span class="number">1538487297981</span>ms :<span class="keyword">true</span></span><br><span class="line">time <span class="number">1538487297981</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487297981</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487297981</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487297981</span>ms :<span class="keyword">false</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果等待时间超过1秒，允许放行的流量也不会超过6个，存储的令牌+第一个令牌</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">RateLimiter r =RateLimiter.create(<span class="number">5</span>);</span><br><span class="line">ExecutorService service = Executors.newFixedThreadPool(<span class="number">10</span>);</span><br><span class="line">CountDownLatch latch = <span class="keyword">new</span> CountDownLatch(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    service.submit(<span class="keyword">new</span> MyTask(latch, r));</span><br><span class="line">    <span class="keyword">if</span> (i==<span class="number">9</span>)&#123;</span><br><span class="line">        TimeUnit.MILLISECONDS.sleep(<span class="number">1001</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;sleep 10 seconds over&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    latch.countDown();</span><br><span class="line">    System.out.println(<span class="string">&quot;countdown:&quot;</span> + latch.getCount());</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(<span class="string">&quot;countdown over&quot;</span>);</span><br><span class="line">service.shutdown();</span><br></pre></td></tr></table></figure>
+
+<p>结果为</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">countdown:<span class="number">9</span></span><br><span class="line">countdown:<span class="number">8</span></span><br><span class="line">countdown:<span class="number">7</span></span><br><span class="line">countdown:<span class="number">6</span></span><br><span class="line">countdown:<span class="number">5</span></span><br><span class="line">countdown:<span class="number">4</span></span><br><span class="line">countdown:<span class="number">3</span></span><br><span class="line">countdown:<span class="number">2</span></span><br><span class="line">countdown:<span class="number">1</span></span><br><span class="line">sleep <span class="number">10</span> seconds over</span><br><span class="line">countdown:<span class="number">0</span></span><br><span class="line">countdown over</span><br><span class="line">time <span class="number">1538487514780</span>ms :<span class="keyword">true</span></span><br><span class="line">time <span class="number">1538487514780</span>ms :<span class="keyword">true</span></span><br><span class="line">time <span class="number">1538487514780</span>ms :<span class="keyword">true</span></span><br><span class="line">time <span class="number">1538487514780</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487514780</span>ms :<span class="keyword">true</span></span><br><span class="line">time <span class="number">1538487514780</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487514780</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487514780</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487514780</span>ms :<span class="keyword">true</span></span><br><span class="line">time <span class="number">1538487514780</span>ms :<span class="keyword">true</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="WarmingUp-TryAcquire"><a href="#WarmingUp-TryAcquire" class="headerlink" title="WarmingUp-TryAcquire"></a><font color= DarkSlateGray1 >WarmingUp-TryAcquire</font></h2><p>使用warmingUp的方式由于默认已经存储满了令牌，那么，它在第一次请求执行完之后，必须等待一定的时间才会让下一次请求开始，而这个请求放行的时间则是会超过存储所需要的时间</p>
+<blockquote>
+<p>注意这里的不同，默认是存储满的，也就是刚开始的消费要慢很多</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">RateLimiter r =RateLimiter.create(<span class="number">5</span>,<span class="number">1</span>,TimeUnit.SECONDS);</span><br><span class="line">ExecutorService service = Executors.newFixedThreadPool(<span class="number">10</span>);</span><br><span class="line">CountDownLatch latch = <span class="keyword">new</span> CountDownLatch(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    service.submit(<span class="keyword">new</span> MyTask(latch, r));</span><br><span class="line">    latch.countDown();</span><br><span class="line">    System.out.println(<span class="string">&quot;countdown:&quot;</span> + latch.getCount());</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(<span class="string">&quot;countdown over&quot;</span>);</span><br><span class="line">service.shutdown();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>运行结果如下</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">countdown:<span class="number">9</span></span><br><span class="line">countdown:<span class="number">8</span></span><br><span class="line">countdown:<span class="number">7</span></span><br><span class="line">countdown:<span class="number">6</span></span><br><span class="line">countdown:<span class="number">5</span></span><br><span class="line">countdown:<span class="number">4</span></span><br><span class="line">countdown:<span class="number">3</span></span><br><span class="line">countdown:<span class="number">2</span></span><br><span class="line">countdown:<span class="number">1</span></span><br><span class="line">countdown:<span class="number">0</span></span><br><span class="line">countdown over</span><br><span class="line">time <span class="number">1538487677462</span>ms :<span class="keyword">true</span></span><br><span class="line">time <span class="number">1538487677462</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487677462</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487677462</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487677462</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487677462</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487677462</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487677462</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487677462</span>ms :<span class="keyword">false</span></span><br><span class="line">time <span class="number">1538487677462</span>ms :<span class="keyword">false</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="Acquire运行案例"><a href="#Acquire运行案例" class="headerlink" title="Acquire运行案例"></a><font color= #EE82EE>Acquire运行案例</font></h1><p>所需要的task源码如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyTask</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> CountDownLatch latch;</span><br><span class="line">    <span class="keyword">private</span> RateLimiter limiter;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> start;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyTask</span><span class="params">(CountDownLatch latch, RateLimiter limiter,<span class="keyword">long</span> start)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.latch = latch;</span><br><span class="line">        <span class="keyword">this</span>.limiter = limiter;</span><br><span class="line">       <span class="keyword">this</span>.start=start;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span>    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//使得线程同时触发            </span></span><br><span class="line">           latch.await();</span><br><span class="line">            System.out.printf(<span class="string">&quot;result:&quot;</span>+limiter.acquire(<span class="number">2</span>));</span><br><span class="line">            System.out.println(<span class="string">&quot; time &quot;</span>+(System.currentTimeMillis()-start)+<span class="string">&quot;ms&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="Busty-Acquire"><a href="#Busty-Acquire" class="headerlink" title="Busty-Acquire"></a><font color= DarkSlateGray1 >Busty-Acquire</font></h2><p>Acquire会阻塞运行的结果，而且会提前消费</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">RateLimiter r =RateLimiter.create(<span class="number">1</span>); </span><br><span class="line">r.acquire();</span><br><span class="line">System.out.println(<span class="string">&quot;time cost:&quot;</span>+(System.currentTimeMillis()-start)+<span class="string">&quot;ms&quot;</span>);</span><br><span class="line">r.acquire();</span><br><span class="line">System.out.println(<span class="string">&quot;time cost:&quot;</span>+(System.currentTimeMillis()-start)+<span class="string">&quot;ms&quot;</span>);</span><br><span class="line">r.acquire(<span class="number">3</span>);</span><br><span class="line">System.out.println(<span class="string">&quot;time cost:&quot;</span>+(System.currentTimeMillis()-start)+<span class="string">&quot;ms&quot;</span>);</span><br><span class="line">r.acquire();</span><br><span class="line">System.out.println(<span class="string">&quot;time cost:&quot;</span>+(System.currentTimeMillis()-start)+<span class="string">&quot;ms&quot;</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>第一次会立马运行，然后因为请求了一次，下次发放令牌的时间往后迁移,获取的令牌越多，下次能够运行需要等待的时间越长</p>
+<p>运行结果为</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">time cost:<span class="number">0</span>ms</span><br><span class="line">time cost:<span class="number">1005</span>ms</span><br><span class="line">time cost:<span class="number">2004</span>ms</span><br><span class="line">time cost:<span class="number">5001</span>ms</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在多线程背景运行如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">RateLimiter r =RateLimiter.create(<span class="number">1</span>);</span><br><span class="line"><span class="keyword">long</span> start=System.currentTimeMillis();</span><br><span class="line">r.acquire(<span class="number">3</span>);</span><br><span class="line">System.out.println(<span class="string">&quot;time cost:&quot;</span>+(System.currentTimeMillis()-start)+<span class="string">&quot;ms&quot;</span>);</span><br><span class="line">ExecutorService service = Executors.newFixedThreadPool(<span class="number">10</span>);</span><br><span class="line">CountDownLatch latch = <span class="keyword">new</span> CountDownLatch(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    service.submit(<span class="keyword">new</span> MyTask(latch, r,start));</span><br><span class="line">    latch.countDown();</span><br><span class="line">    System.out.println(<span class="string">&quot;countdown:&quot;</span> + latch.getCount());</span><br><span class="line">&#125;</span><br><span class="line">System.out.println(<span class="string">&quot;countdown over&quot;</span>);</span><br><span class="line">service.shutdown();</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>结果如下</p>
+<figure class="highlight sas"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">time cost:1ms</span><br><span class="line">countdown:9</span><br><span class="line">countdown:8</span><br><span class="line">countdown:7</span><br><span class="line">countdown:6</span><br><span class="line">countdown:5</span><br><span class="line">countdown:4</span><br><span class="line">countdown:3</span><br><span class="line">countdown:2</span><br><span class="line">countdown:1</span><br><span class="line">countdown:0</span><br><span class="line">countdown over</span><br><span class="line">result:2.995732 time 3024ms</span><br><span class="line">result:4.995725 time 5006ms</span><br><span class="line">result:6.995719 time 7007ms</span><br><span class="line">result:8.995716 time 9006ms</span><br><span class="line">result:10.995698 time 11004ms</span><br><span class="line">result:12.995572 time 13006ms</span><br><span class="line">result:14.995555 time 15007ms</span><br><span class="line">result:16.995543 time 17005ms</span><br><span class="line">result:18.995516 time 19005ms</span><br><span class="line">result:20.995463 time 21005ms</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="WarmingUp-acquire"><a href="#WarmingUp-acquire" class="headerlink" title="WarmingUp-acquire"></a><font color= DarkSlateGray1 >WarmingUp-acquire</font></h2><p>warmingUp通过acquire的方式获取的令牌，同样会被按照同步的方式获取</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">RateLimiter r =RateLimiter.create(<span class="number">1</span>,<span class="number">1</span>,TimeUnit.SECONDS);</span><br><span class="line"><span class="keyword">long</span> start=System.currentTimeMillis();</span><br><span class="line">r.acquire(<span class="number">3</span>);</span><br><span class="line">System.out.println(<span class="string">&quot;time cost:&quot;</span>+(System.currentTimeMillis()-start)+<span class="string">&quot;ms”);</span></span><br><span class="line"><span class="string">ExecutorService service = Executors.newFixedThreadPool(10);</span></span><br><span class="line"><span class="string">CountDownLatch latch = new CountDownLatch(10);</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">for (int i=0;i&lt;10;i++)</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    service.submit(new MyTask(latch, r,start));</span></span><br><span class="line"><span class="string">    latch.countDown();</span></span><br><span class="line"><span class="string">    System.out.println(&quot;</span>countdown:<span class="string">&quot; + latch.getCount());</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">System.out.println(&quot;</span>countdown over<span class="string">&quot;);</span></span><br><span class="line"><span class="string">service.shutdown();</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+
+<p>结果如下</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">time cost:<span class="number">0</span>ms</span><br><span class="line">countdown:<span class="number">9</span></span><br><span class="line">countdown:<span class="number">8</span></span><br><span class="line">countdown:<span class="number">7</span></span><br><span class="line">countdown:<span class="number">6</span></span><br><span class="line">countdown:<span class="number">5</span></span><br><span class="line">countdown:<span class="number">4</span></span><br><span class="line">countdown:<span class="number">3</span></span><br><span class="line">countdown:<span class="number">2</span></span><br><span class="line">countdown:<span class="number">1</span></span><br><span class="line">countdown:<span class="number">0</span></span><br><span class="line">countdown over</span><br><span class="line">result:<span class="number">3.496859</span> time <span class="number">3521</span>ms</span><br><span class="line">result:<span class="number">5.496854</span> time <span class="number">5506</span>ms</span><br><span class="line">result:<span class="number">7.49685</span> time <span class="number">7505</span>ms</span><br><span class="line">result:<span class="number">9.496835</span> time <span class="number">9504</span>ms</span><br><span class="line">result:<span class="number">11.496821</span> time <span class="number">11505</span>ms</span><br><span class="line">result:<span class="number">13.496807</span> time <span class="number">13502</span>ms</span><br><span class="line">result:<span class="number">15.496793</span> time <span class="number">15504</span>ms</span><br><span class="line">result:<span class="number">17.496778</span> time <span class="number">17506</span>ms</span><br><span class="line">result:<span class="number">19.496707</span> time <span class="number">19506</span>ms</span><br><span class="line">result:<span class="number">21.496699</span> time <span class="number">21506</span>ms</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>RateLimiter本身实现的就是一个<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Token_bucket">令牌桶算法</a></p>
+</blockquote>
+<p>来自： <a target="_blank" rel="noopener" href="https://juejin.im/post/5bb48d7b5188255c865e31bc">https://juejin.im/post/5bb48d7b5188255c865e31bc</a> </p>
+
+  
+    
+    <div class='footer'>
+      
+      
+        
+      
+      
+        <div class='copyright'>
+          <blockquote>
+            
+              
+                <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+              
+            
+              
+                <p>本文永久链接是：<a href=https://gschaos.club/2019/10/19/The%20RateLimiter%20in%20the%20guava/>https://gschaos.club/2019/10/19/The%20RateLimiter%20in%20the%20guava/</a></p>
+              
+            
+          </blockquote>
+        </div>
+      
+      
+        <div class='donate'>
+          <div class='imgs'>
+            
+              <img src='https://gschaos.club/ico/2.jpg'>
+            
+          </div>
+        </div>
+      
+    </div>
+  
+  
+    
+
+
+  <div class='article-meta' id="bottom">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-09-03T15:25:25+08:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2020年9月3日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Guava/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Guava</p></a></div>
+
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://gschaos.club/2019/10/19/The%20RateLimiter%20in%20the%20guava/&title=限流原理解读之guava中的RateLimiter - MysticalYcc&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://gschaos.club/2019/10/19/The%20RateLimiter%20in%20the%20guava/&title=限流原理解读之guava中的RateLimiter - MysticalYcc&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://service.weibo.com/share/share.php?url=https://gschaos.club/2019/10/19/The%20RateLimiter%20in%20the%20guava/&title=限流原理解读之guava中的RateLimiter - MysticalYcc&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=">
+          
+        </a>
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </div>
+
+
+  
+  
+
+  
+    <div class="prev-next">
+      
+        <a class='prev' href='/2019/11/15/unsafe-offset/'>
+          <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>UNSAFE和Java 内存布局</p>
+          <p class='content'>UNSAFE和Java 内存布局（深入理解：锁/反射/线程挂起/内存回收等）最近在翻ReentrantLock源码的时候，看到AQS（AbstractQueuedSynchronizer.jav...</p>
+        </a>
+      
+      
+        <a class='next' href='/2019/10/17/Spring%E6%98%AF%E5%A6%82%E4%BD%95%E5%90%AF%E7%94%A8aop%E5%88%87%E9%9D%A2/'>
+          <p class='title'>Spring是如何启用aop切面<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+          <p class='content'>Spring是如何启用aop切面（比如声明式事务），而对我们的bean实现代理的呢？首先从后面说实现原理，通过aop包下的AspectJAwareAdvisorAutoProxyCreator ...</p>
+        </a>
+      
+    </div>
+  
+</article>
+
+
+  
+
+  <article class="post white-box reveal floatable" id="comments">
+    <p ct><i class='fas fa-comments'></i> 评论</p>
+    
+    <div id="valine_container" class="valine_thread">
+  <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+</div>
+
+  </article>
+
+
+
+
+
+
+</div>
+<aside class='l_side'>
+  
+  
+    
+    
+
+
+
+  <section class="widget toc-wrapper floatable desktop mobile" id="toc-div" >
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AFnextFreeTicketMicros"><span class="toc-text">为什么是nextFreeTicketMicros?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E6%9C%89%E4%B8%80%E4%B8%AA%E6%A0%87%E8%AE%B0%E4%BB%A3%E8%A1%A8%E5%AD%98%E5%82%A8%E4%BA%86%E5%A4%9A%E5%B0%91%E4%BB%A4%E7%89%8C%EF%BC%9F"><span class="toc-text">为什么会有一个标记代表存储了多少令牌？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%8E%E4%B9%88%E8%A1%A1%E9%87%8F%E4%BB%8EstoredPermits%E4%B8%AD%E8%8E%B7%E5%8F%96%E4%BB%A4%E7%89%8C%E8%BF%99%E4%B8%AA%E8%BF%87%E7%A8%8B%EF%BC%9F"><span class="toc-text">怎么衡量从storedPermits中获取令牌这个过程？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#storedPermitsToWaitTime%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="toc-text">storedPermitsToWaitTime实现原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bursty%E7%9A%84storedPermitsToWaitTime%E5%87%BD%E6%95%B0%E5%AE%9E%E7%8E%B0"><span class="toc-text">Bursty的storedPermitsToWaitTime函数实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WarmingUp%E7%9A%84%E8%AE%BE%E8%AE%A1%E7%90%86%E5%BF%B5"><span class="toc-text">WarmingUp的设计理念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bursty-TryAcquire"><span class="toc-text">Bursty-TryAcquire</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WarmingUp-TryAcquire"><span class="toc-text">WarmingUp-TryAcquire</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Busty-Acquire"><span class="toc-text">Busty-Acquire</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WarmingUp-acquire"><span class="toc-text">WarmingUp-acquire</span></a></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+
+      </div>
+      
+  
+  <footer class="footer clearfix">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+  
+    <meting-js
+      theme='#1BCDFC'
+      autoplay='true'
+      volume='0.7'
+      loop='all'
+      order='list'
+      fixed='false'
+      list-max-height='320px'
+      server='netease'
+      type='playlist'
+      id='374088504'
+      list-folded='true'>
+    </meting-js>
+  
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+              <a href="/atom.xml"
+                class="social  flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+                
+                  <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/020-rss.svg" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/020-rss.svg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII="/>
+                
+              </a>
+            
+          
+            
+          
+            
+              <a href="https://github.com/volantis-x/"
+                class="social  flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+                
+                  <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/029-github.svg" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/029-github.svg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII="/>
+                
+              </a>
+            
+          
+            
+              <a href="/"
+                class="social  flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+                
+                  <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/010-facebook.svg" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/010-facebook.svg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII="/>
+                
+              </a>
+            
+          
+            
+              <a href="/"
+                class="social  flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+                
+                  <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/018-twitter.svg" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/018-twitter.svg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII="/>
+                
+              </a>
+            
+          
+            
+              <a href="/"
+                class="social  flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+                
+                  <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/045-telegram.svg" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/045-telegram.svg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII="/>
+                
+              </a>
+            
+          
+            
+              <a href="/"
+                class="social  flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+                
+                  <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/006-youtube.svg" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/006-youtube.svg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII="/>
+                
+              </a>
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客内容遵循 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+      
+    
+      
+        
+          <div></div>
+        
+      
+    
+      
+        本站使用
+        <a href="https://github.com/volantis-x/hexo-theme-volantis/tree/4.0.0-rc.2" target="_blank" class="codename">Volantis</a>
+        作为主题，总访问量为
+          <span id="busuanzi_value_site_pv"><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+          次
+        
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="/">Copyright ©     皖ICP备19015872号-1</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+
+      <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+    </div>
+  </div>
+  <div>
+    <!-- required -->
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5/dist/jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script>
+  function pjax_fancybox() {
+    $(".md").find("img").not('.inline').not('a img').each(function () { //渲染 fancybox
+      var element = document.createElement("a"); // a 标签
+      $(element).attr("class", "fancybox");
+      $(element).attr("pjax-fancybox", "");  // 过滤 pjax
+      $(element).attr("href", $(this).attr("src"));
+      if ($(this).attr("data-original")) {
+        $(element).attr("href", $(this).attr("data-original"));
+      }
+      $(element).attr("data-fancybox", "images");
+      var caption = "";   // 描述信息
+      if ($(this).attr('alt')) {  // 判断当前页面是否存在描述信息
+        $(element).attr('data-caption', $(this).attr('alt'));
+        caption = $(this).attr('alt');
+      }
+      var div = document.createElement("div");
+      $(div).addClass("fancybox");
+      $(this).wrap(div); // 最外层套 div ，其实主要作用还是 class 样式
+      var span = document.createElement("span");
+      $(span).addClass("image-caption");
+      $(span).text(caption); // 加描述
+      $(this).after(span);  // 再套一层描述
+      // 背景层
+      var bgDiv = document.createElement("div");
+      $(bgDiv).addClass("bg");
+      if ($(this).attr('bg')) {
+        $(bgDiv).css('background', $(this).attr('bg'));
+      }
+      $(this).wrap(bgDiv); // 背景层
+      $(this).wrap(element);  // 最后套 a 标签
+    })
+    $(".md").find("img").fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+      closeClick: true,
+      helpers: {
+        overlay: {closeClick: true}
+      },
+      buttons: [
+        "zoom",
+        "close"
+      ]
+    });
+  };
+  $(function () {
+    pjax_fancybox();
+  });
+</script>
+
+
+<!-- internal -->
+
+
+
+  
+  
+
+  <div id="rightmenu-wrapper">
+    <ul class="list-v rightmenu" id="rightmenu-content">
+      <li class='option'>
+        <a class='vlts-menu opt fix-cursor-default' id='menu-copy-text' onclick='document.execCommand("copy")'><i class='fa fa-copy fa-fw'></i>复制文本</a>
+        <hr id='hr-text'>
+        <a class='vlts-menu opt fix-cursor-default' id='menu-copy-href'><i class='fa fa-link fa-fw'></i>复制链接</a>
+        <a class='vlts-menu opt fix-cursor-default' id='menu-open-href'><i class='fa fa-external-link-square-alt fa-fw'></i>在新标签页打开</a>
+        <hr id='hr-href'>
+        <a class='vlts-menu opt fix-cursor-default' id='menu-copy-src'><i class='fa fa-image fa-fw'></i>复制图片地址</a>
+        <hr id='hr-src'>
+      </li>
+      
+        <li class='navigation'>
+          <a class='nav icon-only fix-cursor-default' onclick='history.back()'><i class='fa fa-arrow-left fa-fw'></i></a>
+          <a class='nav icon-only fix-cursor-default' onclick='history.forward()'><i class='fa fa-arrow-right fa-fw'></i></a>
+          <a class='nav icon-only fix-cursor-default' onclick='window.location.reload()'><i class='fa fa-redo fa-fw'></i></a>
+          <a class='nav icon-only fix-cursor-default' href='/'><i class='fa fa-home fa-fw'></i></a>
+        </li>
+      
+      <hr>
+      
+        
+      
+        
+          
+    <li>
+      <a class='vlts-menu fix-cursor-default' href=https://volantis.js.org/faqs/
+        
+        
+        
+        
+          id="https:volantisjsorgfaqs"
+        >
+        <i class='fab fa-github fa-fw'></i> GitHub
+      </a>
+    </li>
+  
+        
+      
+        
+          
+    <li>
+      <a class='vlts-menu fix-cursor-default' href=https://blog.csdn.net/qq_17238449
+        
+        
+        
+        
+          id="https:blogcsdnnetqq_17238449"
+        >
+        <i class='fas fa-blog fa-fw'></i> csdn
+      </a>
+    </li>
+  
+        
+      
+        
+          
+    <li>
+      <a class='vlts-menu fix-cursor-default' href=https://www.gschaos.club/about/
+        
+        
+        
+        
+          id="https:wwwgschaosclubabout"
+        >
+        <i class='fas fa-portrait fa-fw'></i> 关于本人
+      </a>
+    </li>
+  
+        
+      
+        
+          <hr>
+        
+      
+        
+          
+    <li>
+      <a class='vlts-menu fix-cursor-default' href=https://github.com/yccjack/yccjack.github.io
+        
+        
+        
+        
+          id="https:githubcomyccjackyccjackgithubio"
+        >
+        <i class='fa fa-code-branch fa-fw'></i> 本站源码
+      </a>
+    </li>
+  
+        
+      
+        
+          
+    <li>
+      <a class='vlts-menu fix-cursor-default' href=https://github.com/volantis-x/hexo-theme-volantis/
+        
+        
+        
+        
+          id="https:githubcomvolantis-xhexo-theme-volantis"
+        >
+        <i class='fa fa-code-branch fa-fw'></i> 主题源码
+      </a>
+    </li>
+  
+        
+      
+        
+          <hr>
+        
+      
+        
+          
+    <li>
+      <a class='vlts-menu fix-cursor-default' 
+        
+        
+        
+          onclick="document.execCommand('print')"
+        
+        >
+        <i class='fa fa-print fa-fw'></i> 打印页面
+      </a>
+    </li>
+  
+        
+      
+        
+          <hr>
+        
+      
+        
+          <li class='music name'>
+            <p class='nav music-title fix-cursor-default'></p>
+          </li>
+          <li class='music ctrl'>
+            <a class='nav icon-only backward fix-cursor-default' onclick='aplayerBackward()'><i class='fa fa-step-backward fa-fw'></i></a>
+            <a class='nav icon-only toggle fix-cursor-default' onclick='aplayerToggle()'><i class='fa fa-play fa-fw'></i></a>
+            <a class='nav icon-only forward fix-cursor-default' onclick='aplayerForward()'><i class='fa fa-step-forward fa-fw'></i></a>
+          </li>
+          <li class='music volume'>
+            <a class='nav volume'>
+              <div class="aplayer-volume-bar-wrap">
+                <div class="aplayer-volume-bar fix-cursor-pointer">
+                  <div class="aplayer-volume"></div>
+                  <i class='left fa fa-volume-off fa-fw'></i>
+                  <i class='right fa fa-volume-up fa-fw'></i>
+                </div>
+              </div>
+            </a>
+          </li>
+        
+      
+    </ul>
+  </div>
+
+  <script>
+    window.document.oncontextmenu = function (event) {
+      if (event.ctrlKey) return true;
+      if (/Android|webOS|BlackBerry/i.test(navigator.userAgent)) return true;
+      return popMenu(event);
+    };
+    document.addEventListener("click", function (event) {
+      var mymenu = document.getElementById('rightmenu-wrapper');
+      mymenu.style.display = "none";
+    });
+    function popMenu(event) {
+      var mymenu = document.getElementById('rightmenu-wrapper');
+      var menuContent = document.getElementById('rightmenu-content');
+      var screenWidth = document.documentElement.clientWidth || document.body.clientWidth;
+      var screenHeight = document.documentElement.clientHeight || document.body.clientHeight;
+      mymenu.style.left = event.clientX + "px"; // 获取鼠标位置
+      mymenu.style.top = event.clientY + "px";
+      mymenu.style.display = 'block';
+      if (event.clientX * 2 > screenWidth) {
+        menuContent.classList.add('left');
+      } else {
+        menuContent.classList.remove('left');
+      }
+      if (event.clientY * 2 > screenHeight) {
+        menuContent.classList.add('top');
+      } else {
+        menuContent.classList.remove('top');
+      }
+
+      let hrText = document.getElementById('hr-text');
+      let hrSrc = document.getElementById('hr-src');
+      let hrHref = document.getElementById('hr-href');
+
+      // 选中图片
+      let copySrc = document.getElementById('menu-copy-src');
+      if (copySrc != undefined) {
+        if (event.target.currentSrc) {
+          copySrc.style.display = 'block';
+          copySrc.addEventListener("click", function (e) {
+            copyString(event.target.currentSrc);
+          },{once: true});
+          hrSrc.style.display = 'block';
+        } else {
+          copySrc.style.display = 'none';
+          hrSrc.style.display = 'none';
+        }
+      }
+
+      // 选中按钮
+      // 判断是不是按钮
+      let href = '';
+      if (event.path) {
+        for (i = 0; i < event.path.length; i++) {
+          if (event.path[i].href != undefined && event.path[i].href.length > 0) {
+            href = event.path[i].href;
+          }
+        }
+      }
+
+      let copyText = document.getElementById('menu-copy-text');
+      copyText.style.display = 'none';
+      hrText.style.display = 'none';
+      if (href.length == 0) {
+        // 选中文本
+        if (window.getSelection().toString()) {
+          copyText.style.display = 'block';
+          hrText.style.display = 'block';
+        }
+      }
+
+      // 在新标签页打开
+      let openHref = document.getElementById('menu-open-href');
+      if (openHref != undefined) {
+        if (href.length > 0) {
+          openHref.style.display = 'block';
+          openHref.addEventListener("click", function (e) {
+            window.open(href);
+          },{once: true});
+          hrHref.style.display = 'block';
+        } else {
+          openHref.style.display = 'none';
+          hrHref.style.display = 'none';
+        }
+      }
+      // 复制链接
+      let copyHref = document.getElementById('menu-copy-href');
+      if (copyHref != undefined) {
+        if (href.length > 0) {
+          copyHref.style.display = 'block';
+          copyHref.addEventListener("click", function (e) {
+            copyString(href);
+          },{once: true});
+        } else {
+          copyHref.style.display = 'none';
+        }
+      }
+
+      // 有音乐播放器
+      if ('true' == true && ('home,help,examples,contributors,hr,source_docs,source_theme,hr,print,hr,music'||[]).includes('music')) {
+        // 如果有aplayer，初始化一下
+      	try {
+      		checkAPlayer();
+          updateTitle();
+      	} catch (error) {
+      		console.log(error);
+      	}
+      }
+
+      return false; // 该行代码确保系统自带的右键菜单不会被调出
+    }
+    function hideMenu() {
+      document.getElementById('rightmenu-wrapper').style.display = 'none';
+    }
+    function copyString(str) {
+      const input = document.createElement('input');
+      input.setAttribute('readonly', 'readonly');
+      document.body.appendChild(input);
+      input.setAttribute('value', str);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+    }
+    document.execCommand('click');
+  </script>
+
+
+
+
+<!-- optional -->
+
+  <script>
+  
+  var SEARCH_SERVICE = "hexo" || "hexo";
+  var ROOT = "/" || "/";
+  if (!ROOT.endsWith('/')) ROOT += '/';
+</script>
+
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazyload",
+    threshold: 0
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    lazyLoadInstance.update();
+  });
+  document.addEventListener('pjax:complete', function () {
+    lazyLoadInstance.update();
+  });
+</script>
+
+
+
+
+  
+  
+    <script>
+      window.FPConfig = {
+        delay: 0,
+        ignoreKeywords: [],
+        maxRPS: 5,
+        hoverDelay: 25
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"></script>
+  
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+    var clipboard = new ClipboardJS('.btn-copy', {
+        target: function (trigger) {
+            return trigger.nextElementSibling
+        }
+    });
+    function wait(callback, seconds) {
+        var timelag = null;
+        timelag = window.setTimeout(callback, seconds)
+    }
+    function pjax_initCopyCode() {
+		if($(".highlight .code pre").length+$(".article pre code").length==0)return;
+        var copyHtml = '';
+        copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+        copyHtml += '<i class="fas fa-copy"></i><span>COPY</span>';
+        copyHtml += '</button>';
+        $(".highlight .code pre").before(copyHtml);
+        $(".article pre code").before(copyHtml);
+        clipboard.off('success').on('success', function (e) {
+            let $btn = $(e.trigger);
+            $btn.addClass('copied');
+            let $icon = $($btn.find('i'));
+            $icon.removeClass('fa-copy');
+            $icon.addClass('fa-check-circle');
+            let $span = $($btn.find('span'));
+            $span[0].innerText = 'COPIED';
+            wait(function () {
+                $icon.removeClass('fa-check-circle');
+                $icon.addClass('fa-copy');
+                $span[0].innerText = 'COPY'
+            }, 2000)
+        });
+        clipboard.off('error').on('error', function (e) {
+            e.clearSelection();
+            let $btn = $(e.trigger);
+            $btn.addClass('copy-failed');
+            let $icon = $($btn.find('i'));
+            $icon.removeClass('fa-copy');
+            $icon.addClass('fa-times-circle');
+            let $span = $($btn.find('span'));
+            $span[0].innerText = 'COPY FAILED';
+            wait(function () {
+                $icon.removeClass('fa-times-circle');
+                $icon.addClass('fa-copy');
+                $span[0].innerText = 'COPY'
+            }, 2000)
+        })
+    }
+    $(function () {
+        pjax_initCopyCode()
+    });
+</script>
+
+
+
+
+
+
+  <script>
+  let APlayerController = new Object();
+  APlayerController.id = '374088504';  // 设定全局音乐播放ID
+  APlayerController.volume = '0.7';
+</script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/meting@2.0/dist/Meting.min.js"></script>
+
+
+
+
+  
+<script src="/js/aplayer.js"></script>
+
+
+
+
+
+
+  
+  
+<script src="/js/valine.js"></script>
+
+
+<script>
+  var GUEST_INFO = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link'.split(',').filter(function (item) {
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick', 'mail', 'link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function (item) {
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+
+  function emoji(path, idx, ext) {
+    return path + "/" + path + "-" + idx + "." + ext;
+  }
+
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+
+  function pjax_valine() {
+    if(!document.querySelectorAll("#valine_container")[0])return;
+
+    let pagePlaceholder = $.trim($('#pjax-comment-placeholder').text()) || "快来评论吧~";
+
+    let path = $.trim($('#pjax-comment-path').text());
+    if (path.length == 0) {
+      let defaultPath = '';
+      path = defaultPath || decodeURI(window.location.pathname);
+    }
+
+    var valine = new Valine();
+    valine.init({
+      el: '#valine_container',
+      meta: meta,
+      placeholder: pagePlaceholder,
+      path: path,
+      appId: "J2f6Gx43ptrGYdf1rHPAS5sJ-gzGzoHsz",
+      appKey: "cSywIQR7CfBFaNI8iiPTYy41",
+      pageSize: '10',
+      avatar: 'robohash',
+      lang: 'zh-cn',
+      visitor: 'true',
+      highlight: 'true',
+      mathJax: 'false',
+      enableQQ: 'true',
+      requiredFields: requiredFields,
+      emojiCDN: 'https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/valine/',
+      emojiMaps: emojiMaps
+    })
+  }
+
+  $(function () {
+    pjax_valine();
+  });
+</script>
+
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5/lib/darkmode-js.min.js" aysc></script>
+
+<script type="text/javascript">
+function getClientHeight(){
+  var clientHeight=0;
+  if(document.body.clientHeight&&document.documentElement.clientHeight){
+  var clientHeight = (document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
+  }else{
+  var clientHeight = (document.body.clientHeight>document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
+  }
+  return clientHeight;
+}
+function supportCss3(style) {
+  var prefix = ['webkit', 'Moz', 'ms', 'o'],
+  i,
+  humpString = [],
+  htmlStyle = document.documentElement.style,
+  _toHumb = function (string) {
+  return string.replace(/-(\w)/g, function ($0, $1) {
+  return $1.toUpperCase();
+  });
+  };
+  for (i in prefix)
+  humpString.push(_toHumb(prefix[i] + '-' + style));
+  humpString.push(_toHumb(style));
+  for (i in humpString)
+  if (humpString[i] in htmlStyle) return true;
+  return false;
+};
+//配置信息
+var options = {
+  bottom: '32px',
+  right: 'unset',
+  left: '16px',
+  time: '0s',
+  mixColor: '#f4f4f4',
+  backgroundColor: '#f4f4f4',
+  buttonColorDark: '#333',
+  buttonColorLight: '#ddd',
+  saveInCookies: true,
+  label: '',
+  autoMatchOsTheme: true
+};
+// 卡片兼容处理 mix-blend-mode 与 effect: [blur] 冲突
+
+function pjax_darkmodejs(){
+  
+  if(!supportCss3('mix-blend-mode'))return;
+  var checkExist2 = setInterval(function() {
+     if (typeof jQuery == 'undefined'){return;}
+     clearInterval(checkExist2);
+     var TopFlag=getClientHeight();
+    $(window).scroll(function(){
+      var top = $(document).scrollTop();
+      if(top > TopFlag) {
+        $(".darkmode-layer").css("mix-blend-mode","normal");
+        $(".darkmode-layer").css("background-color","#222");
+      }else{
+        $(".darkmode-layer").css("mix-blend-mode","difference");
+        $(".darkmode-layer").css("background-color","");
+      }
+    })
+  }, 100);
+  
+}
+// mix-blend-mode support?
+if(supportCss3('mix-blend-mode')){
+  window.darkmode = new Darkmode(options);
+  
+  window.darkmode.showWidget();
+  
+  pjax_darkmodejs();
+}
+////////////////Development///////////////////////
+//////////////darkmode模式切换////////////////////
+//window.darkmode.toggle();                     //
+//////////////darkmode模式判断////////////////////
+//console.log(window.darkmode.isActivated())    //
+//////////////////////////////////////////////////
+</script>
+
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js" data-pjax></script>
+
+
+  
+<script src="/js/app.js"></script>
+
+
+
+
+  
+    
+<script src="/js/search.js"></script>
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script defer>
+
+  const LCCounter = {
+    app_id: 'J2f6Gx43ptrGYdf1rHPAS5sJ-gzGzoHsz',
+    app_key: 'cSywIQR7CfBFaNI8iiPTYy41',
+    custom_api_server: '',
+
+    // 查询存储的记录
+    getRecord(Counter, url, title) {
+      return new Promise(function (resolve, reject) {
+        Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({url})))
+          .then(resp => resp.json())
+          .then(({results, code, error}) => {
+            if (code === 401) {
+              throw error;
+            }
+            if (results && results.length > 0) {
+              var record = results[0];
+              resolve(record);
+            } else {
+              Counter('post', '/classes/Counter', {url, title: title, times: 0})
+                .then(resp => resp.json())
+                .then((record, error) => {
+                  if (error) {
+                    throw error;
+                  }
+                  resolve(record);
+                }).catch(error => {
+                console.error('Failed to create', error);
+                reject(error);
+              });
+            }
+          }).catch((error) => {
+          console.error('LeanCloud Counter Error:', error);
+          reject(error);
+        });
+      })
+    },
+
+    // 发起自增请求
+    increment(Counter, incrArr) {
+      return new Promise(function (resolve, reject) {
+        Counter('post', '/batch', {
+          "requests": incrArr
+        }).then((res) => {
+          res = res.json();
+          if (res.error) {
+            throw res.error;
+          }
+          resolve(res);
+        }).catch((error) => {
+          console.error('Failed to save visitor count', error);
+          reject(error);
+        });
+      });
+    },
+
+    // 构建自增请求体
+    buildIncrement(objectId) {
+      return {
+        "method": "PUT",
+        "path": `/1.1/classes/Counter/${ objectId }`,
+        "body": {
+          "times": {
+            '__op': 'Increment',
+            'amount': 1
+          }
+        }
+      }
+    },
+
+    // 校验是否为有效的 UV
+    validUV() {
+      var key = 'LeanCloudUVTimestamp';
+      var flag = localStorage.getItem(key);
+      if (flag) {
+        // 距离标记小于 24 小时则不计为 UV
+        if (new Date().getTime() - parseInt(flag) <= 86400000) {
+          return false;
+        }
+      }
+      localStorage.setItem(key, new Date().getTime().toString());
+      return true;
+    },
+
+    addCount(Counter) {
+      var enableIncr = '' === 'true' && window.location.hostname !== 'localhost';
+      enableIncr = true;
+      var getterArr = [];
+      var incrArr = [];
+      // 请求 PV 并自增
+      var pvCtn = document.querySelector('#lc-sv');
+      if (pvCtn || enableIncr) {
+        var pvGetter = this.getRecord(Counter, 'https://gschaos.club' + '/#lc-sv', 'Visits').then((record) => {
+          incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-sv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + 1;
+              if (pvCtn) {
+                pvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(pvGetter);
+      }
+
+      // 请求 UV 并自增
+      var uvCtn = document.querySelector('#lc-uv');
+      if (uvCtn || enableIncr) {
+        var uvGetter = this.getRecord(Counter, 'https://gschaos.club' + '/#lc-uv', 'Visitors').then((record) => {
+          var vuv = this.validUV();
+          vuv && incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-uv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + (vuv ? 1 : 0);
+              if (uvCtn) {
+                uvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(uvGetter);
+      }
+
+      // 请求文章的浏览数，如果是当前页面就自增
+      var allPV = document.querySelectorAll('#lc-pv');
+      if (allPV.length > 0 || enableIncr) {
+        for (i = 0; i < allPV.length; i++) {
+          let pv = allPV[i];
+          let title = pv.getAttribute('data-title');
+          var url = 'https://gschaos.club' + pv.getAttribute('data-path');
+          if (url) {
+            var viewGetter = this.getRecord(Counter, url, title).then((record) => {
+              // 是当前页面就自增
+              if (pv.getAttribute('data-path') == window.location.pathname) {
+                incrArr.push(this.buildIncrement(record.objectId));
+              }
+              if (pv) {
+                var ele = pv.querySelector('#lc-pv #number');
+                if (ele) {
+                  if (pv.getAttribute('data-path') == window.location.pathname) {
+                    ele.innerText = (record.times || 0) + 1;
+                  } else {
+                    ele.innerText = record.times || 0;
+                  }
+                  pv.style.display = 'inline';
+                }
+              }
+            });
+            getterArr.push(viewGetter);
+          }
+        }
+      }
+
+      // 如果启动计数自增，批量发起自增请求
+      if (enableIncr) {
+        Promise.all(getterArr).then(() => {
+          incrArr.length > 0 && this.increment(Counter, incrArr);
+        })
+      }
+
+    },
+
+
+    fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${ api_server }/1.1${ url }`, {
+          method,
+          headers: {
+            'X-LC-Id': this.app_id,
+            'X-LC-Key': this.app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      this.addCount(Counter);
+    },
+
+    refreshCounter() {
+      var api_server = this.app_id.slice(-9) !== '-MdYXbMMI' ? this.custom_api_server : `https://${ this.app_id.slice(0, 8).toLowerCase() }.api.lncldglobal.com`;
+      if (api_server) {
+        this.fetchData(api_server);
+      } else {
+        fetch('https://app-router.leancloud.cn/2/route?appId=' + this.app_id)
+          .then(resp => resp.json())
+          .then(({api_server}) => {
+            this.fetchData('https://' + api_server);
+          });
+      }
+    }
+
+  };
+
+  LCCounter.refreshCounter();
+
+  document.addEventListener('pjax:complete', function () {
+    LCCounter.refreshCounter();
+  });
+</script>
+
+
+
+<!-- more -->
+
+
+    
+      
+
+
+<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script>
+
+<!-- 样式位于：source/css/_third-party/pjaxanimate.styl -->
+
+<div class="pjax-animate">
+  
+    <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+    <div id="loading-bar-wrapper"><script>NProgress.configure({parent:"#loading-bar-wrapper",trickleSpeed: 100})</script></div>
+    <script>
+      window.ShowLoading = function() {
+        NProgress.start();
+      };
+      window.HideLoading = function() {
+        NProgress.done();
+      }
+    </script>
+  
+</div>
+
+<script>
+    var pjax;
+    document.addEventListener('DOMContentLoaded', function () {
+      pjax = new Pjax({
+        elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([pjax-fancybox])',
+        selectors: [
+          "title",
+          "#pjax-container",
+          "#pjax-header-nav-list"
+        ],
+        cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
+        timeout: 5000
+      });
+    });
+
+    document.addEventListener('pjax:send', function (e) {
+      window.stop(); // 相当于点击了浏览器的停止按钮
+
+      try {
+        var currentUrl = window.location.pathname;
+        var targetUrl = e.triggerElement.href;
+        var banUrl = [""];
+        if (banUrl[0] != "") {
+          banUrl.forEach(item => {
+            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
+              window.location.href = targetUrl;
+            }
+          });
+        }
+      } catch (error) {}
+
+      window.subData = null; // 移除标题（用于一二级导航栏切换处）
+      $.fancybox.close();    // 关闭弹窗
+      $('.l_header .switcher .s-search').removeClass('active'); // 关闭移动端激活的搜索框
+      $('.l_header').removeClass('z_search-open'); // 关闭移动端激活的搜索框
+      $('.wrapper').removeClass('sub'); // 跳转页面时关闭二级导航
+
+      // 解绑事件 避免重复监听
+      $('.s-top').unbind('click');
+      $('.menu a').unbind('click');
+      $(window).unbind('resize');
+      $(window).unbind('scroll');
+      $(document).unbind('scroll');
+      $(document).unbind('click');
+      $('body').unbind('click');
+      window.ShowLoading();
+    });
+
+    document.addEventListener('pjax:complete', function () {
+      // 关于百度统计对 SPA 页面的处理：
+      // 方案一：百度统计>管理>单页应用设置中，打开开启按钮即可对SPA进行统计。 https://tongji.baidu.com/web/help/article?id=324
+      // 方案二：取消注释下列代码。 https://tongji.baidu.com/web/help/article?id=235
+      // 
+
+      // 关于谷歌统计对 SPA 页面的处理：
+      // 当应用以动态方式加载内容并更新地址栏中的网址时，也应该更新通过 gtag.js 存储的网页网址。
+      // https://developers.google.cn/analytics/devguides/collection/gtagjs/single-page-applications?hl=zh-cn
+      
+
+      $('.nav-main').find('.list-v').not('.menu-phone').removeAttr("style",""); // 移除小尾巴的移除
+      $('.menu-phone.list-v').removeAttr("style",""); // 移除小尾巴的移除
+      $('script[data-pjax], .pjax-reload script').each(function () {
+        $(this).parent().append($(this).remove());
+      });
+      try{
+        pjax_fancybox();
+        
+        
+        
+        
+          pjax_initCopyCode();
+        
+        
+          pjax_valine();
+        
+        
+        
+        
+        
+          pjax_darkmodejs();
+        
+      } catch (e) {
+        console.log(e);
+      }
+      window.HideLoading();
+    });
+
+    document.addEventListener('pjax:error', function (e) {
+      window.HideLoading();
+      window.location.href = e.triggerElement.href;
+    });
+</script>
+
+    
+  </div>
+</body>
+</html>
