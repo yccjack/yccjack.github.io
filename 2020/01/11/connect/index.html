@@ -1,468 +1,131 @@
-<!DOCTYPE html>
-<html>
-<head hexo-theme='https://github.com/volantis-x/hexo-theme-volantis/tree/4.0.0-rc.2'>
-  <meta charset="utf-8">
-  <!-- SEO相关 -->
-  
-    
-  
-  <!-- 渲染优化 -->
-  <meta name="renderer" content="webkit">
-  <meta name="force-rendering" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-  <meta name="HandheldFriendly" content="True" >
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>浏览器 | MysticalYcc</title><meta name="description" content="www.gschaos.club在浏览器里输出，发生了什么"><meta name="keywords" content="计算机网络"><meta name="author" content="俞超超"><meta name="copyright" content="俞超超"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://gschaos.club/2020/01/11/connect/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta property="og:type" content="article"><meta property="og:title" content="浏览器"><meta property="og:url" content="https://gschaos.club/2020/01/11/connect/"><meta property="og:site_name" content="MysticalYcc"><meta property="og:description" content="www.gschaos.club在浏览器里输出，发生了什么"><meta property="og:image" content="https://gschaos.club/null"><meta property="article:published_time" content="2020-01-10T16:00:00.000Z"><meta property="article:modified_time" content="2020-09-03T07:31:12.000Z"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  hexoversion: '5.0.0',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime: '',
+  date_suffix: {"one_hour":"刚刚","hours":"小时前","day":"天前"},
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: false,
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
 
-  <!-- 页面元数据 -->
-  
-  <title>浏览器 - MysticalYcc</title>
-  
-    <meta name="keywords" content="计算机网络">
-  
-
-  
-    <meta name="description" content="www.gschaos.club在浏览器里输出，发生了什么">
-  
-
-  <!-- feed -->
-  
-
-  <!-- import meta -->
-  
-
-  <!-- link -->
-  
-    
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14/css/all.min.css">
-
-  
-  
-  
-    
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
-
-  
-
-  
-
-  
-    <link rel="shortcut icon" type='image/x-icon' href="https://gschaos.club/ico/favicon.ico">
-  
-
-  
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
-  
-
-  
-
-  <!-- import link -->
-  
-
-  
-  
-    
-<link rel="stylesheet" href="/css/style.css">
-
-  
-  
-  
-</head>
-
-<body>
-  <header class="l_header auto shadow blur" style='opacity: 0' >
-  <div class='container'>
-  <div class='wrapper'>
-    <div class='nav-sub'>
-      <p class="title"></p>
-      <ul class='switcher nav-list-h m-phone' id="pjax-header-nav-list">
-        <li><a class="s-comment fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
-        
-          <li><a class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
-        
-      </ul>
-    </div>
-		<div class="nav-main">
-      
-        
-        <a class="title flat-box" target="_self" href='/'>
-          
-            <img no-lazy class='logo' src='https://gschaos.club/ico/me.jpg'/>
-          
-          
-          
-        </a>
-      
-
-			<div class='menu navigation'>
-				<ul class='nav-list-h m-pc'>
-          
-          
-          
-            
-            
-              <li>
-                <a class="menuitem flat-box faa-parent animated-hover" href=/
-                  
-                  
-                  
-                    id="home"
-                  >
-                  <i class='fas fa-rss fa-fw'></i>博客
-                </a>
-                
-              </li>
-            
-          
-          
-            
-            
-              <li>
-                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
-                  
-                  
-                  
-                    id="categories"
-                  >
-                  <i class='fas fa-folder-open fa-fw'></i>分类
-                </a>
-                
-              </li>
-            
-          
-          
-            
-            
-              <li>
-                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
-                  
-                  
-                  
-                    id="tags"
-                  >
-                  <i class='fas fa-tags fa-fw'></i>标签
-                </a>
-                
-              </li>
-            
-          
-          
-            
-            
-              <li>
-                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
-                  
-                  
-                  
-                    id="archives"
-                  >
-                  <i class='fas fa-archive fa-fw'></i>归档
-                </a>
-                
-              </li>
-            
-          
-          
-            
-            
-              <li>
-                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
-                  
-                  
-                  
-                    id="friends"
-                  >
-                  <i class='fas fa-link fa-fw'></i>友链
-                </a>
-                
-              </li>
-            
-          
-          
-            
-            
-              <li>
-                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
-                  
-                  
-                  
-                    id="about"
-                  >
-                  <i class='fas fa-info-circle fa-fw'></i>关于
-                </a>
-                
-              </li>
-            
-          
-          
-				</ul>
-			</div>
-
-      <div class="m_search">
-        <form name="searchform" class="form u-search-form">
-          <i class="icon fas fa-search fa-fw"></i>
-          <input type="text" class="input u-search-input" placeholder="Search..." />
-        </form>
-      </div>
-
-			<ul class='switcher nav-list-h m-phone'>
-				
-					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
-				
-				<li>
-          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
-          <ul class="menu-phone list-v navigation white-box">
-            
-              
-            
-              <li>
-                <a class="menuitem flat-box faa-parent animated-hover" href=/
-                  
-                  
-                  
-                    id="home"
-                  >
-                  <i class='fas fa-rss fa-fw'></i>博客
-                </a>
-                
-              </li>
-            
-          
-            
-              
-            
-              <li>
-                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
-                  
-                  
-                  
-                    id="categories"
-                  >
-                  <i class='fas fa-folder-open fa-fw'></i>分类
-                </a>
-                
-              </li>
-            
-          
-            
-              
-            
-              <li>
-                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
-                  
-                  
-                  
-                    id="tags"
-                  >
-                  <i class='fas fa-tags fa-fw'></i>标签
-                </a>
-                
-              </li>
-            
-          
-            
-              
-            
-              <li>
-                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
-                  
-                  
-                  
-                    id="archives"
-                  >
-                  <i class='fas fa-archive fa-fw'></i>归档
-                </a>
-                
-              </li>
-            
-          
-            
-              
-            
-              <li>
-                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
-                  
-                  
-                  
-                    id="friends"
-                  >
-                  <i class='fas fa-link fa-fw'></i>友链
-                </a>
-                
-              </li>
-            
-          
-            
-              
-            
-              <li>
-                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
-                  
-                  
-                  
-                    id="about"
-                  >
-                  <i class='fas fa-info-circle fa-fw'></i>关于
-                </a>
-                
-              </li>
-            
-          
-            
-          </ul>
-        </li>
-			</ul>
-		</div>
-	</div>
-  </div>
-</header>
-
-  <div class="l_body">
-    <div class="l_cover">
-
-  
-  
-      <div class='cover-wrapper post focus' style="display: none;">
-        
-          <div class='cover-bg lazyload placeholder' data-bg="https://s1.ax1x.com/2018/10/01/i1rcWj.jpg"></div>
-        
-        <div class='cover-body'>
-  <div class='top'>
-    
-      <img no-lazy class='logo' src='https://gschaos.club/ico/me.jpg'/>
-    
-    
-      <p class="title">MysticalYcc</p>
-    
-    
-      <p class="subtitle">浮华三千里，逍遥独一人。</p>
-    
-  </div>
-  <div class='bottom'>
-    <div class='menu navigation'>
-      <div class='list-h'>
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-        <div class="scroll-down" style="display: none;"><i class="fa fa-chevron-down scroll-down-effects"></i></div>
-      </div>
-  
-
-</div>
-
-    <div class='safearea'>
-      <div class='body-wrapper' id="pjax-container">
-        
-          <!--此文件用来存放一些不方便取值的变量-->
-<!--思路大概是将值藏到重加载的区域内-->
-
-
-
-<div id="pjax-data" style="display: none">
-  <div id="pjax-ispage">true</div>
-  <div id="pjax-pageTitle">浏览器</div>
-  <div id="pjax-enable-cover">true</div>
-  <div id="pjax-comment-path"></div>
-  <div id="pjax-comment-placeholder"></div>
-</div>
-
-
-<script>
-  // 处理封面 此时 jquery 还没加载
-  if ("none" == "none") { // 移除封面
-    document.getElementsByClassName('cover-wrapper')[0].style.display = "none";
-    document.getElementsByClassName('l_header', 'cover-wrapper')[0].classList.add("show");
-  } else {
-    if ("none" == "half") { // 半屏
-      document.getElementsByClassName('cover-wrapper')[0].setAttribute('id', 'half');
-      document.getElementsByClassName('scroll-down')[0].style.display = "none";
-    } else if ("none" == "full") { // 全屏
-      document.getElementsByClassName('cover-wrapper')[0].setAttribute('id', 'full');
-      document.getElementsByClassName('scroll-down')[0].style.display = "";
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
     }
-    document.getElementsByClassName('cover-wrapper')[0].style.display = "";
-    document.getElementsByClassName('l_header', 'cover-wrapper')[0].classList.remove("show");
+    localStorage.setItem(key, JSON.stringify(item))
+    },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
   }
-</script>
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true,
+  postUpdate: '2020-09-03 15:31:12'
+}</script><noscript><style type="text/css">
+#nav {
+  opacity: 1
+}
+.justified-gallery img {
+  opacity: 1
+}
+</style></noscript><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+  }
+}
 
+var autoChangeMode = 'false'
+var t = saveToLocal.get('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
 
-        
-        
-
-<div class='l_main'>
-  <article class="article post white-box reveal md floatable article-type-post" id="post" itemscope itemprop="blogPost">
-  
-
-
-  
-  <div class="article-meta" id="top">
-    
-    
-    
-      <h1 class="title">
-        浏览器
-      </h1>
-      <div class='new-meta-box'>
-        
-          
-            
-<div class='new-meta-item author'>
-  <a class='author' href="https://gschaos.club/ico/favicon.ico" rel="nofollow">
-    <img no-lazy src="">
-    <p>MysticalYcc</p>
-  </a>
-</div>
-
-          
-        
-          
-            
-  <div class='new-meta-item category'>
-    <a class='notlink'>
-      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
-      <a class="category-link" href="/categories/%E7%BD%91%E7%BB%9C%E6%98%AF%E6%80%8E%E4%B9%88%E8%BF%9E%E6%8E%A5%E7%9A%84/">网络是怎么连接的</a>
-    </a>
-  </div>
-
-
-          
-        
-          
-        
-          
-            
-  <div class="new-meta-item browse leancloud">
-    <a class='notlink'>
-      
-      <div id="lc-pv" data-title="浏览器" data-path="/2020/01/11/connect/">
-        <i class="fas fa-eye fa-fw" aria-hidden="true"></i>
-        <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
-        次浏览
-      </div>
-    </a>
-  </div>
-
-
-          
-        
-      </div>
-    
-  </div>
-
-
-  
-  
-  <h2 id="浏览器"><a href="#浏览器" class="headerlink" title="浏览器"></a><font color=#2cede4>浏览器</font></h2><p>   从输入一个地址开始，它可以是这样的 <font color=#2cede4> <a target="_blank" rel="noopener" href="http://www.baidu.com/">www.baidu.com</a></font>, 也可以是这样的 <strong><a target="_blank" rel="noopener" href="https://admin:admin@www.gschaos.club:80/dir/file1.html">https://admin:admin@www.gschaos.club:80/dir/file1.html</a></strong>, 咋一看好像都能看懂,而且还知道这么输入会得到什么,更言之还能断点调试一下;</p>
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (saveToLocal.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><meta name="generator" content="Hexo 5.0.0"></head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/null" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">37</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">20</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">12</div></a></div></div></div><hr/></div></div><div id="body-wrap"><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8"><span class="toc-number">1.</span> <span class="toc-text">浏览器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#URL"><span class="toc-number">1.1.</span> <span class="toc-text">URL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E8%A7%A3%E6%9E%90URL"><span class="toc-number">1.2.</span> <span class="toc-text">浏览器解析URL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.3.</span> <span class="toc-text">HTTP协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IP%E5%9C%B0%E5%9D%80"><span class="toc-number">1.4.</span> <span class="toc-text">IP地址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS"><span class="toc-number">1.5.</span> <span class="toc-text">DNS</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-TCP-IP%E5%8F%82%E8%80%83%E6%A8%A1%E5%9E%8B%E5%8F%8A%E5%8D%8F%E8%AE%AE"><span class="toc-number">2.</span> <span class="toc-text">2 TCP&#x2F;IP参考模型及协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%A8%A1%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">1) 模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%8D%8F%E8%AE%AE"><span class="toc-number">4.</span> <span class="toc-text">2) 协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%89%A9%E7%90%86%E5%B1%82"><span class="toc-number">5.</span> <span class="toc-text">3 物理层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82"><span class="toc-number">6.</span> <span class="toc-text">4 数据链路层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E7%BD%91%E7%BB%9C%E5%B1%82"><span class="toc-number">7.</span> <span class="toc-text">5 网络层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IP%E5%A4%B4"><span class="toc-number">8.</span> <span class="toc-text">IP头</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E4%BC%A0%E8%BE%93%E5%B1%82"><span class="toc-number">9.</span> <span class="toc-text">6 传输层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-TCP%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="toc-number">10.</span> <span class="toc-text">1) TCP的功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-TCP%E5%A4%B4%E7%9A%84%E4%BB%8B%E7%BB%8D"><span class="toc-number">11.</span> <span class="toc-text">2) TCP头的介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E4%BC%A0%E8%AF%B4%E4%B8%AD%E7%9A%84%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%EF%BC%88%E6%8A%93%E5%8C%85%E6%BC%94%E7%A4%BA%EF%BC%89"><span class="toc-number">12.</span> <span class="toc-text">3) 传说中的三次握手和四次挥手（抓包演示）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E5%BA%94%E7%94%A8%E5%B1%82"><span class="toc-number">13.</span> <span class="toc-text">7 应用层</span></a></li></ol></div></div></div><header class="post-bg" id="page-header"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">MysticalYcc</a></span><span id="menus"><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">浏览器</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-01-10T16:00:00.000Z" title="发表于 2020-01-11 00:00:00">2020-01-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2020-09-03T07:31:12.000Z" title="更新于 2020-09-03 15:31:12">2020-09-03</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BD%91%E7%BB%9C%E6%98%AF%E6%80%8E%E4%B9%88%E8%BF%9E%E6%8E%A5%E7%9A%84/">网络是怎么连接的</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><h2 id="浏览器"><a href="#浏览器" class="headerlink" title="浏览器"></a><font color=#2cede4>浏览器</font></h2><p>   从输入一个地址开始，它可以是这样的 <font color=#2cede4> <a target="_blank" rel="noopener" href="http://www.baidu.com/">www.baidu.com</a></font>, 也可以是这样的 <strong><a target="_blank" rel="noopener" href="https://admin:admin@www.gschaos.club:80/dir/file1.html">https://admin:admin@www.gschaos.club:80/dir/file1.html</a></strong>, 咋一看好像都能看懂,而且还知道这么输入会得到什么,更言之还能断点调试一下;</p>
 <h3 id="URL"><a href="#URL" class="headerlink" title="URL"></a><font color=#2cede4>URL</font></h3><p>我们先来看下URL,URL有很多种,不止我们常用到的http://,还有很多比如<font color=#2cede4>“file:” (读取本地文件) , “ftp:”(文件传输协议) , “mailto:”(邮件服务,需要配置正确的电子邮箱)</font>等.</p>
-<p><img src="/images/storage/url.png" class="lazyload" data-srcset="/images/storage/url.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="url的各种格式"></p>
+<p><img src="/images/storage/url.png" alt="url的各种格式"></p>
 <p>它们拥有同样的格式,即都需要定义一个访问方法(协议http,ftp等).</p>
 <p><font color= \#E6E6FA >那么知道这些后浏览器做了什么呢?</font></p>
 <h3 id="浏览器解析URL"><a href="#浏览器解析URL" class="headerlink" title="浏览器解析URL"></a><font color=#2cede4>浏览器解析URL</font></h3><p>浏览器首先对URL进行解析,从而生成发送给服务器的请求信息.依据不同的协议访问不同的服务器,这里阐述访问Web服务器的情况.</p>
 <p>解析方式如下:</p>
-<p><img src="/images/storage/urlany.png" class="lazyload" data-srcset="/images/storage/urlany.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="URL解析"></p>
+<p><img src="/images/storage/urlany.png" alt="URL解析"></p>
 <p>有时候进入主页的时候文件名经常不写比如<strong><a target="_blank" rel="noopener" href="http://www.lab.com/dir/">http://www.lab.com/dir/</a></strong>,那么解析的时候就会去寻找目录下面的default.html或者index.html具体访问什么要看服务器如何配置.当不写最后一个**/**时,是会先寻找文件夹,再寻找文件名的规则来进行的.</p>
 <p>明白了URL，我们来对URL中HTTP进行简单的说明。</p>
 <h3 id="HTTP协议"><a href="#HTTP协议" class="headerlink" title="HTTP协议"></a><font color=#2cede4>HTTP协议</font></h3><p>HTTP协议定义了客户端和服务器之间交互的消息内容和步骤,请求中包含了<strong>对什么</strong>和<strong>做什么</strong>两个部分;</p>
@@ -470,7 +133,7 @@
 <p><strong>对什么</strong>: 这部分就是URI(统一资源标识符),一般来说,URI的内容是一个存放网页数据的文件名或者是一个CGI程序的文件名.例如/dir/file1.html;不过,URI不仅限于此,也可以直接用”http:”开头的URL来作为URI.换句话就是,这里可以写各种访问目标,而这些访问目标统称为URI.</p>
 <p><strong>做什么</strong>:  也称为方法.表示需要Web服务器做什么,典型的例子包括读取URI表示的数据/将客户端输入的数据发送给URI表示的程序等.</p>
 </blockquote>
-<p><img src="/images/storage/dowhat.png" class="lazyload" data-srcset="/images/storage/dowhat.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="doWhat"></p>
+<p><img src="/images/storage/dowhat.png" alt="doWhat"></p>
 <p>看到这张图是不是就对之前所解释的<strong>做什么</strong>有所了解了呢!</p>
 <p>收到消息之后,Web服务器会对其中的内容进行解析,通过URI和方法来判断<font color=#2cede4>“对什么”,”做什么”</font>,并根据这些要求完成工作将结果放入响应消息中.</p>
 <p>至此我们了解了HTTP的全貌,之后会一步步往下深入网络到底是怎么连接的..</p>
@@ -479,22 +142,22 @@
 <p>在这之前，来了解一下IP地址是啥子。</p>
 <h3 id="IP地址"><a href="#IP地址" class="headerlink" title="IP地址"></a>IP地址</h3><p>住在有门牌号的房子的大伙都知道(如果没有，请默哀两分钟！)，寄发信件的时候需要填写自己和对方的具体地址，而这个地址就是小区的某个房间的门牌号，完整的地址包括了国家，省份市直辖区，县/区，乡镇小区等等。国家与国家之间形成了不同的区域，说中国在哪，一定会有答案，再往下，省市区小区直到门牌号，它就像一个唯一的号牌将这个地址标记出来。</p>
 <p>IP地址同样是这样的道理。</p>
-<p><img src="/images/storage/intnet.png" class="lazyload" data-srcset="/images/storage/intnet.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="intnet"></p>
+<p><img src="/images/storage/intnet.png" alt="intnet"></p>
 <p>互联网和公司内部的局域网都是基于TCP/IP的思路来设计的，如上图，就是由一些小的子网(小区甚至楼层之间)，通过路由器连接起来。这里的子网可以理解成为用集线器连接起来的几台计算机，将它看作一个单位，称为子网。将子网连接起来，就形成了一个网络。</p>
 <p>你要说怎么理解，那看下面这张图吧(自己画的可能不准确！)。</p>
-<p><img src="/images/storage/naphthalene.png" class="lazyload" data-srcset="/images/storage/naphthalene.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="naphthalene"></p>
+<p><img src="/images/storage/naphthalene.png" alt="naphthalene"></p>
 <p>在网络中所有的设备都会被分配一个地址。就好像是<strong>XX号XX室</strong>。其中<strong>号</strong>对应的号码是分配给整个子网的，而<strong>室</strong>对应的号码是分配给子网中的计算机的，这就是网络中的地址。<strong>号</strong>对应的号码称为网络号，<strong>室</strong>对应的号码称为主机号，这个地址的整体称为IP地址。发送者发送的消息首先经过子网中的集线器，转发到距离最近的路由器上。接下来，路由器会根据消息的目的地判断下一个路由去的位置，然后将消息发送到下一个路由器，即消息再次经过子网内的集线器被转发到下一个路由器。前面的过程不断重复，最终消息就被传到了目的地。这个过程就好像你准备好信件由邮局寄出，邮局寄出后会送往下一站，再由下一站判断你的目的地，再往下送一样；</p>
 <p>那么这个地址到底是怎么组成的呢？</p>
-<p><img src="/images/storage/ip.png" class="lazyload" data-srcset="/images/storage/ip.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="IP"></p>
+<p><img src="/images/storage/ip.png" alt="IP"></p>
 <p>如上图，实际的IP地址是一串32比特的数字，按照1个字节为一组分成4组，分别用十进制表示然后再用圆点隔开。在IP地址的规则中，网络号和主机号连接起来总共是32比特，但这两部分的具体结构是不固定的。在组建网络时，用户可以自行决定他们之间的分配关系，因此，这里还需要另外的附加信息来表示IP地址的内部结构。</p>
 <p>这个附加信息就是子网掩码。子网掩码的格式如下图，是一串与IP地址长度相同的32比特数字，左边一半全是1，代表网络号，右边一半全是0，代表主机号。</p>
-<p><img src="/images/storage/ipyanma.png" class="lazyload" data-srcset="/images/storage/ipyanma.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="ipyanma"></p>
+<p><img src="/images/storage/ipyanma.png" alt="ipyanma"></p>
 <h3 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h3><p>那么要怎么得到域名对应的IP地址呢？?</p>
 <p>按照开发的思路，要得到域名对应的IP地址，那肯定需要一个key-value的内存表来记录域名key对应的IP地址value，这样取出来即可，可是….这个表在哪里？</p>
 <p>这就要涉及到DNS域名服务器，浏览器委托操作系统先去DNS域名服务器查询域名对应的IP地址，服务器返回需要IP，然后我们就可以用这个IP发送消息了。</p>
-<p><img src="/images/storage/mengbi2.jpg" class="lazyload" data-srcset="/images/storage/mengbi2.jpg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="mengbi2"></p>
+<p><img src="/images/storage/mengbi2.jpg" alt="mengbi2"></p>
 <p>等等！我怎么访问DNS域名服务器的？我..我怎么知道它的IP的？？</p>
-<p><img src="/images/storage/mangqu.jpeg" class="lazyload" data-srcset="/images/storage/mangqu.jpeg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="mangqu"></p>
+<p><img src="/images/storage/mangqu.jpeg" alt="mangqu"></p>
 <p>参考<a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2016/06/dns.html">DNS 原理入门</a>以及如果你听英文可以听得懂的话 <a target="_blank" rel="noopener" href="https://aws.amazon.com/tw/route53/what-is-dns/">AWS的‘什麼是 DNS’？</a>；</p>
 <p> 首先，本机一定要知道DNS服务器的IP地址，否则上不了网。通过DNS服务器，才能知道某个域名的IP地址到底是什么。  </p>
 <p>DNS服务器的IP地址，有可能是动态的，每次上网时由网关分配，这叫做DHCP机制；也有可能是事先指定的固定地址。Linux系统里面，DNS服务器的IP地址保存在<code>/etc/resolv.conf</code>文件。 </p>
@@ -514,21 +177,21 @@
 <p> “根域名服务器”的NS记录和IP地址一般是不会变化的，所以内置在DNS服务器里面。 </p>
 <p>我们只要知道连接网络需要ip地址，而域名如何解析成ip地址需要DNS域名服务器，而这个DNS域名服务器在设置网络连接的时候已经配置好，即已存在这个IP地址即可。</p>
 <p>知道了对方的IP地址，要怎么才算连接呢？以编程者的思想连接如下图所示。</p>
-<p><img src="/images/storage/allConnect.png" class="lazyload" data-srcset="/images/storage/allConnect.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="allConnect"></p>
+<p><img src="/images/storage/allConnect.png" alt="allConnect"></p>
 <p>我们这里不需要知道编程怎么实现，因为不管是哪种编程它们都是在委托操作系统在发送信息，所以基本流程如下图。</p>
-<p><img src="/images/storage/simpleConnect.png" class="lazyload" data-srcset="/images/storage/simpleConnect.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="simpleConnect"></p>
+<p><img src="/images/storage/simpleConnect.png" alt="simpleConnect"></p>
 <p>这里解释下这张图！</p>
 <p>上文中我们知道连接互联网的重任不是应用自己连接，而是委托给操作系统来执行连接，浏览器或者应用程序调用Socket发起一个连接就是一次创建Socket(FD)套接字的过程。</p>
 <p>首先，分配一个内存空间用以存储套接字信息，然后，将表示这个套接字的描述符告知应用程序。</p>
 <p>那何为套接字描述符呢?在这之前想考一个问题，在计算机中同一时间进行通信操作的应用程序不止一个，这时，我们就需要一种方法来识别出某个特定的套接字，这种方法就是描述符。我们可以理解描述符是给某个套接字分配的唯一编号。当我们使用某个套接字来执行收发数据的操作时，就可以出示所拥有的描述符，协议栈就能够判断出我们希望用哪一个套接字来连接或者发送数据了。在win中使用<font color= #CD5C5C>netstat</font>命令查看系统套接字内容，如下图(这张图是盗来的)：</p>
-<p><img src="/images/storage/netstat.png" class="lazyload" data-srcset="/images/storage/netstat.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="netstat"></p>
+<p><img src="/images/storage/netstat.png" alt="netstat"></p>
 <p>图中每一行相当于一个套接字，当创建套接字时，就会增加一行控制信息，赋予“即将开始通信”的状态，并进行通信的准备工作，如分配用于临时存放手法数据的缓冲区空间。</p>
 <p>接着Socket调用<font color= #CD6839 >connect</font>连接服务器，这个时候协议栈并不知道要和谁通信，在服务器端甚至应用程序要和谁连接都不晓得，这样下去都不知道咋整。所以，发起连接的一方需要告知被连接方一些必要的信息，比如“halo，我需要和你通奸…..哦不! 需要和你通信，这是我的房间号(ip+端口)，记得回信息哦，我在等着你呢！”。这样双方才知道互连的通信是谁，才能顺利的进行收发数据。</p>
 <p>其实就是男女双方需要交换一些个性信息才好继续沟通下去。</p>
 <p>那么，它们如何沟通呢？</p>
 <p>需要的前提大部分已经凑齐，开始通信之前我们需要了解一下TPC/IP模型。</p>
 <p> 网络模型不是一开始就有的，在网络刚发展时，网络协议是由各互联网公司自己定义的，各家的协议也是不能互通的。这样大大的阻碍了互联网的发展，为了解决这个问题，国际标准化组织 1984 提出的模型标准，简称 OSI（Open Systems Interconnection Model）。具体如下图：</p>
-<p><img src="/images/storage/v2-ad2bee0fd2abff4bf5807ca93d93cbd6_hd.jpg" class="lazyload" data-srcset="/images/storage/v2-ad2bee0fd2abff4bf5807ca93d93cbd6_hd.jpg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="img"></p>
+<p><img src="/images/storage/v2-ad2bee0fd2abff4bf5807ca93d93cbd6_hd.jpg" alt="img"></p>
 <p>OSI七层模型每一层都有自己的作用，从上到下的作用依次为：</p>
 <ul>
 <li>应用层(Application) :提供网络与用户应用软件之间的接口服务</li>
@@ -541,7 +204,7 @@
 </ul>
 <p>七层中应用层、表示层和会话层由软件控制，传输层、网络层和数据链路层由操作系统控制，物理层有物理设备控制。</p>
 <h2 id="2-TCP-IP参考模型及协议"><a href="#2-TCP-IP参考模型及协议" class="headerlink" title="2 TCP/IP参考模型及协议"></a>2 TCP/IP参考模型及协议</h2><h2 id="1-模型"><a href="#1-模型" class="headerlink" title="1) 模型"></a>1) 模型</h2><p>TCP/IP 模型是由 OSI 模型演化而来，TCP/IP 模型将 OSI 模型由七层简化为五层（一开始为四层），应用层、表示层、会话层统一为应用层。</p>
-<p><img src="/images/storage/v2-72754ddc9c8133906ade003ad4a346d5_hd.jpg" class="lazyload" data-srcset="/images/storage/v2-72754ddc9c8133906ade003ad4a346d5_hd.jpg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="img"></p>
+<p><img src="/images/storage/v2-72754ddc9c8133906ade003ad4a346d5_hd.jpg" alt="img"></p>
 <h2 id="2-协议"><a href="#2-协议" class="headerlink" title="2) 协议"></a>2) 协议</h2><p>TCP/IP协议被称为传输控制协议/互联网协议，又称网络通讯协议(Transmission Control Protocol)。是由网络层的IP协议和传输层的TCP协议组成，是一个很大的协议集合。</p>
 <ul>
 <li>物理层和数据链路层没有定义任何特定协议，支持所有的标准和专用的协议。</li>
@@ -570,9 +233,9 @@
 <p>在能够选择的多条道路之间选择一条最短的路径就是路由的工作。</p>
 <p>路由和选址都离不开IP，我们就详细介绍一下IP头部。</p>
 <h2 id="IP头"><a href="#IP头" class="headerlink" title="IP头"></a>IP头</h2><p>IP头部是由20个字节组成的，具体项所占的位数如下图：</p>
-<p><img src="/images/storage/v2-7060962aca6abdc95435330415f968fa_hd.jpg" class="lazyload" data-srcset="/images/storage/v2-7060962aca6abdc95435330415f968fa_hd.jpg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="img"></p>
+<p><img src="/images/storage/v2-7060962aca6abdc95435330415f968fa_hd.jpg" alt="img"></p>
 <p>具体的数据我们用Wireshark来表抓取一下，如图（蓝色部分为IP数据包）：</p>
-<p><img src="/images/storage/v2-489d57b43d9b4c6d2535eeeb60cc7f3f_hd.jpg" class="lazyload" data-srcset="/images/storage/v2-489d57b43d9b4c6d2535eeeb60cc7f3f_hd.jpg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="img"></p>
+<p><img src="/images/storage/v2-489d57b43d9b4c6d2535eeeb60cc7f3f_hd.jpg" alt="img"></p>
 <blockquote>
 <p>version - 版本</p>
 <p>Header Length - 首部长部</p>
@@ -591,7 +254,7 @@
 <p>传输层的协议主要有TCP 和 UDP，TCP(Transimision Control Protocal)是一种可靠的、面向连接的协议，传输效率低。UDP(User Datagram Protocal)是一种不可靠的、无连接的服务，传输效率高。<br>下面重点介绍一下TCP的三次握手和四次挥手。</p>
 <h2 id="1-TCP的功能"><a href="#1-TCP的功能" class="headerlink" title="1) TCP的功能"></a>1) TCP的功能</h2><p>TCP主要是将数据进行分段打包传输，对每个数据包编号控制顺序，运输中丢失、重发和丢弃处理。</p>
 <h2 id="2-TCP头的介绍"><a href="#2-TCP头的介绍" class="headerlink" title="2) TCP头的介绍"></a>2) TCP头的介绍</h2><p>有点和IP头类似，我们先来张图看下：</p>
-<p><img src="/images/storage/v2-8caac8f1477e7e0848743f8a9c1d91ba_hd.jpg" class="lazyload" data-srcset="/images/storage/v2-8caac8f1477e7e0848743f8a9c1d91ba_hd.jpg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="img"></p>
+<p><img src="/images/storage/v2-8caac8f1477e7e0848743f8a9c1d91ba_hd.jpg" alt="img"></p>
 <blockquote>
 <p>Source Port &amp; Destination Port - 源端口号和目标端口号;计算机通过端口号识别访问哪个服务,比如http服务或ftp服务;发送方端口号是进行随机端口;目标端口号决定了接收方哪个程序来接收。</p>
 <p>Sequence number - 32位序列号，TCP用序列号对数据包进行标记，以便在到达目的地后重新重装。在建立连接时通常由计算机生成一个随机数作为序列号的初始值。</p>
@@ -610,14 +273,14 @@
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -d &quot;user&quot;:&quot;lucy&quot; 172.16.17.94:8080</span><br></pre></td></tr></table></figure>
 
 <p>用wireshark抓包演示一下。如下图：</p>
-<p><img src="/images/storage/v2-ae1b0c298e03963eab3fc23847a6ef20_hd.jpg" class="lazyload" data-srcset="/images/storage/v2-ae1b0c298e03963eab3fc23847a6ef20_hd.jpg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="img"></p>
+<p><img src="/images/storage/v2-ae1b0c298e03963eab3fc23847a6ef20_hd.jpg" alt="img"></p>
 <p>上图中A为三次握手，B为数据传输，C为四次挥手。下面我们详细介绍一下这三个部分。</p>
 <p>首先我们先图解一下wireshark抓到的数据，如下图：</p>
-<p><img src="/images/storage/v2-4d7cd156319c914e115b19ee15e70063_hd.jpg" class="lazyload" data-srcset="/images/storage/v2-4d7cd156319c914e115b19ee15e70063_hd.jpg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="img"></p>
+<p><img src="/images/storage/v2-4d7cd156319c914e115b19ee15e70063_hd.jpg" alt="img"></p>
 <p>我们把这个过程分为三部分，第一部分为三次握手建立连接，第二部分为数据传输，第三次为四次挥手断开连接。</p>
 <p>三次握手</p>
 <p>我们分析一下三次握手的过程（包括ack 和 seq的值变化）。</p>
-<p><img src="/images/storage/v2-b93fef4ca387c4aa50071dad72fc2085_hd.jpg" class="lazyload" data-srcset="/images/storage/v2-b93fef4ca387c4aa50071dad72fc2085_hd.jpg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="img"></p>
+<p><img src="/images/storage/v2-b93fef4ca387c4aa50071dad72fc2085_hd.jpg" alt="img"></p>
 <p>为了方便描述我们将主动发起请求的172.16.17.94:8080 主机称为客户端，将返回数据的主机172.16.17.94:8080称为服务器，以下也是。</p>
 <ul>
 <li>第一次握手: 建立连接。客户端发送连接请求，发送SYN报文，将seq设置为0。然后，客户端进入SYN_SEND状态，等待服务器的确认。</li>
@@ -627,7 +290,7 @@
 <blockquote>
 <p>数据传输</p>
 </blockquote>
-<p><img src="/images/storage/v2-325456c5c7054ee6b29795a684cbbffb_hd.jpg" class="lazyload" data-srcset="/images/storage/v2-325456c5c7054ee6b29795a684cbbffb_hd.jpg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="img"></p>
+<p><img src="/images/storage/v2-325456c5c7054ee6b29795a684cbbffb_hd.jpg" alt="img"></p>
 <ul>
 <li>客户端先向服务器发送数据，该数据报是lenth为159的数据。</li>
 <li>服务器收到报文后, 也向客户端发送了一个数据进行确认（ACK），并且返回客户端要请求的数据，数据的长度为111，将seq设置为1，ack设置为160（1 + 159）。</li>
@@ -637,7 +300,7 @@
 <p>四次挥手</p>
 </blockquote>
 <p>当客户端和服务器通过三次握手建立了TCP连接以后，当数据传送完毕，就要断开TCP连接了，就有了神秘的“四次挥手”。</p>
-<p><img src="/images/storage/v2-6704e393bd622132d3dac3773412ec26_hd.jpg" class="lazyload" data-srcset="/images/storage/v2-6704e393bd622132d3dac3773412ec26_hd.jpg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="img"></p>
+<p><img src="/images/storage/v2-6704e393bd622132d3dac3773412ec26_hd.jpg" alt="img"></p>
 <ul>
 <li>第一次挥手：客户端向服务器发送一个FIN报文段，将设置seq为160和ack为112，;此时，客户端进入 <strong>FIN_WAIT_1</strong>状态,这表示客户端没有数据要发送服务器了，请求关闭连接;</li>
 <li>第二次挥手：服务器收到了客户端发送的FIN报文段，向客户端回一个ACK报文段，ack设置为1，seq设置为112;服务器进入了<strong>CLOSE_WAIT</strong>状态，客户端收到服务器返回的ACK报文后，进入<strong>FIN_WAIT_2</strong>状态;</li>
@@ -647,7 +310,7 @@
 <p>注意：在握手和挥手时确认号应该是对方序列号加1,传输数据时则是对方序列号加上对方携带应用层数据的长度。</p>
 <h2 id="7-应用层"><a href="#7-应用层" class="headerlink" title="7 应用层"></a>7 应用层</h2><p>应用层常见协议有HTTP、HTTPS 、FTP 、SMTP等。</p>
 <p>TCP/IP模型我们基本介绍完了，那层与层之间是怎样合作和分工的呢，我们用两张图介绍一下：<br>发送方的数据是从上往下传输的，即从应用层向物理层传输。接收方的数据是从下往上传输的，即从物理层向应用层传输。如下两张图。</p>
-<p><img src="/images/storage/v2-fddf614d20e94c08a02861297fb95a99_hd.jpg" class="lazyload" data-srcset="/images/storage/v2-fddf614d20e94c08a02861297fb95a99_hd.jpg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="img"></p>
+<p><img src="/images/storage/v2-fddf614d20e94c08a02861297fb95a99_hd.jpg" alt="img"></p>
 <p>发送方是从高层到低层封装数据：</p>
 <ul>
 <li>在应用层要把各式各样的数据如字母、数字、汉字、图片等转换成二进制</li>
@@ -658,7 +321,7 @@
 <li>数据链路径层，上层数据成一个MAC头部，内部有最关键的是MAC地址。MAC地址就是固化在硬件设备内部的全球唯一的物理地址。</li>
 <li>在物理层，无论在之前哪一层封装的报文头和还是上层数据都是由二进制组成的，物理将这些二进制数字比特流转换成电信号在网络中传输</li>
 </ul>
-<p><img src="/images/storage/v2-1ede5aa9c734a98c0d9c259cd92308fe_hd.jpg" class="lazyload" data-srcset="/images/storage/v2-1ede5aa9c734a98c0d9c259cd92308fe_hd.jpg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="img"></p>
+<p><img src="/images/storage/v2-1ede5aa9c734a98c0d9c259cd92308fe_hd.jpg" alt="img"></p>
 <p>接收方是从低层到高层解封装</p>
 <ul>
 <li>数据封装完毕传输到接收方后，将数据要进行解封装</li>
@@ -668,1351 +331,5 @@
 <li>在传输层，把TCP头部拆掉，将真实的数据传送至应用层</li>
 </ul>
 <p><strong>我严重怀疑你在拖文章长度</strong></p>
-<p> <img src="/images/storage/ganga.jpeg" class="lazyload" data-srcset="/images/storage/ganga.jpeg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="尴尬表情包"> </p>
-
-  
-    
-    <div class='footer'>
-      
-      
-        
-      
-      
-        <div class='copyright'>
-          <blockquote>
-            
-              
-                <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
-
-              
-            
-              
-                <p>本文永久链接是：<a href=https://gschaos.club/2020/01/11/connect/>https://gschaos.club/2020/01/11/connect/</a></p>
-              
-            
-          </blockquote>
-        </div>
-      
-      
-        <div class='donate'>
-          <div class='imgs'>
-            
-              <img src='https://gschaos.club/ico/2.jpg'>
-            
-          </div>
-        </div>
-      
-    </div>
-  
-  
-    
-
-
-  <div class='article-meta' id="bottom">
-    <div class='new-meta-box'>
-      
-        
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-09-03T15:31:12+08:00">
-  <a class='notlink'>
-    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：2020年9月3日</p>
-  </a>
-</div>
-
-        
-      
-        
-          
-  
-  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>计算机网络</p></a></div>
-
-
-        
-      
-        
-          
-  <div class="new-meta-item share -mob-share-list">
-  <div class="-mob-share-list share-body">
-    
-      
-        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer noopener"
-          
-          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://gschaos.club/2020/01/11/connect/&title=浏览器 - MysticalYcc&summary="
-          
-          >
-          
-            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=">
-          
-        </a>
-      
-    
-      
-        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer noopener"
-          
-          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://gschaos.club/2020/01/11/connect/&title=浏览器 - MysticalYcc&summary="
-          
-          >
-          
-            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=">
-          
-        </a>
-      
-    
-      
-        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer noopener"
-          
-          target="_blank" href="http://service.weibo.com/share/share.php?url=https://gschaos.club/2020/01/11/connect/&title=浏览器 - MysticalYcc&summary="
-          
-          >
-          
-            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=">
-          
-        </a>
-      
-    
-      
-    
-      
-    
-  </div>
-</div>
-
-
-
-        
-      
-    </div>
-  </div>
-
-
-  
-  
-
-  
-    <div class="prev-next">
-      
-        <a class='prev' href='/2020/06/05/cros/'>
-          <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>跨域问题</p>
-          <p class='content'>跨域问题
-作者：cnsyear
-链接 ：https://cnsyear.com/posts/a74bc789.html
-
-前后端分离跨域问题的几种解决方案
-前后端分离跨域问题的几种解决方案
-
-一...</p>
-        </a>
-      
-      
-        <a class='next' href='/2020/01/01/SimpleTuning/'>
-          <p class='title'>SimpleTuning<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
-          <p class='content'>[TOC]
-SimpleTuningSimple JVM  Tuning simulation
-运行
-
-设置参数 有一点需要注意的是，如果-Xms和-Xmx没有被设定成相同的值，而且-Xmn被使...</p>
-        </a>
-      
-    </div>
-  
-</article>
-
-
-  
-
-  <article class="post white-box reveal floatable" id="comments">
-    <p ct><i class='fas fa-comments'></i> 评论</p>
-    
-    <div id="valine_container" class="valine_thread">
-  <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
-</div>
-
-  </article>
-
-
-
-
-
-
-</div>
-<aside class='l_side'>
-  
-  
-    
-    
-
-
-
-  <section class="widget toc-wrapper floatable desktop mobile" id="toc-div" >
-    
-  <header>
-    
-      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
-    
-  </header>
-
-
-    <div class='content'>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8"><span class="toc-text">浏览器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#URL"><span class="toc-text">URL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E8%A7%A3%E6%9E%90URL"><span class="toc-text">浏览器解析URL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP%E5%8D%8F%E8%AE%AE"><span class="toc-text">HTTP协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IP%E5%9C%B0%E5%9D%80"><span class="toc-text">IP地址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS"><span class="toc-text">DNS</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-TCP-IP%E5%8F%82%E8%80%83%E6%A8%A1%E5%9E%8B%E5%8F%8A%E5%8D%8F%E8%AE%AE"><span class="toc-text">2 TCP&#x2F;IP参考模型及协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%A8%A1%E5%9E%8B"><span class="toc-text">1) 模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%8D%8F%E8%AE%AE"><span class="toc-text">2) 协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%89%A9%E7%90%86%E5%B1%82"><span class="toc-text">3 物理层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82"><span class="toc-text">4 数据链路层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E7%BD%91%E7%BB%9C%E5%B1%82"><span class="toc-text">5 网络层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IP%E5%A4%B4"><span class="toc-text">IP头</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E4%BC%A0%E8%BE%93%E5%B1%82"><span class="toc-text">6 传输层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-TCP%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="toc-text">1) TCP的功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-TCP%E5%A4%B4%E7%9A%84%E4%BB%8B%E7%BB%8D"><span class="toc-text">2) TCP头的介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E4%BC%A0%E8%AF%B4%E4%B8%AD%E7%9A%84%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%92%8C%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%EF%BC%88%E6%8A%93%E5%8C%85%E6%BC%94%E7%A4%BA%EF%BC%89"><span class="toc-text">3) 传说中的三次握手和四次挥手（抓包演示）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E5%BA%94%E7%94%A8%E5%B1%82"><span class="toc-text">7 应用层</span></a></li></ol>
-    </div>
-  </section>
-
-
-  
-
-
-</aside>
-
-
-
-      </div>
-      
-  
-  <footer class="footer clearfix">
-    <br><br>
-    
-      
-        <div class="aplayer-container">
-          
-
-  
-    <meting-js
-      theme='#1BCDFC'
-      autoplay='true'
-      volume='0.7'
-      loop='all'
-      order='list'
-      fixed='false'
-      list-max-height='320px'
-      server='netease'
-      type='playlist'
-      id='374088504'
-      list-folded='true'>
-    </meting-js>
-  
-
-
-        </div>
-      
-    
-      
-        <br>
-        <div class="social-wrapper">
-          
-            
-              <a href="/atom.xml"
-                class="social  flat-btn"
-                target="_blank"
-                rel="external nofollow noopener noreferrer">
-                
-                  <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/020-rss.svg" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/020-rss.svg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII="/>
-                
-              </a>
-            
-          
-            
-          
-            
-              <a href="https://github.com/volantis-x/"
-                class="social  flat-btn"
-                target="_blank"
-                rel="external nofollow noopener noreferrer">
-                
-                  <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/029-github.svg" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/029-github.svg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII="/>
-                
-              </a>
-            
-          
-            
-              <a href="/"
-                class="social  flat-btn"
-                target="_blank"
-                rel="external nofollow noopener noreferrer">
-                
-                  <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/010-facebook.svg" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/010-facebook.svg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII="/>
-                
-              </a>
-            
-          
-            
-              <a href="/"
-                class="social  flat-btn"
-                target="_blank"
-                rel="external nofollow noopener noreferrer">
-                
-                  <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/018-twitter.svg" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/018-twitter.svg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII="/>
-                
-              </a>
-            
-          
-            
-              <a href="/"
-                class="social  flat-btn"
-                target="_blank"
-                rel="external nofollow noopener noreferrer">
-                
-                  <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/045-telegram.svg" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/045-telegram.svg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII="/>
-                
-              </a>
-            
-          
-            
-              <a href="/"
-                class="social  flat-btn"
-                target="_blank"
-                rel="external nofollow noopener noreferrer">
-                
-                  <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/006-youtube.svg" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org@1.1/icon/1322024-social-media/006-youtube.svg" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII="/>
-                
-              </a>
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-        </div>
-      
-    
-      
-        <div><p>博客内容遵循 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
-</div>
-      
-    
-      
-        
-          <div></div>
-        
-      
-    
-      
-        本站使用
-        <a href="https://github.com/volantis-x/hexo-theme-volantis/tree/4.0.0-rc.2" target="_blank" class="codename">Volantis</a>
-        作为主题，总访问量为
-          <span id="busuanzi_value_site_pv"><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
-          次
-        
-      
-    
-      
-        <div class='copyright'>
-        <p><a href="/">Copyright ©     皖ICP备19015872号-1</a></p>
-
-        </div>
-      
-    
-  </footer>
-
-
-      <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
-    </div>
-  </div>
-  <div>
-    <!-- required -->
-
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.5/dist/jquery.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
-<script>
-  function pjax_fancybox() {
-    $(".md").find("img").not('.inline').not('a img').each(function () { //渲染 fancybox
-      var element = document.createElement("a"); // a 标签
-      $(element).attr("class", "fancybox");
-      $(element).attr("pjax-fancybox", "");  // 过滤 pjax
-      $(element).attr("href", $(this).attr("src"));
-      if ($(this).attr("data-original")) {
-        $(element).attr("href", $(this).attr("data-original"));
-      }
-      $(element).attr("data-fancybox", "images");
-      var caption = "";   // 描述信息
-      if ($(this).attr('alt')) {  // 判断当前页面是否存在描述信息
-        $(element).attr('data-caption', $(this).attr('alt'));
-        caption = $(this).attr('alt');
-      }
-      var div = document.createElement("div");
-      $(div).addClass("fancybox");
-      $(this).wrap(div); // 最外层套 div ，其实主要作用还是 class 样式
-      var span = document.createElement("span");
-      $(span).addClass("image-caption");
-      $(span).text(caption); // 加描述
-      $(this).after(span);  // 再套一层描述
-      // 背景层
-      var bgDiv = document.createElement("div");
-      $(bgDiv).addClass("bg");
-      if ($(this).attr('bg')) {
-        $(bgDiv).css('background', $(this).attr('bg'));
-      }
-      $(this).wrap(bgDiv); // 背景层
-      $(this).wrap(element);  // 最后套 a 标签
-    })
-    $(".md").find("img").fancybox({
-      selector: '[data-fancybox="images"]',
-      hash: false,
-      loop: false,
-      closeClick: true,
-      helpers: {
-        overlay: {closeClick: true}
-      },
-      buttons: [
-        "zoom",
-        "close"
-      ]
-    });
-  };
-  $(function () {
-    pjax_fancybox();
-  });
-</script>
-
-
-<!-- internal -->
-
-
-
-  
-  
-
-  <div id="rightmenu-wrapper">
-    <ul class="list-v rightmenu" id="rightmenu-content">
-      <li class='option'>
-        <a class='vlts-menu opt fix-cursor-default' id='menu-copy-text' onclick='document.execCommand("copy")'><i class='fa fa-copy fa-fw'></i>复制文本</a>
-        <hr id='hr-text'>
-        <a class='vlts-menu opt fix-cursor-default' id='menu-copy-href'><i class='fa fa-link fa-fw'></i>复制链接</a>
-        <a class='vlts-menu opt fix-cursor-default' id='menu-open-href'><i class='fa fa-external-link-square-alt fa-fw'></i>在新标签页打开</a>
-        <hr id='hr-href'>
-        <a class='vlts-menu opt fix-cursor-default' id='menu-copy-src'><i class='fa fa-image fa-fw'></i>复制图片地址</a>
-        <hr id='hr-src'>
-      </li>
-      
-        <li class='navigation'>
-          <a class='nav icon-only fix-cursor-default' onclick='history.back()'><i class='fa fa-arrow-left fa-fw'></i></a>
-          <a class='nav icon-only fix-cursor-default' onclick='history.forward()'><i class='fa fa-arrow-right fa-fw'></i></a>
-          <a class='nav icon-only fix-cursor-default' onclick='window.location.reload()'><i class='fa fa-redo fa-fw'></i></a>
-          <a class='nav icon-only fix-cursor-default' href='/'><i class='fa fa-home fa-fw'></i></a>
-        </li>
-      
-      <hr>
-      
-        
-      
-        
-          
-    <li>
-      <a class='vlts-menu fix-cursor-default' href=https://volantis.js.org/faqs/
-        
-        
-        
-        
-          id="https:volantisjsorgfaqs"
-        >
-        <i class='fab fa-github fa-fw'></i> GitHub
-      </a>
-    </li>
-  
-        
-      
-        
-          
-    <li>
-      <a class='vlts-menu fix-cursor-default' href=https://blog.csdn.net/qq_17238449
-        
-        
-        
-        
-          id="https:blogcsdnnetqq_17238449"
-        >
-        <i class='fas fa-blog fa-fw'></i> csdn
-      </a>
-    </li>
-  
-        
-      
-        
-          
-    <li>
-      <a class='vlts-menu fix-cursor-default' href=https://www.gschaos.club/about/
-        
-        
-        
-        
-          id="https:wwwgschaosclubabout"
-        >
-        <i class='fas fa-portrait fa-fw'></i> 关于本人
-      </a>
-    </li>
-  
-        
-      
-        
-          <hr>
-        
-      
-        
-          
-    <li>
-      <a class='vlts-menu fix-cursor-default' href=https://github.com/yccjack/yccjack.github.io
-        
-        
-        
-        
-          id="https:githubcomyccjackyccjackgithubio"
-        >
-        <i class='fa fa-code-branch fa-fw'></i> 本站源码
-      </a>
-    </li>
-  
-        
-      
-        
-          
-    <li>
-      <a class='vlts-menu fix-cursor-default' href=https://github.com/volantis-x/hexo-theme-volantis/
-        
-        
-        
-        
-          id="https:githubcomvolantis-xhexo-theme-volantis"
-        >
-        <i class='fa fa-code-branch fa-fw'></i> 主题源码
-      </a>
-    </li>
-  
-        
-      
-        
-          <hr>
-        
-      
-        
-          
-    <li>
-      <a class='vlts-menu fix-cursor-default' 
-        
-        
-        
-          onclick="document.execCommand('print')"
-        
-        >
-        <i class='fa fa-print fa-fw'></i> 打印页面
-      </a>
-    </li>
-  
-        
-      
-        
-          <hr>
-        
-      
-        
-          <li class='music name'>
-            <p class='nav music-title fix-cursor-default'></p>
-          </li>
-          <li class='music ctrl'>
-            <a class='nav icon-only backward fix-cursor-default' onclick='aplayerBackward()'><i class='fa fa-step-backward fa-fw'></i></a>
-            <a class='nav icon-only toggle fix-cursor-default' onclick='aplayerToggle()'><i class='fa fa-play fa-fw'></i></a>
-            <a class='nav icon-only forward fix-cursor-default' onclick='aplayerForward()'><i class='fa fa-step-forward fa-fw'></i></a>
-          </li>
-          <li class='music volume'>
-            <a class='nav volume'>
-              <div class="aplayer-volume-bar-wrap">
-                <div class="aplayer-volume-bar fix-cursor-pointer">
-                  <div class="aplayer-volume"></div>
-                  <i class='left fa fa-volume-off fa-fw'></i>
-                  <i class='right fa fa-volume-up fa-fw'></i>
-                </div>
-              </div>
-            </a>
-          </li>
-        
-      
-    </ul>
-  </div>
-
-  <script>
-    window.document.oncontextmenu = function (event) {
-      if (event.ctrlKey) return true;
-      if (/Android|webOS|BlackBerry/i.test(navigator.userAgent)) return true;
-      return popMenu(event);
-    };
-    document.addEventListener("click", function (event) {
-      var mymenu = document.getElementById('rightmenu-wrapper');
-      mymenu.style.display = "none";
-    });
-    function popMenu(event) {
-      var mymenu = document.getElementById('rightmenu-wrapper');
-      var menuContent = document.getElementById('rightmenu-content');
-      var screenWidth = document.documentElement.clientWidth || document.body.clientWidth;
-      var screenHeight = document.documentElement.clientHeight || document.body.clientHeight;
-      mymenu.style.left = event.clientX + "px"; // 获取鼠标位置
-      mymenu.style.top = event.clientY + "px";
-      mymenu.style.display = 'block';
-      if (event.clientX * 2 > screenWidth) {
-        menuContent.classList.add('left');
-      } else {
-        menuContent.classList.remove('left');
-      }
-      if (event.clientY * 2 > screenHeight) {
-        menuContent.classList.add('top');
-      } else {
-        menuContent.classList.remove('top');
-      }
-
-      let hrText = document.getElementById('hr-text');
-      let hrSrc = document.getElementById('hr-src');
-      let hrHref = document.getElementById('hr-href');
-
-      // 选中图片
-      let copySrc = document.getElementById('menu-copy-src');
-      if (copySrc != undefined) {
-        if (event.target.currentSrc) {
-          copySrc.style.display = 'block';
-          copySrc.addEventListener("click", function (e) {
-            copyString(event.target.currentSrc);
-          },{once: true});
-          hrSrc.style.display = 'block';
-        } else {
-          copySrc.style.display = 'none';
-          hrSrc.style.display = 'none';
-        }
-      }
-
-      // 选中按钮
-      // 判断是不是按钮
-      let href = '';
-      if (event.path) {
-        for (i = 0; i < event.path.length; i++) {
-          if (event.path[i].href != undefined && event.path[i].href.length > 0) {
-            href = event.path[i].href;
-          }
-        }
-      }
-
-      let copyText = document.getElementById('menu-copy-text');
-      copyText.style.display = 'none';
-      hrText.style.display = 'none';
-      if (href.length == 0) {
-        // 选中文本
-        if (window.getSelection().toString()) {
-          copyText.style.display = 'block';
-          hrText.style.display = 'block';
-        }
-      }
-
-      // 在新标签页打开
-      let openHref = document.getElementById('menu-open-href');
-      if (openHref != undefined) {
-        if (href.length > 0) {
-          openHref.style.display = 'block';
-          openHref.addEventListener("click", function (e) {
-            window.open(href);
-          },{once: true});
-          hrHref.style.display = 'block';
-        } else {
-          openHref.style.display = 'none';
-          hrHref.style.display = 'none';
-        }
-      }
-      // 复制链接
-      let copyHref = document.getElementById('menu-copy-href');
-      if (copyHref != undefined) {
-        if (href.length > 0) {
-          copyHref.style.display = 'block';
-          copyHref.addEventListener("click", function (e) {
-            copyString(href);
-          },{once: true});
-        } else {
-          copyHref.style.display = 'none';
-        }
-      }
-
-      // 有音乐播放器
-      if ('true' == true && ('home,help,examples,contributors,hr,source_docs,source_theme,hr,print,hr,music'||[]).includes('music')) {
-        // 如果有aplayer，初始化一下
-      	try {
-      		checkAPlayer();
-          updateTitle();
-      	} catch (error) {
-      		console.log(error);
-      	}
-      }
-
-      return false; // 该行代码确保系统自带的右键菜单不会被调出
-    }
-    function hideMenu() {
-      document.getElementById('rightmenu-wrapper').style.display = 'none';
-    }
-    function copyString(str) {
-      const input = document.createElement('input');
-      input.setAttribute('readonly', 'readonly');
-      document.body.appendChild(input);
-      input.setAttribute('value', str);
-      input.select();
-      document.execCommand('copy');
-      document.body.removeChild(input);
-    }
-    document.execCommand('click');
-  </script>
-
-
-
-
-<!-- optional -->
-
-  <script>
-  
-  var SEARCH_SERVICE = "hexo" || "hexo";
-  var ROOT = "/" || "/";
-  if (!ROOT.endsWith('/')) ROOT += '/';
-</script>
-
-
-
-
-  <script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
-<script>
-  // https://www.npmjs.com/package/vanilla-lazyload
-  // Set the options globally
-  // to make LazyLoad self-initialize
-  window.lazyLoadOptions = {
-    elements_selector: ".lazyload",
-    threshold: 0
-  };
-  // Listen to the initialization event
-  // and get the instance of LazyLoad
-  window.addEventListener(
-    "LazyLoad::Initialized",
-    function (event) {
-      window.lazyLoadInstance = event.detail.instance;
-    },
-    false
-  );
-  document.addEventListener('DOMContentLoaded', function () {
-    lazyLoadInstance.update();
-  });
-  document.addEventListener('pjax:complete', function () {
-    lazyLoadInstance.update();
-  });
-</script>
-
-
-
-
-  
-  
-    <script>
-      window.FPConfig = {
-        delay: 0,
-        ignoreKeywords: [],
-        maxRPS: 5,
-        hoverDelay: 25
-      };
-    </script>
-    <script defer src="https://cdn.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"></script>
-  
-
-
-
-
-  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
-<script>
-    var clipboard = new ClipboardJS('.btn-copy', {
-        target: function (trigger) {
-            return trigger.nextElementSibling
-        }
-    });
-    function wait(callback, seconds) {
-        var timelag = null;
-        timelag = window.setTimeout(callback, seconds)
-    }
-    function pjax_initCopyCode() {
-		if($(".highlight .code pre").length+$(".article pre code").length==0)return;
-        var copyHtml = '';
-        copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
-        copyHtml += '<i class="fas fa-copy"></i><span>COPY</span>';
-        copyHtml += '</button>';
-        $(".highlight .code pre").before(copyHtml);
-        $(".article pre code").before(copyHtml);
-        clipboard.off('success').on('success', function (e) {
-            let $btn = $(e.trigger);
-            $btn.addClass('copied');
-            let $icon = $($btn.find('i'));
-            $icon.removeClass('fa-copy');
-            $icon.addClass('fa-check-circle');
-            let $span = $($btn.find('span'));
-            $span[0].innerText = 'COPIED';
-            wait(function () {
-                $icon.removeClass('fa-check-circle');
-                $icon.addClass('fa-copy');
-                $span[0].innerText = 'COPY'
-            }, 2000)
-        });
-        clipboard.off('error').on('error', function (e) {
-            e.clearSelection();
-            let $btn = $(e.trigger);
-            $btn.addClass('copy-failed');
-            let $icon = $($btn.find('i'));
-            $icon.removeClass('fa-copy');
-            $icon.addClass('fa-times-circle');
-            let $span = $($btn.find('span'));
-            $span[0].innerText = 'COPY FAILED';
-            wait(function () {
-                $icon.removeClass('fa-times-circle');
-                $icon.addClass('fa-copy');
-                $span[0].innerText = 'COPY'
-            }, 2000)
-        })
-    }
-    $(function () {
-        pjax_initCopyCode()
-    });
-</script>
-
-
-
-
-
-
-  <script>
-  let APlayerController = new Object();
-  APlayerController.id = '374088504';  // 设定全局音乐播放ID
-  APlayerController.volume = '0.7';
-</script>
-
-  
-<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
-
-
-  
-<script src="https://cdn.jsdelivr.net/npm/meting@2.0/dist/Meting.min.js"></script>
-
-
-
-
-  
-<script src="/js/aplayer.js"></script>
-
-
-
-
-
-
-  
-  
-<script src="/js/valine.js"></script>
-
-
-<script>
-  var GUEST_INFO = ['nick', 'mail', 'link'];
-  var meta = 'nick,mail,link'.split(',').filter(function (item) {
-    return GUEST_INFO.indexOf(item) > -1
-  });
-  var REQUIRED_FIELDS = ['nick', 'mail', 'link'];
-  var requiredFields = 'nick,mail'.split(',').filter(function (item) {
-    return REQUIRED_FIELDS.indexOf(item) > -1
-  });
-
-  function emoji(path, idx, ext) {
-    return path + "/" + path + "-" + idx + "." + ext;
-  }
-
-  var emojiMaps = {};
-  for (var i = 1; i <= 54; i++) {
-    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
-  }
-  for (var i = 1; i <= 101; i++) {
-    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
-  }
-  for (var i = 1; i <= 116; i++) {
-    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
-  }
-  for (var i = 1; i <= 125; i++) {
-    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
-  }
-  for (var i = 1; i <= 4; i++) {
-    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
-  }
-
-  function pjax_valine() {
-    if(!document.querySelectorAll("#valine_container")[0])return;
-
-    let pagePlaceholder = $.trim($('#pjax-comment-placeholder').text()) || "快来评论吧~";
-
-    let path = $.trim($('#pjax-comment-path').text());
-    if (path.length == 0) {
-      let defaultPath = '';
-      path = defaultPath || decodeURI(window.location.pathname);
-    }
-
-    var valine = new Valine();
-    valine.init({
-      el: '#valine_container',
-      meta: meta,
-      placeholder: pagePlaceholder,
-      path: path,
-      appId: "J2f6Gx43ptrGYdf1rHPAS5sJ-gzGzoHsz",
-      appKey: "cSywIQR7CfBFaNI8iiPTYy41",
-      pageSize: '10',
-      avatar: 'robohash',
-      lang: 'zh-cn',
-      visitor: 'true',
-      highlight: 'true',
-      mathJax: 'false',
-      enableQQ: 'true',
-      requiredFields: requiredFields,
-      emojiCDN: 'https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/valine/',
-      emojiMaps: emojiMaps
-    })
-  }
-
-  $(function () {
-    pjax_valine();
-  });
-</script>
-
-
-
-
-  
-<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5/lib/darkmode-js.min.js" aysc></script>
-
-<script type="text/javascript">
-function getClientHeight(){
-  var clientHeight=0;
-  if(document.body.clientHeight&&document.documentElement.clientHeight){
-  var clientHeight = (document.body.clientHeight<document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
-  }else{
-  var clientHeight = (document.body.clientHeight>document.documentElement.clientHeight)?document.body.clientHeight:document.documentElement.clientHeight;
-  }
-  return clientHeight;
-}
-function supportCss3(style) {
-  var prefix = ['webkit', 'Moz', 'ms', 'o'],
-  i,
-  humpString = [],
-  htmlStyle = document.documentElement.style,
-  _toHumb = function (string) {
-  return string.replace(/-(\w)/g, function ($0, $1) {
-  return $1.toUpperCase();
-  });
-  };
-  for (i in prefix)
-  humpString.push(_toHumb(prefix[i] + '-' + style));
-  humpString.push(_toHumb(style));
-  for (i in humpString)
-  if (humpString[i] in htmlStyle) return true;
-  return false;
-};
-//配置信息
-var options = {
-  bottom: '32px',
-  right: 'unset',
-  left: '16px',
-  time: '0s',
-  mixColor: '#f4f4f4',
-  backgroundColor: '#f4f4f4',
-  buttonColorDark: '#333',
-  buttonColorLight: '#ddd',
-  saveInCookies: true,
-  label: '',
-  autoMatchOsTheme: true
-};
-// 卡片兼容处理 mix-blend-mode 与 effect: [blur] 冲突
-
-function pjax_darkmodejs(){
-  
-  if(!supportCss3('mix-blend-mode'))return;
-  var checkExist2 = setInterval(function() {
-     if (typeof jQuery == 'undefined'){return;}
-     clearInterval(checkExist2);
-     var TopFlag=getClientHeight();
-    $(window).scroll(function(){
-      var top = $(document).scrollTop();
-      if(top > TopFlag) {
-        $(".darkmode-layer").css("mix-blend-mode","normal");
-        $(".darkmode-layer").css("background-color","#222");
-      }else{
-        $(".darkmode-layer").css("mix-blend-mode","difference");
-        $(".darkmode-layer").css("background-color","");
-      }
-    })
-  }, 100);
-  
-}
-// mix-blend-mode support?
-if(supportCss3('mix-blend-mode')){
-  window.darkmode = new Darkmode(options);
-  
-  window.darkmode.showWidget();
-  
-  pjax_darkmodejs();
-}
-////////////////Development///////////////////////
-//////////////darkmode模式切换////////////////////
-//window.darkmode.toggle();                     //
-//////////////darkmode模式判断////////////////////
-//console.log(window.darkmode.isActivated())    //
-//////////////////////////////////////////////////
-</script>
-
-
-
-
-  <script defer src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js" data-pjax></script>
-
-
-  
-<script src="/js/app.js"></script>
-
-
-
-
-  
-    
-<script src="/js/search.js"></script>
-
-  
-
-
-
-
-
-
-
-
-
-
-  <script defer>
-
-  const LCCounter = {
-    app_id: 'J2f6Gx43ptrGYdf1rHPAS5sJ-gzGzoHsz',
-    app_key: 'cSywIQR7CfBFaNI8iiPTYy41',
-    custom_api_server: '',
-
-    // 查询存储的记录
-    getRecord(Counter, url, title) {
-      return new Promise(function (resolve, reject) {
-        Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({url})))
-          .then(resp => resp.json())
-          .then(({results, code, error}) => {
-            if (code === 401) {
-              throw error;
-            }
-            if (results && results.length > 0) {
-              var record = results[0];
-              resolve(record);
-            } else {
-              Counter('post', '/classes/Counter', {url, title: title, times: 0})
-                .then(resp => resp.json())
-                .then((record, error) => {
-                  if (error) {
-                    throw error;
-                  }
-                  resolve(record);
-                }).catch(error => {
-                console.error('Failed to create', error);
-                reject(error);
-              });
-            }
-          }).catch((error) => {
-          console.error('LeanCloud Counter Error:', error);
-          reject(error);
-        });
-      })
-    },
-
-    // 发起自增请求
-    increment(Counter, incrArr) {
-      return new Promise(function (resolve, reject) {
-        Counter('post', '/batch', {
-          "requests": incrArr
-        }).then((res) => {
-          res = res.json();
-          if (res.error) {
-            throw res.error;
-          }
-          resolve(res);
-        }).catch((error) => {
-          console.error('Failed to save visitor count', error);
-          reject(error);
-        });
-      });
-    },
-
-    // 构建自增请求体
-    buildIncrement(objectId) {
-      return {
-        "method": "PUT",
-        "path": `/1.1/classes/Counter/${ objectId }`,
-        "body": {
-          "times": {
-            '__op': 'Increment',
-            'amount': 1
-          }
-        }
-      }
-    },
-
-    // 校验是否为有效的 UV
-    validUV() {
-      var key = 'LeanCloudUVTimestamp';
-      var flag = localStorage.getItem(key);
-      if (flag) {
-        // 距离标记小于 24 小时则不计为 UV
-        if (new Date().getTime() - parseInt(flag) <= 86400000) {
-          return false;
-        }
-      }
-      localStorage.setItem(key, new Date().getTime().toString());
-      return true;
-    },
-
-    addCount(Counter) {
-      var enableIncr = '' === 'true' && window.location.hostname !== 'localhost';
-      enableIncr = true;
-      var getterArr = [];
-      var incrArr = [];
-      // 请求 PV 并自增
-      var pvCtn = document.querySelector('#lc-sv');
-      if (pvCtn || enableIncr) {
-        var pvGetter = this.getRecord(Counter, 'https://gschaos.club' + '/#lc-sv', 'Visits').then((record) => {
-          incrArr.push(this.buildIncrement(record.objectId))
-          var eles = document.querySelectorAll('#lc-sv #number');
-          if (eles.length > 0) {
-            eles.forEach((el,index,array)=>{
-              el.innerText = record.times + 1;
-              if (pvCtn) {
-                pvCtn.style.display = 'inline';
-              }
-            })
-          }
-        });
-        getterArr.push(pvGetter);
-      }
-
-      // 请求 UV 并自增
-      var uvCtn = document.querySelector('#lc-uv');
-      if (uvCtn || enableIncr) {
-        var uvGetter = this.getRecord(Counter, 'https://gschaos.club' + '/#lc-uv', 'Visitors').then((record) => {
-          var vuv = this.validUV();
-          vuv && incrArr.push(this.buildIncrement(record.objectId))
-          var eles = document.querySelectorAll('#lc-uv #number');
-          if (eles.length > 0) {
-            eles.forEach((el,index,array)=>{
-              el.innerText = record.times + (vuv ? 1 : 0);
-              if (uvCtn) {
-                uvCtn.style.display = 'inline';
-              }
-            })
-          }
-        });
-        getterArr.push(uvGetter);
-      }
-
-      // 请求文章的浏览数，如果是当前页面就自增
-      var allPV = document.querySelectorAll('#lc-pv');
-      if (allPV.length > 0 || enableIncr) {
-        for (i = 0; i < allPV.length; i++) {
-          let pv = allPV[i];
-          let title = pv.getAttribute('data-title');
-          var url = 'https://gschaos.club' + pv.getAttribute('data-path');
-          if (url) {
-            var viewGetter = this.getRecord(Counter, url, title).then((record) => {
-              // 是当前页面就自增
-              if (pv.getAttribute('data-path') == window.location.pathname) {
-                incrArr.push(this.buildIncrement(record.objectId));
-              }
-              if (pv) {
-                var ele = pv.querySelector('#lc-pv #number');
-                if (ele) {
-                  if (pv.getAttribute('data-path') == window.location.pathname) {
-                    ele.innerText = (record.times || 0) + 1;
-                  } else {
-                    ele.innerText = record.times || 0;
-                  }
-                  pv.style.display = 'inline';
-                }
-              }
-            });
-            getterArr.push(viewGetter);
-          }
-        }
-      }
-
-      // 如果启动计数自增，批量发起自增请求
-      if (enableIncr) {
-        Promise.all(getterArr).then(() => {
-          incrArr.length > 0 && this.increment(Counter, incrArr);
-        })
-      }
-
-    },
-
-
-    fetchData(api_server) {
-      var Counter = (method, url, data) => {
-        return fetch(`${ api_server }/1.1${ url }`, {
-          method,
-          headers: {
-            'X-LC-Id': this.app_id,
-            'X-LC-Key': this.app_key,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data)
-        });
-      };
-      this.addCount(Counter);
-    },
-
-    refreshCounter() {
-      var api_server = this.app_id.slice(-9) !== '-MdYXbMMI' ? this.custom_api_server : `https://${ this.app_id.slice(0, 8).toLowerCase() }.api.lncldglobal.com`;
-      if (api_server) {
-        this.fetchData(api_server);
-      } else {
-        fetch('https://app-router.leancloud.cn/2/route?appId=' + this.app_id)
-          .then(resp => resp.json())
-          .then(({api_server}) => {
-            this.fetchData('https://' + api_server);
-          });
-      }
-    }
-
-  };
-
-  LCCounter.refreshCounter();
-
-  document.addEventListener('pjax:complete', function () {
-    LCCounter.refreshCounter();
-  });
-</script>
-
-
-
-<!-- more -->
-
-
-    
-      
-
-
-<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script>
-
-<!-- 样式位于：source/css/_third-party/pjaxanimate.styl -->
-
-<div class="pjax-animate">
-  
-    <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
-    <div id="loading-bar-wrapper"><script>NProgress.configure({parent:"#loading-bar-wrapper",trickleSpeed: 100})</script></div>
-    <script>
-      window.ShowLoading = function() {
-        NProgress.start();
-      };
-      window.HideLoading = function() {
-        NProgress.done();
-      }
-    </script>
-  
-</div>
-
-<script>
-    var pjax;
-    document.addEventListener('DOMContentLoaded', function () {
-      pjax = new Pjax({
-        elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([pjax-fancybox])',
-        selectors: [
-          "title",
-          "#pjax-container",
-          "#pjax-header-nav-list"
-        ],
-        cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
-        timeout: 5000
-      });
-    });
-
-    document.addEventListener('pjax:send', function (e) {
-      window.stop(); // 相当于点击了浏览器的停止按钮
-
-      try {
-        var currentUrl = window.location.pathname;
-        var targetUrl = e.triggerElement.href;
-        var banUrl = [""];
-        if (banUrl[0] != "") {
-          banUrl.forEach(item => {
-            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
-              window.location.href = targetUrl;
-            }
-          });
-        }
-      } catch (error) {}
-
-      window.subData = null; // 移除标题（用于一二级导航栏切换处）
-      $.fancybox.close();    // 关闭弹窗
-      $('.l_header .switcher .s-search').removeClass('active'); // 关闭移动端激活的搜索框
-      $('.l_header').removeClass('z_search-open'); // 关闭移动端激活的搜索框
-      $('.wrapper').removeClass('sub'); // 跳转页面时关闭二级导航
-
-      // 解绑事件 避免重复监听
-      $('.s-top').unbind('click');
-      $('.menu a').unbind('click');
-      $(window).unbind('resize');
-      $(window).unbind('scroll');
-      $(document).unbind('scroll');
-      $(document).unbind('click');
-      $('body').unbind('click');
-      window.ShowLoading();
-    });
-
-    document.addEventListener('pjax:complete', function () {
-      // 关于百度统计对 SPA 页面的处理：
-      // 方案一：百度统计>管理>单页应用设置中，打开开启按钮即可对SPA进行统计。 https://tongji.baidu.com/web/help/article?id=324
-      // 方案二：取消注释下列代码。 https://tongji.baidu.com/web/help/article?id=235
-      // 
-
-      // 关于谷歌统计对 SPA 页面的处理：
-      // 当应用以动态方式加载内容并更新地址栏中的网址时，也应该更新通过 gtag.js 存储的网页网址。
-      // https://developers.google.cn/analytics/devguides/collection/gtagjs/single-page-applications?hl=zh-cn
-      
-
-      $('.nav-main').find('.list-v').not('.menu-phone').removeAttr("style",""); // 移除小尾巴的移除
-      $('.menu-phone.list-v').removeAttr("style",""); // 移除小尾巴的移除
-      $('script[data-pjax], .pjax-reload script').each(function () {
-        $(this).parent().append($(this).remove());
-      });
-      try{
-        pjax_fancybox();
-        
-        
-        
-        
-          pjax_initCopyCode();
-        
-        
-          pjax_valine();
-        
-        
-        
-        
-        
-          pjax_darkmodejs();
-        
-      } catch (e) {
-        console.log(e);
-      }
-      window.HideLoading();
-    });
-
-    document.addEventListener('pjax:error', function (e) {
-      window.HideLoading();
-      window.location.href = e.triggerElement.href;
-    });
-</script>
-
-    
-  </div>
-</body>
-</html>
+<p> <img src="/images/storage/ganga.jpeg" alt="尴尬表情包"> </p>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">俞超超</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://gschaos.club/2020/01/11/connect/">https://gschaos.club/2020/01/11/connect/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://gschaos.club" target="_blank">MysticalYcc</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></div><div class="post_share"><div class="social-share" data-image="/null" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/06/05/cros/"><img class="prev-cover" src="/null" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">跨域问题</div></div></a></div><div class="next-post pull-right"><a href="/2020/01/01/SimpleTuning/"><img class="next-cover" src="/null" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">SimpleTuning</div></div></a></div></nav></article></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 By 俞超超</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
