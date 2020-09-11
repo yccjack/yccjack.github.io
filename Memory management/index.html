@@ -1,0 +1,1826 @@
+<!DOCTYPE html>
+<html>
+<head hexo-theme='https://github.com/volantis-x/hexo-theme-volantis/releases/tag/3.0.0'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
+  
+    
+  
+  <!-- 渲染优化 -->
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 页面元数据 -->
+  
+  <title>存储器管理 - MysticalYcc</title>
+  
+    <meta name="keywords" content="操作系统">
+  
+
+  
+
+  <!-- feed -->
+  
+
+  <!-- import meta -->
+  
+
+  <!-- link -->
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.13/css/all.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/l-lin/font-awesome-animation/dist/font-awesome-animation.min.css">
+
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+
+  
+
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.css">
+
+  
+
+  
+    <link rel="shortcut icon" type='image/x-icon' href="https://gschaos.club/ico/favicon.ico">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+  
+
+  
+
+  <!-- import link -->
+  
+
+  
+  
+    
+<link rel="stylesheet" href="/css/style.css">
+
+  
+
+  
+  
+</head>
+
+<body>
+  
+  
+  
+  <div class="cover-wrapper">
+    <cover class='cover post' style="display: none;">
+      <div class='cover-body'>
+  <div class='a'>
+    
+      <img no-lazy class='logo' src='https://gschaos.club/ico/me.jpg'/>
+    
+    
+      <p class="title">MysticalYcc</p>
+    
+    
+      <p class="subtitle">浮华三千里，逍遥独一人。</p>
+    
+  </div>
+  <div class='b'>
+    <div class='menu navigation dock'>
+      <div class='list-h'>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+      <div class="scroll-down" style="display: none;"><i class="fa fa-chevron-down scroll-down-effects"></i></div>
+    </cover>
+    <header class="l_header shadow blur">
+  <div class='container'>
+  <div class='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h m-phone' id="pjax-header-nav-list">
+        <li><a class="s-comment fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+          <li><a class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
+        
+      </ul>
+    </div>
+		<div class="nav-main">
+      
+        
+        <a class="title flat-box" target="_self" href='/'>
+          
+            <img no-lazy class='logo' src='https://gschaos.club/ico/me.jpg'/>
+          
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h m-pc'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h m-phone'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+  </div>
+  
+
+
+  <div class="l_body">
+    <div class='body-wrapper' id="pjax-container">
+      
+        <!--此文件用来存放一些不方便取值的变量--> 
+<!--思路大概是将值藏到重加载的区域内--> 
+ 
+ 
+ 
+<div id="pjax-data" style="display: none"> 
+  <div id="pjax-ispage">true</div> 
+  <div id="pjax-pageTitle">存储器管理</div> 
+  <div id="pjax-enable-cover">true</div> 
+  <div id="pjax-comment-path">none</div> 
+  <div id="pjax-comment-placeholder">none</div> 
+</div> 
+ 
+ 
+<script> 
+  // 处理封面 此时 jquery 还没加载 
+  if ("blog" == "none") { // 移除封面 
+    document.getElementsByClassName('cover')[0].style.display = "none"; 
+    document.getElementsByClassName('l_body')[0].classList.add("nocover"); 
+    document.getElementsByClassName('l_header', 'cover-wrapper')[0].classList.add("show"); 
+  } else { 
+    if ("blog" == "blog") { // 半屏 
+      document.getElementsByClassName('cover')[0].classList.remove("full"); 
+      document.getElementsByClassName('cover')[0].classList.add("half"); 
+      document.getElementsByClassName('scroll-down')[0].style.display = "none"; 
+    } else if ("blog" == "docs") { // 全屏 
+      document.getElementsByClassName('cover')[0].classList.remove("half"); 
+      document.getElementsByClassName('cover')[0].classList.add("full"); 
+      document.getElementsByClassName('scroll-down')[0].style.display = ""; 
+    } 
+    document.getElementsByClassName('cover')[0].style.display = ""; 
+    document.getElementsByClassName('l_body', 'show')[0].classList.remove("nocover"); 
+    document.getElementsByClassName('l_header', 'cover-wrapper')[0].classList.remove("show"); 
+  } 
+</script> 
+
+      
+      
+
+<div class='l_main'>
+  
+
+  
+    <article id="post" class="post white-box reveal shadow article-type-post" itemscope itemprop="blogPost">
+      
+
+
+  <section class='meta'>
+    
+      
+      
+      <div class="meta" id="header-meta">
+        
+          
+  <h1 class="title">
+    <a href="/Memory%20management/">
+      存储器管理
+    </a>
+  </h1>
+
+
+        
+        <div class='new-meta-box'>
+          
+            
+          
+            
+              
+<div class='new-meta-item author'>
+  <a class='author' href="/" rel="nofollow">
+    <img no-lazy src="">
+    <p>MysticalYcc</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+  
+  <div class='new-meta-item category'>
+    <a href='/categories/%E5%AD%98%E5%82%A8%E5%99%A8%E7%AE%A1%E7%90%86/' rel="nofollow">
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <p>存储器管理</p>
+    </a>
+  </div>
+
+
+            
+          
+            
+              <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2019年4月6日</p>
+  </a>
+</div>
+
+            
+          
+            
+              
+
+            
+          
+        </div>
+        
+          <hr>
+        
+      </div>
+    
+  </section>
+
+
+      <section class="article typo">
+        <div class="article-entry" itemprop="articleBody">
+          
+          
+          <p><img src="https://mysticalyu.gitee.io/pic/img/a-i-20.jpg"></p>
+ <a id="more"></a>
+
+
+
+<h2 id="存储器管理"><a href="#存储器管理" class="headerlink" title="存储器管理"></a>存储器管理</h2><blockquote>
+<p>作者：java3y</p>
+<p> <a target="_blank" rel="noopener" href="https://github.com/ZhongFuCheng3y/3y">https://github.com/ZhongFuCheng3y/3y</a> </p>
+</blockquote>
+<h1 id="存储器的基础知识"><a href="#存储器的基础知识" class="headerlink" title="存储器的基础知识"></a>存储器的基础知识</h1><p>首先，一般的存储器我们就会认为它包含着三部分：</p>
+<ul>
+<li><p>寄存器</p>
+</li>
+<li><ul>
+<li>速度最快，但是造价高</li>
+</ul>
+</li>
+<li><p>主存储器</p>
+</li>
+<li><ul>
+<li>速度次之，被通俗称为内存</li>
+</ul>
+</li>
+<li><p>外存</p>
+</li>
+<li><ul>
+<li>速度最慢，用于存储文件数据，因为上边两种一旦断电，数据就会丢失。这个用来做持久化存储的。</li>
+</ul>
+</li>
+</ul>
+<p>因此，<strong>我们的存储器往往是使用三层结构的</strong>。</p>
+<h2 id="程序的装入和链接"><a href="#程序的装入和链接" class="headerlink" title="程序的装入和链接"></a>程序的装入和链接</h2><p>在操作系统的角度而言，我们面对存储器就是面对程序的装入和连接</p>
+<p>一般地<strong>，用户程序向要在系统上运行，就要经历下面几个步骤：</strong></p>
+<ul>
+<li><strong>编译</strong>：对用户源程序进行遍历，形成若干个目标模块</li>
+<li><strong>链接</strong>：将目标模块以及他们所需要的库函数链接在一起，形成完整的模块。</li>
+<li><strong>装入</strong>：将模块装入内存</li>
+</ul>
+<h3 id="绝对装入（麻烦）"><a href="#绝对装入（麻烦）" class="headerlink" title="绝对装入（麻烦）"></a>绝对装入（麻烦）</h3><p>用户程序中使用的地址称为相对地址或逻辑地址或虚拟地址。<br>在早期，当程序装入内存时，<strong>指令存储在内存中的物理地址与其逻辑地址完全相同.</strong><br>这种程序的装入方式称为<strong>绝对装入方式(Absolute Loading Mode)。</strong></p>
+<h3 id="可重定位装入方式（避免地址叠加）"><a href="#可重定位装入方式（避免地址叠加）" class="headerlink" title="可重定位装入方式（避免地址叠加）"></a>可重定位装入方式（避免地址叠加）</h3><p>采用可重定位的装入方式(Relocation loading Mode)时，如果能够<strong>将不同的的程序装入到地址范围不同的物理内存空间，避免分配给各个程序的内存空间叠加(相交或“撞车”)，就能实现将多个程序安全装入内存，使它们共享内存空间，从而支持多任务系统</strong></p>
+<p>如果使用可重定位装入方式，就必须要解决：<strong>逻辑地址对物理地址之间的转换</strong></p>
+<h3 id="静态装入"><a href="#静态装入" class="headerlink" title="静态装入"></a>静态装入</h3><p>静态链接是由链接器在链接时将库的内容加入到可执行程序中的做法。<br>链接器是一个独立程序，<strong>将一个或多个库或目标文件(先前由编译器或汇编器生成)链接到一块生成可执行程序</strong>。</p>
+<p><strong>在程序运行前一次性装入</strong></p>
+<h3 id="动态装入"><a href="#动态装入" class="headerlink" title="动态装入"></a>动态装入</h3><p>随着内存技术的发展，为了让更多的程序投入有限的内存并发运行，操作系统只将运行程序所必须的模块装入内存，其他诸如帮助系统等不常用的程序模块不装入内存，<strong>进而只装入能够使程序运行起来的那部分模块，更加节省了空间。</strong></p>
+<p><strong>在程序运行时，分批装入到内存中</strong></p>
+<h3 id="静态链接"><a href="#静态链接" class="headerlink" title="静态链接"></a>静态链接</h3><p><strong>静态链接是由链接器在链接时将库的内容加入到可执行程序中的做法。</strong><br>链接器是一个独立程序，将一个或多个库或目标文件(先前由编译器或汇编器生成)链接到一块生成可执行程序。</p>
+<p><strong>和静态装入是一样的。</strong></p>
+<h3 id="动态链接"><a href="#动态链接" class="headerlink" title="动态链接"></a>动态链接</h3><p>载入时动态链接是在将功能模块读入内存时把动态库中调用到的相关模块的内容载入内存。<br>载入时动态链接是分别载入，<strong>当把一个模块载入内存时检查有调用关系的模块并将其载入内存，比静态链接节省了许多开销。</strong><br><strong>运行时动态链接则是把当前模块调用的模块推迟到调用的时候再载入。</strong></p>
+<p><strong>在运行时和运行前进行链接</strong>。</p>
+<h1 id="连续分配存储管理方式"><a href="#连续分配存储管理方式" class="headerlink" title="连续分配存储管理方式"></a>连续分配存储管理方式</h1><p>操作系统将内存分为<strong>系统区和用户区两部分</strong></p>
+<ul>
+<li>系统区仅提供给<strong>OS使用，通常是放在内存的低址部分</strong>，用户区指系统区以外的全部内存空间，<strong>提供给用户使用，通常在高地址部分。</strong></li>
+<li>内存会被分成为系统区和用户区，比例为1:3。</li>
+<li>内存分配方式指的是<strong>对用户区的分配方式。原因是用户提交的任务只能在用户区运行。</strong></li>
+</ul>
+<h2 id="固定分区方式"><a href="#固定分区方式" class="headerlink" title="固定分区方式"></a>固定分区方式</h2><p>为了支持多道程序系统和分时系统，<strong>支持多个程序并发执行，引入了分区式存储管理。</strong></p>
+<p><strong>分区式存储管理是把内存分为一些大小相等或不等的分区，操作系统占用其中一个分区，其余的分区由应用程序使用，每个应用程序占用一个或几个分区</strong>。</p>
+<p>1 划分内存分区的方法</p>
+<ul>
+<li><p>1)分区大小相等</p>
+</li>
+<li><ul>
+<li>内存分区大小一致，可能浪费空间；也可能空间不够。</li>
+</ul>
+</li>
+<li><p>2)分区大小不等</p>
+</li>
+<li><ul>
+<li>含较多的较小分区、适量的中等分区和少量的大分区。</li>
+</ul>
+</li>
+</ul>
+<p>系统对内存的管理和控制通过数据结构—<strong>分区说明表进行。</strong><br><strong>分区说明表说明各分区号、分区大小、起始地址和是否是空闲区(分区状态)。</strong><br>内存的分配释放、存储保护以及地址变换等都通过分区说明表进行。</p>
+<p>内存分区的分配：</p>
+<ul>
+<li>1)为了便于内存分配<strong>，通常将分区按大小进行排队，并为之建立一张分区表。</strong></li>
+<li>2)分配</li>
+<li>3)回收</li>
+</ul>
+<p><img src="/images/storage/member1" alt="img"></p>
+<h2 id="动态分区"><a href="#动态分区" class="headerlink" title="动态分区"></a>动态分区</h2><ul>
+<li>固定分区的重大意义在于操作系统开始支持多任务。</li>
+<li>但是<strong>仍然存在内存浪费的问题</strong>。</li>
+<li>原因是<strong>内存分区在先，而运行程序在后，对于每个待运行的程序而言内存分区的大小并非量身定做。</strong></li>
+<li>于是就出现了当运行某个任务时只能将该任务装载到内存空间中更大的分区。</li>
+<li><strong>尽管浪费没有单一连续分区严重，但是内存的使用率仍然很低</strong>。</li>
+</ul>
+<p>如果内存分区的划分不是预先划定，<strong>而是根据所要运行的程序的大小分配内存，在内存分配阶段就不会出现内存碎片。</strong><br>于是，<strong>动态分区技术应运而生</strong>。</p>
+<p>1 基本问题：</p>
+<p>1)动态分区的基本思想：<strong>在作业执行前不直接建立分区，分区的建立是在作业的处理过程中进行的。且其大小可随作业或进程对内存的要求而改变。</strong><br>2)动态创建分区：<strong>在装入程序时按其初始要求分配，或在其执行过程中通过系统调用进行分配或改变分区大小，按需分配</strong>。<br>3)采用的数据结构：<strong>内存分配表，由两个表格组成。一个是已分配区表，另一张是空闲区表.</strong></p>
+<p><strong>动态分区就有两张表来进行说明了</strong>。</p>
+<p><img src="/images/storage/member2" alt="img"></p>
+<p><img src="/images/storage/member3" alt="img"></p>
+<p>动态分区分配内存时从可用表或自由链中寻找空闲区的常用方法</p>
+<ul>
+<li><p>1)首次适应算法(First Ft Algorithm, FFA)</p>
+</li>
+<li><ul>
+<li><strong>首次适应法要求可用表或自由链按起始地址递增的次序排列</strong>。</li>
+</ul>
+</li>
+<li><p>2)最佳适应算法(Best Fit Algorithm, BFA)</p>
+</li>
+<li><ul>
+<li><strong>要求按空闲区大小从小到大的次序组成空闲区可用表或自由链</strong>。</li>
+</ul>
+</li>
+<li><p>3)最坏适应算法(Worst Fit Algorithm, WFA)：</p>
+</li>
+<li><ul>
+<li><strong>要求空闲区按其大小递减的顺序组成空闲区可用表或自由链</strong>。</li>
+</ul>
+</li>
+</ul>
+<h3 id="碎片问题"><a href="#碎片问题" class="headerlink" title="碎片问题"></a>碎片问题</h3><p>4)碎片问题</p>
+<ul>
+<li>经过一段时间的分配回收后，内存中存在很多很小的空闲块。<strong>它们每一个都很小，不足以满足分配要求； 但其总和满足分配要求。这些空闲块被称为碎片。</strong></li>
+</ul>
+<p>5)碎片问题的解决</p>
+<ul>
+<li>通过在内存移动程序的技术将<strong>所有小的空闲区域合并为大的空闲区域，这种技术称为紧凑技术，</strong>也称为紧缩技术、紧致技术、浮动技术、搬家技术。</li>
+</ul>
+<h2 id="可重定位分区分配"><a href="#可重定位分区分配" class="headerlink" title="可重定位分区分配"></a>可重定位分区分配</h2><p><strong>动态分区</strong>很完美地在内存初次分配阶段<strong>解决了内存空间浪费的问题</strong>。但是，内存是需要重复利用的。<br>随着任务的不断运行完毕，内存空间会被回收；同时，<strong>操作系统又会不断接收新的任务，内存空间会被分配</strong>。</p>
+<p>于是，当运行一个新任务时，<strong>只能从回收回来的分区上分配内存，一方面动态分区技术在一定程度上退化为固定分区，</strong>另一方面分配后余下的碎片(小块的内存空间)就被保留了下来，<strong>较小的内存空间被分配出去的可能性很小，造成了浪费(碎片）。</strong></p>
+<p>最终，内存空间会存在很多小块的空闲空间，而不再有大块的空闲空间，<strong>于是当较大型的任务到达时，没有足够的空间供分配（尽管这些小块的空闲内存空间之和比任务所需的空间大）</strong></p>
+<ul>
+<li>针对动态分区中碎片之和大于任务所需空间的情况，<strong>考虑对内存空间采用紧凑技术进行整理，将已进入内存的任务所占有的内存空间尽量搬到较低的地址，相对的，空闲碎片的会被换到了高地址空间。</strong></li>
+<li>当所有进入内存的任务都被搬到较低的地址后，<strong>空闲碎片都被移动到了内存空间的高地址空间。</strong></li>
+<li>于是，<strong>所有的碎片被整合成了一个大块，从而可以装载任务。这就是可重定位的动态分区</strong>。</li>
+</ul>
+<p><strong>将碎片合成一大块—可重定位的动态分区</strong></p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><ul>
+<li>1）动态重定位依靠硬件地址变换机构完成。</li>
+<li>2）地址重定位机构需要基地址寄存器(BR)和程序虚地址寄存器(VR)。<br>指令或数据的虚地址(VA)，也称为逻辑地址(LA)。内存地址MA(MA)，也称物理地址(PA)<br><strong>实现逻辑地址到物理地址的转换，可以通过公式MA＝(BR)十(VR)完成。</strong></li>
+</ul>
+<p>图5-10所示为指令或数据的<strong>逻辑地址到物理地址的转换过程</strong></p>
+<p><img src="/images/storage/member4" alt="img"></p>
+<p><img src="/images/storage/member5" alt="img"></p>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li>1)可以对内存进行非连续分配。</li>
+<li>2)动态重定位提供了实现虚拟存储器的基础。</li>
+<li>3)有利于程序段的共享。</li>
+</ul>
+<p>4 动态重定位分区的分配算法</p>
+<ul>
+<li>1)主干是动态分区的分配算法。</li>
+<li>2)在动态分区的基础上增加了紧凑技术。</li>
+<li>3)内存分配算法，如图5-11所示。</li>
+</ul>
+<h1 id="基本分页存储管理"><a href="#基本分页存储管理" class="headerlink" title="基本分页存储管理"></a>基本分页存储管理</h1><p><strong>上面的存储都是连续的内存分配技术，我们的分页存储是离散的</strong></p>
+<p><strong>与其花费巨大的代价搬家，不如离散地存储在这些碎片中</strong></p>
+<ul>
+<li>一种离散存储的方法是<strong>面向系统的</strong>，将内存用户空间划分为<strong>大小相等(2nB，如4KB)的物理块；</strong></li>
+<li>另一种方法是<strong>面向用户</strong>的，将内存空间划分为物理段，<strong>32位系统中，以高16位表示段号，低16位表示段内地址</strong>。</li>
+</ul>
+<p><strong>这就是汇编语言中定义一个段时大小不可以超过64KB的根本原因。</strong></p>
+<p>离散存储思想产生的原因：</p>
+<ul>
+<li><p>(1)紧凑技术的弊端</p>
+</li>
+<li><ul>
+<li>尽管可重定位分区方式下的紧凑技术使得碎片得以利用，提高了内存空间的利用率。<strong>但这是以牺牲时间进行搬家而获得的</strong>，代价是很高的。</li>
+</ul>
+</li>
+<li><p>(2)求变创新</p>
+</li>
+<li><ul>
+<li>从内存连续分配的思想上突破、创新，提出离散的内存分配方式，<strong>从而使存在大量碎片和无足够大的连续空间供分配这一矛盾得以缓解</strong>。</li>
+</ul>
+</li>
+</ul>
+<p><strong>离散存储的基本概念</strong></p>
+<ul>
+<li>将一个进程直接分散地装入到许多不相邻的分区中，<strong>而无须“紧凑”的分配方式，称为离散分配。</strong></li>
+<li>离散分配的种类包括<strong>分页存储管理、分段存储管理和段页式存储管理。</strong></li>
+<li><strong>不具备页面对换功能的分页存储管理方式称为基本分页存储管理方式</strong>。</li>
+</ul>
+<h2 id="分页存储管理"><a href="#分页存储管理" class="headerlink" title="分页存储管理"></a>分页存储管理</h2><p>分页存储管理的基本方法</p>
+<ol>
+<li>页面和物理块</li>
+<li>页面。</li>
+<li>页面大小。</li>
+</ol>
+<p><strong>将用户作业的地址空间分成若干个大小相同的区域，称为页面或页</strong>，并为每个页从“0”开始编号；<br>相应地，<strong>主存空间也分成与页大小相同的若干个存储块，或称为物理块或页框(frame)，</strong>并且采用同样的方式为它们进行编号，从0开始：0块，1块，…，n-1块</p>
+<p>分页地址中的地址结构如下：</p>
+<p><img src="/images/storage/member26" alt="img"></p>
+<p>对某特定机器，其地址结构是一定的。<strong>若给定一个逻辑地址空间中的地址为A，页面的大小为L，则页号P和页内地址d可按下式求得</strong>：</p>
+<p><img src="/images/storage/member6" alt="img"></p>
+<h3 id="页表"><a href="#页表" class="headerlink" title="页表"></a>页表</h3><p>在分页系统中，允许将进程的各个页离散地存储在内存的任一物理块中，<strong>为保证进程仍然能够正确地运行，即能在内存中找到每个页面所对应的物理块，系统又为每个进程建立了一张页面映像表，简称页表</strong></p>
+<p><img src="/images/storage/member7" alt="img"></p>
+<p>进程在运行期间，需要对程序和数据的地址进行变换，即将用户地址空间中的逻辑地址变换为内存空间中的物理地址，由于它执行的频率非常高，每条指令的地址都需要进行变换，因此需要采用硬件来实现。<strong>页表功能是由一组专门的寄存器来实现的。一个页表项用一个寄存器。</strong></p>
+<p><img src="/images/storage/member8" alt="img"></p>
+<p>由于页表是存放在内存中的，这使CPU在每存取一个数据时，都要两次访问内存<strong>。第一次是访问内存中的页表，从中找到指定页的物理块号，再将块号与页内偏移量W拼接，以形成物理地址。第二次访问内存时，才是从第一次所得地址中获得所需数据(或向此地址中写入数据)。</strong>因此，采用这种方式将使计算机的处理速度降低近1/2。可见，以此高昂代价来换取存储器空间利用率的提高，是得不偿失的。</p>
+<p>因此，我们采用：<strong>具有快表的地址变换机</strong></p>
+<p><img src="/images/storage/member9" alt="img"></p>
+<h2 id="分段存储管理"><a href="#分段存储管理" class="headerlink" title="分段存储管理"></a>分段存储管理</h2><p>用户把自己的作业按照逻辑关系划分为若干个段，每个段都从0开始编址，并有自己的名字和长度。因此，<strong>程序员们都迫切地需要访问的逻辑地址是由段名(段号)和段内偏移量(段内地址)决定的，这不仅可以方便程序员编程，也可使程序非常直观，更具可读性。</strong></p>
+<p><strong>在实现对程序和数据的共享时，是以信息的逻辑单位为基础的</strong>。</p>
+<ul>
+<li>分页系统中的“页”只是存放信息的物理单位(块)，<strong>并无完整的逻辑意义</strong>，这样，<strong>一个可被共享的过程往往可能需要占用数十个页面，这为实现共享增加了困难。</strong></li>
+</ul>
+<p><strong>信息保护同样是以信息的逻辑单位为基础的，而且经常是以一个过程、函数或文件为基本单位进行保护的。</strong></p>
+<p>在实际应用中，<strong>往往存在着一些段，尤其是数据段，在它们的使用过程中，由于数据量的不断增加，而使数据段动态增长，相应地它所需要的存储空间也会动态增加</strong>。然而，对于数据段究竟会增长到多大，事先又很难确切地知道。对此，很难采取预先多分配的方法进行解决。</p>
+<h3 id="分段系统的基本原理"><a href="#分段系统的基本原理" class="headerlink" title="分段系统的基本原理"></a>分段系统的基本原理</h3><p>在分段存储管理方式中，<strong>作业的地址空间被划分为若干个段，每个段定义了一组逻辑信息。例如，有主程序段MAIN、子程序段X、数据段D及堆栈段S等。</strong></p>
+<p><img src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==" alt="img"></p>
+<p><img src="/images/storage/member10" alt="img"></p>
+<h3 id="段表"><a href="#段表" class="headerlink" title="段表"></a>段表</h3><p><strong>在前面所介绍的动态分区分配方式中，系统为整个进程分配一个连续的内存空间。而在分段式存储管理系统中，则是为每个分段分配一个连续的分区。进程中的各个段，可以离散地装入内存中不同的分区中。为保证程序能正常运行，就必须能从物理内存中找出每个逻辑段所对应的位置。这就需要段表了</strong></p>
+<p>为了实现进程从逻辑地址到物理地址的变换功能，<strong>在系统中设置了段表寄存器，用于存放段表始址和段表长度TL。</strong>在进行地址变换时，系统将逻辑地址中的段号与段表长度TL进行比较。若S&gt;TL，表示段号太大，是访问越界，于是产生越界中断信号。若未越界，则根据段表的始址和该段的段号，计算出该段对应段表项的位置，从中读出该段在内存的起始地址。然后，再检查段内地址d是否超过该段的段长SL。若超过，即d&gt;SL，同样发出越界中断信号。若未越界，则将该段的基址d与段内地址相加，即可得到要访问的内存物理地址。图示出了分段系统的地址变换过程。</p>
+<p><img src="/images/storage/member11" alt="img"></p>
+<h2 id="分页和分段的总结"><a href="#分页和分段的总结" class="headerlink" title="分页和分段的总结"></a>分页和分段的总结</h2><p>（1）页是信息的物理单位，分页是为了实现离散的分配方式，<strong>以消减主存“碎片”</strong>，提高主存的利用率。或者说，<strong>分页仅仅是由于系统管理的需要</strong>，而不是用户的需要。<strong>段是信息的逻辑单位</strong>，它包含一组意义相对完整的信息。<strong>分段的目的是为了能更好地满足用户的需要</strong>。<br>（2）页的大小固定且由系统确定，<strong>把逻辑地址划分为页号和页内地址两部分，是由机器硬件实现的，因而一个系统只能有一种大小的页面</strong>。段的长度却不固定，决定于用户所编写的程序，通常由编译程序在对源程序进行编译时，<strong>根据信息的性质来划分</strong>。<br>（3）<strong>分页的作业地址空间是一维的</strong>，即单一的线性地址空间，程序员只需要利用一个记忆符，即可表示一个地址。<strong>分段的作业地址空间是二维的</strong>，程序员在标识一个地址时，<strong>既需给出段名</strong>，<strong>又需给出段内地址</strong>。</p>
+<h2 id="段页式存储管理"><a href="#段页式存储管理" class="headerlink" title="段页式存储管理"></a>段页式存储管理</h2><p>段页式系统的基本原理是分段和分页原理的结合，<strong>即先将用户程序分成若干个段，再把每个段分成若干个页，并为每一个段赋予一个段名</strong>。图(a)示出了一个作业地址空间的结构。该作业有三个段：<strong>主程序段、子程序段和数据段；页面大小为 4 KB</strong>。在段页式系统中，其地址结构由段号、段内页号及页内地址三部分所组成，如图(b)所示。</p>
+<p><img src="/images/storage/member12" alt="img"></p>
+<p>在段页式系统中，<strong>为了实现从逻辑地址到物理地址的变换，系统中需要同时配置段表和页表</strong>。<strong>段表</strong>的内容与分段系统略有不同，它不再是内存始址和段长，<strong>而是页表始址和页表长度</strong>。图示出了利用段表和页表进行从用户地址空间到物理(内存)空间的映射。</p>
+<p><img src="/images/storage/member13" alt="img"></p>
+<p>地址变换过程：</p>
+<p>　在段页式系统中，为了便于实现地址变换，须配置一个段表寄存器，其中存放段表始址和段长TL。进行地址变换时，首先利用段号S，将它与段长TL进行比较。若S &lt; TL，表示未越界，于是利用段表始址和段号来求出该段所对应的段表项在段表中的位置，从中得到该段的页表始址，并利用逻辑地址中的段内页号P来获得对应页的页表项位置，从中读出该页所在的物理块号b，再利用块号b和页内地址来构成物理地址。图示出了段页式系统中的地址变换机构。</p>
+<p><img src="/images/storage/member15" alt="img"></p>
+<h1 id="虚拟存储器"><a href="#虚拟存储器" class="headerlink" title="虚拟存储器"></a>虚拟存储器</h1><p>要求将一个作业全部装入内存后方能运行，于是，出现了下面这样两种情况：</p>
+<ul>
+<li>　(1) <strong>有的作业很大，其所要求的内存空间超过了内存总容量，作业不能全部被装入内存，致使该作业无法运行</strong>；</li>
+<li>　(2) 有大量作业要求运行，<strong>但由于内存容量不足以容纳所有这些作业</strong>，只能将少数作业装入内存让它们先运行，而将其它大量的作业留在外存上等待</li>
+</ul>
+<p>局部性原理：</p>
+<ul>
+<li>程序在执行时将呈现出局部性规律，即在一较短的时间内，程序的执行仅局限于某个部分，相应地，<strong>它所访问的存储空间也局限于某个区域。时间局部性和空间局部性</strong></li>
+</ul>
+<p>基于局部性原理可知，<strong>应用程序在运行之前没有必要将之全部装入内存，而仅须将那些当前要运行的少数页面或段先装入内存便可运行，其余部分暂留在盘上</strong>。</p>
+<h2 id="虚拟存储器的定义"><a href="#虚拟存储器的定义" class="headerlink" title="虚拟存储器的定义"></a>虚拟存储器的定义</h2><p>　当用户看到自己的程序能在系统中正常运行时，他会认为，该系统所具有的内存容量一定比自己的程序大，或者说，<strong>用户所感觉到的内存容量会比实际内存容量大得多。但用户所看到的大容量只是一种错觉，是虚的，故人们把这样的存储器称为虚拟存储器</strong>。</p>
+<h2 id="实现方法"><a href="#实现方法" class="headerlink" title="实现方法"></a>实现方法</h2><p>主要的硬件支持有：</p>
+<ul>
+<li>(1) 请求分页的页表机制。</li>
+<li>(2) 缺页中断机构。</li>
+<li>(3) 地址变换机构。</li>
+</ul>
+<p>为了实现请求分页，系统必须提供一定的硬件支持。<strong>计算机系统除了要求一定容量的内存和外存外，还需要有请求页表机制、缺页中断机构以及地址变换机构。</strong></p>
+<p>在请求分页系统中需要的主要数据结构是<strong>请求页表，其基本作用仍然是将用户地址空间中的逻辑地址映射为内存空间中的物理地址</strong>。为了满足页面换进换出的需要，在请求页表中又增加了四个字段。这样，在请求分页系统中的每个页表应含以下诸项</p>
+<p><img src="/images/storage/member16" alt="img"></p>
+<p>一个显而易见的事实是，随着为每个进程所分配的物理块的减少，将使进程在执行中的缺页率上升，从而会降低进程的执行速度。<strong>最小物理块数是指能保证进程正常运行所需的最小物理块数，当系统为进程分配的物理块数少于此值时，进程将无法运行。</strong></p>
+<p><img src="/images/storage/member17" alt="img"></p>
+<p>考虑优先权的分配算法。在实际应用中，为了照顾到重要的、紧迫的作业能尽快地完成，应为它分配较多的内存空间。<strong>通常采取的方法是把内存中可供分配的所有物理块分成两部分：一部分按比例地分配给各进程；另一部分则根据各进程的优先权进行分配，为高优先进程适当地增加其相应份额。</strong>在有的系统中，如重要的实时控制系统，则可能是完全按优先权为各进程分配其物理块的。</p>
+<h3 id="页面调入策略"><a href="#页面调入策略" class="headerlink" title="页面调入策略"></a>页面调入策略</h3><p>为使进程能够正常运行，必须事先将要执行的那部分程序和数据所在的页面调入内存。现在的问题是：</p>
+<ul>
+<li><p>　(1) 系统应在何时调入所需页面；</p>
+</li>
+<li><ul>
+<li>　　　(1) 预调页策略。</li>
+<li>　　　(2) 请求调页策略</li>
+</ul>
+</li>
+<li><p>　　(2) 系统应从何处调入这些页面；</p>
+</li>
+<li><ul>
+<li>　　系统拥有足够的<strong>对换区空间</strong>，这时可以全部从对换区调入所需页面，以提高调页速度</li>
+<li>　　系统缺少足够的对换区空间，这时凡是不会被修改的文件，<strong>都直接从文件区调入</strong>；而当换出这些页面时，由于它们未被修改，则不必再将它们重写到磁盘(换出)，以后再调入时，仍从文件区直接调入。但对于那些可能被修改的部分，在将它们换出时便须调到对换区，以后需要时再从对换区调入。</li>
+</ul>
+</li>
+<li><p>　　(3) 是如何进行调入的。</p>
+</li>
+<li><ul>
+<li>　　<strong>每当程序所要访问的页面未在内存时(存在位为“0”)，便向CPU发出一缺页中断</strong>，中断处理程序首先保留CPU环境，分析中断原因后转入缺页中断处理程序</li>
+</ul>
+</li>
+</ul>
+<h3 id="缺页率"><a href="#缺页率" class="headerlink" title="缺页率"></a>缺页率</h3><p><img src="/images/storage/member18" alt="img"></p>
+<p><strong>事实上，在缺页中断处理时，当由于空间不足，需要置换部分页面到外存时，选择被置换页面还需要考虑到置换的代价，如页面是否被修改过。没有修改过的页面可以直接放弃，而修改过的页面则必须进行保存，所以处理这两种情况时的时间也是不同的</strong>。假设被置换的页面被修改的概率是β，其缺页中断处理时间为ta，被置换页面没有被修改的缺页中断时间为tb，那么，缺页中断处理时间的计算公式为   t=β×ta+(1—β)×tb</p>
+<h1 id="页面置换算法"><a href="#页面置换算法" class="headerlink" title="页面置换算法"></a>页面置换算法</h1><p>在进程运行过程中，若其所要访问的页面不在内存，而需把它们调入内存，但内存已无空闲空间时，为了保证该进程能正常运行，<strong>系统必须从内存中调出一页程序或数据送到磁盘的对换区中</strong>。但应将哪个页面调出，须根据一定的算法来确定。通常，**把选择换出页面的算法称为页面置换算法(Page-Replacement Algorithms)**。置换算法的好坏将直接影响到系统的性能。</p>
+<h2 id="最佳-Optimal-置换算法"><a href="#最佳-Optimal-置换算法" class="headerlink" title="最佳(Optimal)置换算法"></a>最佳(Optimal)置换算法</h2><p>最佳置换算法是由Belady于1966年提出的一种理论上的算法。<strong>其所选择的被淘汰页面将是以后永不使用的，或许是在最长(未来)时间内不再被访问的页面。</strong>采用最佳置换算法通常<strong>可保证获得最低的缺页率</strong>。但由于人们目前还无法预知，一个进程在内存的若干个页面中，哪一个页面是未来最长时间内不再被访问的，因而该算法是无法实现的，但可以利用该算法去评价其它算法。</p>
+<p>该算法是无法实现的，但是会利用该算法去评价其它算法。</p>
+<h2 id="先进先出-FIFO-页面置换算法"><a href="#先进先出-FIFO-页面置换算法" class="headerlink" title="先进先出(FIFO)页面置换算法"></a>先进先出(FIFO)页面置换算法</h2><p>　FIFO算法是最早出现的置换算法。<strong>该算法总是淘汰最先进入内存的页面，即选择在内存中驻留时间最久的页面予以淘汰</strong>。该算法实现简单，只需把一个进程已调入内存的页面按先后次序链接成一个队列，并设置一个指针，称为替换指针，使它总是指向最老的页面。但该<strong>算法与进程实际运行的规律不相适应，</strong>因为在进程中，有些页面经常被访问，比如，含有全局变量、常用函数、例程等的页面，<strong>FIFO算法并不能保证这些页面不被淘汰</strong>。</p>
+<p><strong>淘汰最先进入内存的页面，但可能那些页面也会被再次使用</strong>。所以这个算法也不太行。</p>
+<h2 id="LRU-Least-Recently-Used-最近最久未使用置换算法"><a href="#LRU-Least-Recently-Used-最近最久未使用置换算法" class="headerlink" title="LRU(Least Recently Used)最近最久未使用置换算法"></a>LRU(Least Recently Used)最近最久未使用置换算法</h2><p>FIFO置换算法的性能之所以较差，<strong>是因为它所依据的条件是各个页面调入内存的时间，而页面调入的先后并不能反映页面的使用情况。最近最久未使用(LRU)的页面置换算法是根据页面调入内存后的使用情况做出决策的。</strong></p>
+<p>需要的硬件支持：</p>
+<p>可利用一个特殊的栈保存当前使用的各个页面的页面号。每当进程访问某页面时，便将该页面的页面号从栈中移出，将它压入栈顶。因此，<strong>栈顶始终是最新被访问页面的编号，而栈底则是最近最久未使用页面的页面号</strong>。假定现有一进程，它分有五个物理块，所访问的页面的页面号序列为：4，7，0，7，1，0，1，2，1，2，6</p>
+<p><img src="/images/storage/member19" alt="img"></p>
+<h2 id="抖动"><a href="#抖动" class="headerlink" title="抖动"></a>抖动</h2><p>“抖动”与工作集 ：</p>
+<p>　　由于<strong>请求分页式虚拟存储器</strong>系统的性能优越，在正常运行情况下，<strong>它能有效地减少内存碎片，提高处理机的利用率和吞吐量</strong>，故是目前最常用的一种系统。但如果在系统中运行的进程太多，进程在运行中会频繁地发生缺页情况，这又会对系统的性能产生很大的影响，故还须对请求分页系统的性能做简单的分析。</p>
+<p>由于虚拟存储器系统<strong>能从逻辑上扩大内存</strong>，这时，只需装入一个进程的部分程序和数据便可开始运行，故人们希望在系统中能运行更多的进程，即增加多道程序度，以提高处理机的利用率。**但处理机的实际利用率却如图中的实线所示。 **</p>
+<p><img src="/images/storage/member20" alt="img"></p>
+<p>产生“抖动”的原因：</p>
+<p>　　发生“抖动”的根本原因是，<strong>同时在系统中运行的进程太多，由此分配给每一个进程的物理块太少，不能满足进程正常运行的基本要求，致使每个进程在运行时，频繁地出现缺页，必须请求系统将所缺之页调入内存</strong>。这会使得在系统中排队等待页面调进/调出的进程数目增加。显然，对磁盘的有效访问时间也随之急剧增加，造成每个进程的大部分时间都用于页面的换进/换出，而几乎不能再去做任何有效的工作，从而导致发生处理机的利用率急剧下降并趋于0的情况。<strong>我们称此时的进程是处于“抖动”状态。</strong></p>
+
+          
+            <div class='article_footer'>
+              
+                
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+
+
+  
+
+  
+    
+    
+
+<section class="widget copyright  desktop mobile">
+  <div class='content'>
+    
+      <blockquote>
+        
+          
+            <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+          
+        
+          
+            <p>本文永久链接是：<a href=https://gschaos.club/Memory%20management/>https://gschaos.club/Memory%20management/</a></p>
+          
+        
+      </blockquote>
+    
+  </div>
+</section>
+
+  
+
+  
+    
+    
+
+<section class="widget qrcode  desktop mobile">
+  
+
+  <div class='content article-entry'>
+    
+  </div>
+</section>
+
+  
+
+
+              
+            </div>
+          
+        </div>
+        
+          
+
+
+  <section class='meta' id="footer-meta">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-09-10T16:42:10+08:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2020年9月10日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>操作系统</p></a></div>
+
+
+        
+      
+        
+          
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://gschaos.club/Memory%20management/&title=存储器管理 - MysticalYcc&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://gschaos.club/Memory%20management/&title=存储器管理 - MysticalYcc&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://service.weibo.com/share/share.php?url=https://gschaos.club/Memory%20management/&title=存储器管理 - MysticalYcc&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png">
+          
+        </a>
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </section>
+
+
+        
+        
+          <div class="prev-next">
+            
+              <a class='prev' href='/resolution%20jar%20rejected/'>
+                <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>解决jar包冲突的简单办法</p>
+                <p class='content'>
+解决jar包冲突的简单办法– 在使用log4j.properties时，pom中导入的一些jar会产生log4j类的冲突报错，以下是一个简单的pom配置：
+
+
+
+
+解决jar包冲突的简单办法场...</p>
+              </a>
+            
+            
+              <a class='next' href='/some%20books%20for%20me/'>
+                <p class='title'>操作系统+网络<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+                <p class='content'>
+最近在读一本&lt;&lt;软件架构设计:大型网站技术架构与业务融合之道&gt;&gt;,它就像是把你平时一点点积累的知识有条理且有深度的整合。一步一步的将读者断断续续的知识接起来。以下文章是...</p>
+              </a>
+            
+          </div>
+        
+      </section>
+    </article>
+  
+
+  
+    
+
+  <article class="post white-box reveal comments shadow">
+    <section class="article typo">
+      <p ct><i class='fas fa-comments'></i> 评论</p>
+      
+      <section id="comments">
+        <div id="valine_container" class="valine_thread">
+  <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+</div>
+
+      </section>
+    </section>
+  </article>
+
+
+  
+
+
+
+
+<!-- 根据页面mathjax变量决定是否加载MathJax数学公式js -->
+
+
+</div>
+<aside class='l_side'>
+  
+  
+
+  
+    
+    
+
+
+
+  <section class="widget toc-wrapper shadow desktop mobile" id="toc-div" >
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%99%A8%E7%AE%A1%E7%90%86"><span class="toc-text">存储器管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E7%9A%84%E8%A3%85%E5%85%A5%E5%92%8C%E9%93%BE%E6%8E%A5"><span class="toc-text">程序的装入和链接</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%9D%E5%AF%B9%E8%A3%85%E5%85%A5%EF%BC%88%E9%BA%BB%E7%83%A6%EF%BC%89"><span class="toc-text">绝对装入（麻烦）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E9%87%8D%E5%AE%9A%E4%BD%8D%E8%A3%85%E5%85%A5%E6%96%B9%E5%BC%8F%EF%BC%88%E9%81%BF%E5%85%8D%E5%9C%B0%E5%9D%80%E5%8F%A0%E5%8A%A0%EF%BC%89"><span class="toc-text">可重定位装入方式（避免地址叠加）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E8%A3%85%E5%85%A5"><span class="toc-text">静态装入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E8%A3%85%E5%85%A5"><span class="toc-text">动态装入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E9%93%BE%E6%8E%A5"><span class="toc-text">静态链接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5"><span class="toc-text">动态链接</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BA%E5%AE%9A%E5%88%86%E5%8C%BA%E6%96%B9%E5%BC%8F"><span class="toc-text">固定分区方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%88%86%E5%8C%BA"><span class="toc-text">动态分区</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A2%8E%E7%89%87%E9%97%AE%E9%A2%98"><span class="toc-text">碎片问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E9%87%8D%E5%AE%9A%E4%BD%8D%E5%88%86%E5%8C%BA%E5%88%86%E9%85%8D"><span class="toc-text">可重定位分区分配</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-text">实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%82%B9"><span class="toc-text">优点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E9%A1%B5%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86"><span class="toc-text">分页存储管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B5%E8%A1%A8"><span class="toc-text">页表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%AE%B5%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86"><span class="toc-text">分段存储管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%AE%B5%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="toc-text">分段系统的基本原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AE%B5%E8%A1%A8"><span class="toc-text">段表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E9%A1%B5%E5%92%8C%E5%88%86%E6%AE%B5%E7%9A%84%E6%80%BB%E7%BB%93"><span class="toc-text">分页和分段的总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AE%B5%E9%A1%B5%E5%BC%8F%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86"><span class="toc-text">段页式存储管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E5%AD%98%E5%82%A8%E5%99%A8%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-text">虚拟存储器的定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95"><span class="toc-text">实现方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B5%E9%9D%A2%E8%B0%83%E5%85%A5%E7%AD%96%E7%95%A5"><span class="toc-text">页面调入策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%BA%E9%A1%B5%E7%8E%87"><span class="toc-text">缺页率</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E4%BD%B3-Optimal-%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95"><span class="toc-text">最佳(Optimal)置换算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E8%BF%9B%E5%85%88%E5%87%BA-FIFO-%E9%A1%B5%E9%9D%A2%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95"><span class="toc-text">先进先出(FIFO)页面置换算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LRU-Least-Recently-Used-%E6%9C%80%E8%BF%91%E6%9C%80%E4%B9%85%E6%9C%AA%E4%BD%BF%E7%94%A8%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95"><span class="toc-text">LRU(Least Recently Used)最近最久未使用置换算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%96%E5%8A%A8"><span class="toc-text">抖动</span></a></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+
+    </div>
+    
+  
+  <footer class="clearfix">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+  
+    <meting-js
+      theme='#1BCDFC'
+      autoplay='true'
+      volume='0.7'
+      loop='all'
+      order='list'
+      fixed='false'
+      list-max-height='320px'
+      server='netease'
+      type='playlist'
+      id='374088504'
+      list-folded='true'>
+    </meting-js>
+  
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+              <a href="/atom.xml"
+                class="social fas fa-rss flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="mailto:568166723@qq.com"
+                class="social fas fa-envelope flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="https://github.com/yccjack"
+                class="social fab fa-github flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+            
+              <a href="https://music.163.com/#/user/home?id=272854615"
+                class="social fas fa-headphones-alt flat-btn"
+                target="_blank"
+                rel="external nofollow noopener noreferrer">
+              </a>
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客内容遵循 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+      
+    
+      
+        本站使用
+        <a href="https://github.com/volantis-x/hexo-theme-volantis/releases/tag/3.0.0" target="_blank" class="codename">Volantis</a>
+        作为主题，总访问量为
+          <span id="busuanzi_value_site_pv"><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+          次
+        
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="/">Copyright ©  皖ICP备19015872号-1</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+
+    <a class="s-top fas fa-arrow-up fa-fw" href='javascript:void(0)'></a>
+  </div>
+  <div>
+    
+      
+  
+
+  <div id="rightmenu-wrapper">
+    <ul class="list-v rightmenu" id="rightmenu-content">
+      <li class='option'>
+        <a class='vlts-menu opt fix-cursor-default' id='menu-copy-text' onclick='document.execCommand("copy")'><i class='fa fa-copy fa-fw'></i>复制文本</a>
+        <hr id='hr-text'>
+        <a class='vlts-menu opt fix-cursor-default' id='menu-copy-href'><i class='fa fa-link fa-fw'></i>复制链接</a>
+        <a class='vlts-menu opt fix-cursor-default' id='menu-open-href'><i class='fa fa-external-link-square-alt fa-fw'></i>在新标签页打开</a>
+        <hr id='hr-href'>
+        <a class='vlts-menu opt fix-cursor-default' id='menu-copy-src'><i class='fa fa-image fa-fw'></i>复制图片地址</a>
+        <hr id='hr-src'>
+      </li>
+      <li class='navigation'>
+        <a class='nav icon-only fix-cursor-default' onclick='history.back()'><i class='fa fa-arrow-left fa-fw'></i></a>
+        <a class='nav icon-only fix-cursor-default' onclick='history.forward()'><i class='fa fa-arrow-right fa-fw'></i></a>
+        <a class='nav icon-only fix-cursor-default' onclick='window.location.reload()'><i class='fa fa-redo fa-fw'></i></a>
+        <a class='nav icon-only fix-cursor-default' href='/'><i class='fa fa-home fa-fw'></i></a>
+      </li>
+      <hr>
+      
+        
+      
+        
+          
+    <li>
+      <a class='vlts-menu fix-cursor-default' href=https://volantis.js.org/faqs/
+        
+        
+        
+        
+          id="https:volantisjsorgfaqs"
+        >
+        <i class='fab fa-github fa-fw'></i> GitHub
+      </a>
+    </li>
+  
+        
+      
+        
+          
+    <li>
+      <a class='vlts-menu fix-cursor-default' href=https://blog.csdn.net/qq_17238449
+        
+        
+        
+        
+          id="https:blogcsdnnetqq_17238449"
+        >
+        <i class='fas fa-blog fa-fw'></i> csdn
+      </a>
+    </li>
+  
+        
+      
+        
+          
+    <li>
+      <a class='vlts-menu fix-cursor-default' href=https://www.gschaos.club/about/
+        
+        
+        
+        
+          id="https:wwwgschaosclubabout"
+        >
+        <i class='fas fa-portrait fa-fw'></i> 关于本人
+      </a>
+    </li>
+  
+        
+      
+        
+          <hr>
+        
+      
+        
+          
+    <li>
+      <a class='vlts-menu fix-cursor-default' href=https://github.com/yccjack/yccjack.github.io
+        
+        
+        
+        
+          id="https:githubcomyccjackyccjackgithubio"
+        >
+        <i class='fa fa-code-branch fa-fw'></i> 本站源码
+      </a>
+    </li>
+  
+        
+      
+        
+          
+    <li>
+      <a class='vlts-menu fix-cursor-default' href=https://github.com/volantis-x/hexo-theme-volantis/
+        
+        
+        
+        
+          id="https:githubcomvolantis-xhexo-theme-volantis"
+        >
+        <i class='fa fa-code-branch fa-fw'></i> 主题源码
+      </a>
+    </li>
+  
+        
+      
+        
+          <hr>
+        
+      
+        
+          
+    <li>
+      <a class='vlts-menu fix-cursor-default' 
+        
+        
+        
+          onclick="document.execCommand('print')"
+        
+        >
+        <i class='fa fa-print fa-fw'></i> 打印页面
+      </a>
+    </li>
+  
+        
+      
+        
+          <hr>
+        
+      
+        
+          <li class='music name'>
+            <p class='nav music-title fix-cursor-default'></p>
+          </li>
+          <li class='music ctrl'>
+            <a class='nav icon-only backward fix-cursor-default' onclick='aplayerBackward()'><i class='fa fa-step-backward fa-fw'></i></a>
+            <a class='nav icon-only toggle fix-cursor-default' onclick='aplayerToggle()'><i class='fa fa-play fa-fw'></i></a>
+            <a class='nav icon-only forward fix-cursor-default' onclick='aplayerForward()'><i class='fa fa-step-forward fa-fw'></i></a>
+          </li>
+          <li class='music volume'>
+            <a class='nav volume'>
+              <div class="aplayer-volume-bar-wrap">
+                <div class="aplayer-volume-bar fix-cursor-pointer">
+                  <div class="aplayer-volume"></div>
+                  <i class='left fa fa-volume-off fa-fw'></i>
+                  <i class='right fa fa-volume-up fa-fw'></i>
+                </div>
+              </div>
+            </a>
+          </li>
+        
+      
+    </ul>
+  </div>
+
+  <script>
+    window.document.oncontextmenu = function (event) {
+      if (event.ctrlKey) return true;
+      if (/Android|webOS|BlackBerry/i.test(navigator.userAgent)) return true;
+      return popMenu(event);
+    };
+    document.addEventListener("click", function (event) {
+      var mymenu = document.getElementById('rightmenu-wrapper');
+      mymenu.style.display = "none";
+    });
+    function popMenu(event) {
+      var mymenu = document.getElementById('rightmenu-wrapper');
+      var menuContent = document.getElementById('rightmenu-content');
+      var screenWidth = document.documentElement.clientWidth || document.body.clientWidth;
+      var screenHeight = document.documentElement.clientHeight || document.body.clientHeight;
+      mymenu.style.left = event.clientX + "px"; // 获取鼠标位置
+      mymenu.style.top = event.clientY + "px";
+      mymenu.style.display = 'block';
+      if (event.clientX * 2 > screenWidth) {
+        menuContent.classList.add('left');
+      } else {
+        menuContent.classList.remove('left');
+      }
+      if (event.clientY * 2 > screenHeight) {
+        menuContent.classList.add('top');
+      } else {
+        menuContent.classList.remove('top');
+      }
+
+      let hrText = document.getElementById('hr-text');
+      let hrSrc = document.getElementById('hr-src');
+      let hrHref = document.getElementById('hr-href');
+
+      // 选中图片
+      let copySrc = document.getElementById('menu-copy-src');
+      if (copySrc != undefined) {
+        if (event.target.currentSrc) {
+          copySrc.style.display = 'block';
+          copySrc.addEventListener("click", function (e) {
+            copyString(event.target.currentSrc);
+          },{once: true});
+          hrSrc.style.display = 'block';
+        } else {
+          copySrc.style.display = 'none';
+          hrSrc.style.display = 'none';
+        }
+      }
+
+      // 选中按钮
+      // 判断是不是按钮
+      let href = '';
+      if (event.path) {
+        for (i = 0; i < event.path.length; i++) {
+          if (event.path[i].href != undefined && event.path[i].href.length > 0) {
+            href = event.path[i].href;
+          }
+        }
+      }
+
+      let copyText = document.getElementById('menu-copy-text');
+      copyText.style.display = 'none';
+      hrText.style.display = 'none';
+      if (href.length == 0) {
+        // 选中文本
+        if (window.getSelection().toString()) {
+          copyText.style.display = 'block';
+          hrText.style.display = 'block';
+        }
+      }
+
+      // 在新标签页打开
+      let openHref = document.getElementById('menu-open-href');
+      if (openHref != undefined) {
+        if (href.length > 0) {
+          openHref.style.display = 'block';
+          openHref.addEventListener("click", function (e) {
+            window.open(href);
+          },{once: true});
+          hrHref.style.display = 'block';
+        } else {
+          openHref.style.display = 'none';
+          hrHref.style.display = 'none';
+        }
+      }
+      // 复制链接
+      let copyHref = document.getElementById('menu-copy-href');
+      if (copyHref != undefined) {
+        if (href.length > 0) {
+          copyHref.style.display = 'block';
+          copyHref.addEventListener("click", function (e) {
+            copyString(href);
+          },{once: true});
+        } else {
+          copyHref.style.display = 'none';
+        }
+      }
+
+      // 有音乐播放器
+      if (true == true) {
+        // 如果有aplayer，初始化一下
+      	try {
+      		checkAPlayer();
+          updateTitle();
+      	} catch (error) {
+      		console.log(error);
+      	}
+      }
+
+      return false; // 该行代码确保系统自带的右键菜单不会被调出
+    }
+    function hideMenu() {
+      document.getElementById('rightmenu-wrapper').style.display = 'none';
+    }
+    function copyString(str) {
+      const input = document.createElement('input');
+      input.setAttribute('readonly', 'readonly');
+      document.body.appendChild(input);
+      input.setAttribute('value', str);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+    }
+    document.execCommand('click');
+  </script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5/dist/jquery.min.js"></script>
+
+
+
+  <script>
+    
+    var SEARCH_SERVICE = "hexo" || "hexo";
+    var ROOT = "/" || "/";
+    if (!ROOT.endsWith('/')) ROOT += '/';
+  </script>
+
+
+
+  <script async src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-volantis@2/js/instant_page.js" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+
+
+
+  
+  
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/jquery-backstretch@2.1.18/jquery.backstretch.min.js"></script>
+
+    <script type="text/javascript">
+      $(function(){
+        var imgs=["https://mysticalyu.gitee.io/pic/img/a-i-20.jpg", "https://mysticalyu.gitee.io/pic/img/73vek3.jpg", "https://mysticalyu.gitee.io/pic/img/aniraiden-wu-final003-00000.jpg", "https://mysticalyu.gitee.io/pic/img/bora-kim-1-thumbnail2.jpg", "https://mysticalyu.gitee.io/pic/img/cat-lazy-fengmian.jpg", "https://mysticalyu.gitee.io/pic/img/gyul-bae-templar-20-g.jpg", "https://mysticalyu.gitee.io/pic/img/yueyang.jpg"];
+        if ('true' == 'true') {
+          function shuffle(arr){
+            /*From countercurrent-time*/
+            var n = arr.length;
+            while(n--) {
+              var index = Math.floor(Math.random() * n);
+              var temp = arr[index];
+              arr[index] = arr[n];
+              arr[n] = temp;
+            }
+          }
+          shuffle(imgs);
+        }
+        if ('.cover') {
+          $('.cover').backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        } else {
+          $.backstretch(
+            imgs,
+          {
+            duration: "20000",
+            fade: "1500"
+          });
+        }
+      });
+    </script>
+  
+
+
+
+  <script>
+    let APlayerController = new Object();
+    APlayerController.id = '374088504';  // 设定全局音乐播放ID
+    APlayerController.volume = '0.7';
+  </script>
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+
+  
+    
+<script src="https://cdn.jsdelivr.net/npm/meting@2.0/dist/Meting.min.js"></script>
+
+  
+    
+<script src="/js/aplayer.js"></script>
+
+  
+
+
+
+
+  
+  
+<script src="/js/valine.js"></script>
+
+
+<script>
+  var GUEST_INFO = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link'.split(',').filter(function (item) {
+    return GUEST_INFO.indexOf(item) > -1
+  });
+  var REQUIRED_FIELDS = ['nick', 'mail', 'link'];
+  var requiredFields = 'nick,mail'.split(',').filter(function (item) {
+    return REQUIRED_FIELDS.indexOf(item) > -1
+  });
+
+  function emoji(path, idx, ext) {
+    return path + "/" + path + "-" + idx + "." + ext;
+  }
+
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+
+  function pjax_valine() {
+    let pageUrl = $.trim($('#pjax-comment-path').text()) === "none" ? 
+      decodeURI(window.location.pathname) : $.trim($('#pjax-comment-path').text());
+    let pagePlaceholder = $.trim($('#pjax-comment-placeholder').text()) === "none" ?
+      "快来评论吧~" : $.trim($('#pjax-comment-placeholder').text());
+
+    let ALLPATH = '';
+    if(ALLPATH != '') pageUrl = ALLPATH;
+
+    var valine = new Valine();
+    valine.init({
+      el: '#valine_container',
+      meta: meta,
+      placeholder: pagePlaceholder,
+      path: pageUrl,
+      appId: "J2f6Gx43ptrGYdf1rHPAS5sJ-gzGzoHsz",
+      appKey: "cSywIQR7CfBFaNI8iiPTYy41",
+      pageSize: '10',
+      avatar: 'robohash',
+      lang: 'zh-cn',
+      visitor: 'true',
+      highlight: 'true',
+      mathJax: 'false',
+      enableQQ: 'true',
+      requiredFields: requiredFields,
+      emojiCDN: 'https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/valine/',
+      emojiMaps: emojiMaps
+    })
+  }
+
+  $(function () {
+    pjax_valine();
+  });
+</script>
+
+
+
+
+<!-- darkmodejs -->
+
+
+<!-- 复制 -->
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+    var clipboard = new ClipboardJS('.btn-copy', {
+        target: function (trigger) {
+            return trigger.nextElementSibling
+        }
+    });
+    function wait(callback, seconds) {
+        var timelag = null;
+        timelag = window.setTimeout(callback, seconds)
+    }
+    function pjax_initCopyCode() {
+        var copyHtml = '';
+        copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+        copyHtml += '<i class="fas fa-copy"></i><span>COPY</span>';
+        copyHtml += '</button>';
+        $(".highlight .code pre").before(copyHtml);
+        $(".article pre code").before(copyHtml);
+        clipboard.off('success').on('success', function (e) {
+            let $btn = $(e.trigger);
+            $btn.addClass('copied');
+            let $icon = $($btn.find('i'));
+            $icon.removeClass('fa-copy');
+            $icon.addClass('fa-check-circle');
+            let $span = $($btn.find('span'));
+            $span[0].innerText = 'COPIED';
+            wait(function () {
+                $icon.removeClass('fa-check-circle');
+                $icon.addClass('fa-copy');
+                $span[0].innerText = 'COPY'
+            }, 2000)
+        });
+        clipboard.off('error').on('error', function (e) {
+            e.clearSelection();
+            let $btn = $(e.trigger);
+            $btn.addClass('copy-failed');
+            let $icon = $($btn.find('i'));
+            $icon.removeClass('fa-copy');
+            $icon.addClass('fa-times-circle');
+            let $span = $($btn.find('span'));
+            $span[0].innerText = 'COPY FAILED';
+            wait(function () {
+                $icon.removeClass('fa-times-circle');
+                $icon.addClass('fa-copy');
+                $span[0].innerText = 'COPY'
+            }, 2000)
+        })
+    }
+    $(function () {
+        pjax_initCopyCode()
+    });
+</script>
+
+
+<!-- scrollreveal -->
+
+  <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.6/dist/scrollreveal.min.js"></script>
+  <script type="text/javascript">
+    function pjax_scrollrebeal() {
+      ScrollReveal().reveal('.l_main .reveal', {
+        distance: '32px',
+        duration: '800',
+        interval: '20',
+        scale: '1',
+        easing: 'ease-out'
+      });
+    }
+
+    $(function () {
+      pjax_scrollrebeal();
+    });
+  </script>
+
+<!-- ******************************** -->
+
+<!-- fancybox -->
+<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+<script>
+  function pjax_fancybox() {
+    $(".article-entry").find("img").not('.inline').not('a img').each(function () { //渲染 fancybox
+      var element = document.createElement("a"); // a 标签
+      $(element).attr("class", "fancybox");
+      $(element).attr("pjax-fancybox", "");  // 过滤 pjax
+      $(element).attr("href", $(this).attr("src"));
+      if ($(this).attr("data-original")) {
+        $(element).attr("href", $(this).attr("data-original"));
+      }
+      $(element).attr("data-fancybox", "images");
+      var caption = "";   // 描述信息
+      if ($(this).attr('alt')) {  // 判断当前页面是否存在描述信息
+        $(element).attr('data-caption', $(this).attr('alt'));
+        caption = $(this).attr('alt');
+      }
+      var div = document.createElement("div");
+      $(div).addClass("fancybox");
+      $(this).wrap(div); // 最外层套 div ，其实主要作用还是 class 样式
+      var span = document.createElement("span");
+      $(span).addClass("image-caption");
+      $(span).text(caption); // 加描述
+      $(this).after(span);  // 再套一层描述
+      $(this).wrap(element);  // 最后套 a 标签
+    })
+    $(".article-entry").find("img").fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+      closeClick: true,
+      helpers: {
+        overlay: {closeClick: true}
+      },
+      buttons: [
+        "zoom",
+        "close"
+      ]
+    });
+  };
+  $(function () {
+    pjax_fancybox();
+  });
+</script>
+
+<!-- ******************************** -->
+
+
+  
+<script src="/js/app.js"></script>
+
+
+
+
+  
+    
+<script src="/js/search.js"></script>
+
+  
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-busuanzi@2.3/js/busuanzi.pure.mini.js" data-pjax></script>
+
+
+
+  
+<script src="https://cdn.jsdelivr.net/npm/node-waves@0.7.6/dist/waves.min.js"></script>
+
+  <script type="text/javascript">
+    $(function () {
+      Waves.attach('.flat-btn', ['waves-button']);
+      Waves.attach('.float-btn', ['waves-button', 'waves-float']);
+      Waves.attach('.float-btn-light', ['waves-button', 'waves-float', 'waves-light']);
+      Waves.attach('.flat-box', ['waves-block']);
+      Waves.attach('.float-box', ['waves-block', 'waves-float']);
+      Waves.attach('.waves-image');
+      Waves.init();
+    });
+  </script>
+
+
+
+
+
+
+
+
+    
+      
+
+
+<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script>
+
+<!-- 样式位于：source/css/_third-party/pjaxanimate.styl -->
+
+<div class="pjax-animate">
+  
+    <script src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+    <div id="loading-bar-wrapper"><script>NProgress.configure({parent:"#loading-bar-wrapper",trickleSpeed: 100})</script></div>
+    <script>
+      window.ShowLoading = function() {
+        NProgress.start();
+      };
+      window.HideLoading = function() {
+        NProgress.done();
+      }
+    </script>
+  
+</div>
+
+<script>
+    var pjax;
+    document.addEventListener('DOMContentLoaded', function () {
+      pjax = new Pjax({
+        elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([pjax-fancybox])',
+        selectors: [
+          "title",
+          "#pjax-container",
+          "#pjax-header-nav-list"
+        ],
+        cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
+        timeout: 5000
+      });
+    });
+
+    document.addEventListener('pjax:send', function (e) {
+      window.stop(); // 相当于点击了浏览器的停止按钮
+
+      try {
+        var currentUrl = window.location.pathname;
+        var targetUrl = e.triggerElement.href;
+        var banUrl = [""];
+        if (banUrl[0] != "") {
+          banUrl.forEach(item => {
+            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
+              window.location.href = targetUrl;
+            }
+          });
+        }
+      } catch (error) {}
+
+      window.subData = null; // 移除标题（用于一二级导航栏切换处）
+      $.fancybox.close();    // 关闭弹窗
+      $('.l_header .switcher .s-search').removeClass('active'); // 关闭移动端激活的搜索框
+      $('.l_header').removeClass('z_search-open'); // 关闭移动端激活的搜索框
+      $('.wrapper').removeClass('sub'); // 跳转页面时关闭二级导航
+
+      // 解绑事件 避免重复监听
+      $('.s-top').unbind('click');
+      $('.menu a').unbind('click');
+      $(window).unbind('resize');
+      $(window).unbind('scroll');
+      $(document).unbind('scroll');
+      $(document).unbind('click');
+      $('body').unbind('click');
+      window.ShowLoading();
+    });
+
+    document.addEventListener('pjax:complete', function () {
+      // 关于百度统计对 SPA 页面的处理：
+      // 方案一：百度统计>管理>单页应用设置中，打开开启按钮即可对SPA进行统计。 https://tongji.baidu.com/web/help/article?id=324
+      // 方案二：取消注释下列代码。 https://tongji.baidu.com/web/help/article?id=235
+      // 
+
+      // 关于谷歌统计对 SPA 页面的处理：
+      // 当应用以动态方式加载内容并更新地址栏中的网址时，也应该更新通过 gtag.js 存储的网页网址。
+      // https://developers.google.cn/analytics/devguides/collection/gtagjs/single-page-applications?hl=zh-cn
+      
+
+      $('.nav-main').find('.list-v').not('.menu-phone').removeAttr("style",""); // 移除小尾巴的移除
+      $('.menu-phone.list-v').removeAttr("style",""); // 移除小尾巴的移除
+      $('script[data-pjax], .pjax-reload script').each(function () {
+        $(this).parent().append($(this).remove());
+      });
+
+      try{
+        pjax_fancybox();
+        
+          
+          if ('.cover') {
+            $('.cover').backstretch("resize");
+          } else {
+            $.backstretch("resize");
+          }
+        
+        
+        
+          pjax_scrollrebeal();
+        
+        
+          pjax_initCopyCode();
+        
+        
+          pjax_valine();
+        
+        
+        
+        
+        
+      } catch (e) {
+        console.log(e);
+      }
+      window.HideLoading();
+    });
+
+    document.addEventListener('pjax:error', function (e) {
+      window.HideLoading();
+      window.location.href = e.triggerElement.href;
+    });
+</script>
+
+    
+  </div>
+</body>
+</html>
