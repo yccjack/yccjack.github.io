@@ -1,4 +1,16 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>java虚拟机内存模型 | MysticalYcc</title><meta name="description" content="java虚拟机内存模型"><meta name="author" content="MysticalYcc"><meta name="copyright" content="MysticalYcc"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="canonical" href="https://gschaos.club/Virtual%20machine%20memory%20model/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta property="og:type" content="article"><meta property="og:title" content="java虚拟机内存模型"><meta property="og:url" content="https://gschaos.club/Virtual%20machine%20memory%20model/"><meta property="og:site_name" content="MysticalYcc"><meta property="og:description" content="java虚拟机内存模型"><meta property="og:image" content="https://mysticalyu.gitee.io/pic/img/huifeng-huang-pose-cl05.jpg"><meta property="article:published_time" content="2019-12-03T16:00:00.000Z"><meta property="article:modified_time" content="2020-09-11T03:14:09.000Z"><meta name="twitter:card" content="summary"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>java虚拟机内存模型 | MysticalYcc</title><meta name="author" content="MysticalYcc"><meta name="copyright" content="MysticalYcc"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="java虚拟机内存模型">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java虚拟机内存模型">
+<meta property="og:url" content="https://gschaos.club/Virtual%20machine%20memory%20model/index.html">
+<meta property="og:site_name" content="MysticalYcc">
+<meta property="og:description" content="java虚拟机内存模型">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mysticalyu.gitee.io/pic/img/huifeng-huang-pose-cl05.jpg">
+<meta property="article:published_time" content="2019-12-03T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-09-15T10:02:12.000Z">
+<meta property="article:author" content="MysticalYcc">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mysticalyu.gitee.io/pic/img/huifeng-huang-pose-cl05.jpg"><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="canonical" href="https://gschaos.club/Virtual%20machine%20memory%20model/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
   root: '/',
   hexoversion: '5.1.1',
   algolia: undefined,
@@ -11,16 +23,21 @@
     error: '复制错误',
     noSupport: '浏览器不支持'
   },
-  bookmark: {
-    message_prev: '按',
-    message_next: '键将本页加入书签'
+  relativeDate: {
+    homepage: false,
+    post: false
   },
-  runtime: '天',
-  date_suffix: {"one_hour":"刚刚","hours":"小时前","day":"天前"},
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
   copyright: undefined,
   ClickShowText: undefined,
-  medium_zoom: false,
-  fancybox: true,
+  lightbox: 'fancybox',
   Snackbar: undefined,
   justifiedGallery: {
     js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
@@ -41,7 +58,7 @@ var saveToLocal = {
       expiry: now.getTime() + expiryDay,
     }
     localStorage.setItem(key, JSON.stringify(item))
-    },
+  },
 
   get: function getWithExpiry(key) {
     const itemStr = localStorage.getItem(key)
@@ -63,14 +80,19 @@ var saveToLocal = {
   isHome: false,
   isHighlightShrink: false,
   isSidebar: true,
-  postUpdate: '2020-09-11 11:14:09'
+  postUpdate: '2020-09-15 18:02:12'
 }</script><noscript><style type="text/css">
-#nav {
-  opacity: 1
-}
-.justified-gallery img {
-  opacity: 1
-}
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
 </style></noscript><script>var activateDarkMode = function () {
   document.documentElement.setAttribute('data-theme', 'dark')
   if (document.querySelector('meta[name="theme-color"]') !== null) {
@@ -118,7 +140,7 @@ if (autoChangeMode === '1') {
 } else {
   if (t === 'dark') activateDarkMode()
   else if (t === 'light') activateLightMode()
-}</script><meta name="generator" content="Hexo 5.1.1"></head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="https://gschaos.club/ico/me.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">44</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">28</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">16</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="toc-number">1.</span> <span class="toc-text">虚拟机</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BB%84%E6%88%90"><span class="toc-number">2.</span> <span class="toc-text">虚拟机组成</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%88"><span class="toc-number">2.1.</span> <span class="toc-text">栈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8"><span class="toc-number">2.2.</span> <span class="toc-text">程序计数器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E5%8C%BA"><span class="toc-number">2.3.</span> <span class="toc-text">方法区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88"><span class="toc-number">2.4.</span> <span class="toc-text">本地方法栈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A0%86"><span class="toc-number">2.5.</span> <span class="toc-text">堆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GC"><span class="toc-number">2.6.</span> <span class="toc-text">GC</span></a></li></ol></li></ol></div></div></div><header class="post-bg" id="page-header" style="background-image: url(https://mysticalyu.gitee.io/pic/img/huifeng-huang-pose-cl05.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">MysticalYcc</a></span><span id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">java虚拟机内存模型</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-12-03T16:00:00.000Z" title="发表于 2019-12-04 00:00:00">2019-12-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2020-09-11T03:14:09.000Z" title="更新于 2020-09-11 11:14:09">2020-09-11</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/java/">java</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><p><img src="https://mysticalyu.gitee.io/pic/img/huifeng-huang-pose-cl05.jpg"></p>
+}</script><meta name="generator" content="Hexo 5.1.1"></head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="https://gschaos.club/ico/me.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">44</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">28</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">16</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div id="body-wrap"><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="toc-number">1.</span> <span class="toc-text">虚拟机</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%BB%84%E6%88%90"><span class="toc-number">2.</span> <span class="toc-text">虚拟机组成</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%88"><span class="toc-number">2.1.</span> <span class="toc-text">栈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8"><span class="toc-number">2.2.</span> <span class="toc-text">程序计数器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E5%8C%BA"><span class="toc-number">2.3.</span> <span class="toc-text">方法区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88"><span class="toc-number">2.4.</span> <span class="toc-text">本地方法栈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A0%86"><span class="toc-number">2.5.</span> <span class="toc-text">堆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GC"><span class="toc-number">2.6.</span> <span class="toc-text">GC</span></a></li></ol></li></ol></div></div></div><header class="post-bg" id="page-header" style="background-image: url(https://mysticalyu.gitee.io/pic/img/huifeng-huang-pose-cl05.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">MysticalYcc</a></span><span id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">java虚拟机内存模型</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-12-03T16:00:00.000Z" title="发表于 2019-12-04 00:00:00">2019-12-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2020-09-15T10:02:12.000Z" title="更新于 2020-09-15 18:02:12">2020-09-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/java/">java</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><p><img src="https://mysticalyu.gitee.io/pic/img/huifeng-huang-pose-cl05.jpg"></p>
 <a id="more"></a>
 
 
@@ -127,28 +149,28 @@ if (autoChangeMode === '1') {
 <p>作者：土豆是我的最爱</p>
 <p>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_37141773/article/details/103138476">https://blog.csdn.net/qq_37141773/article/details/103138476</a></p>
 </blockquote>
-<h1 id="虚拟机"><a href="#虚拟机" class="headerlink" title="虚拟机"></a>虚拟机</h1><p><img src="https://img-blog.csdnimg.cn/20191119111545984.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<h1 id="虚拟机"><a href="#虚拟机" class="headerlink" title="虚拟机"></a>虚拟机</h1><p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191119111545984.png" alt="img"></p>
 <p>同样的java代码在不同平台生成的机器码肯定是不一样的，因为不同的操作系统底层的硬件指令集是不同的。</p>
 <p>同一个java代码在windows上生成的机器码可能是0101…….，在linux上生成的可能是1100……，那么这是怎么实现的呢？</p>
 <p>不知道同学们还记不记得，在下载jdk的时候，我们在oracle官网，基于不同的操作系统或者位数版本要下载不同的jdk版本，也就是说针对不同的操作系统，jdk虚拟机有不同的实现。</p>
 <p>那么虚拟机又是什么东西呢，如图是从软件层面屏蔽不同操作系统在底层硬件与指令上的区别，也就是跨平台的由来。</p>
 <p>说到这里同学们可能还是有点不太明白，说的还是太宏观了，那我们来了解下java虚拟机的组成。</p>
-<h1 id="虚拟机组成"><a href="#虚拟机组成" class="headerlink" title="虚拟机组成"></a>虚拟机组成</h1><p><img src="https://img-blog.csdnimg.cn/20191125152256267.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<h1 id="虚拟机组成"><a href="#虚拟机组成" class="headerlink" title="虚拟机组成"></a>虚拟机组成</h1><p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191125152256267.png" alt="img"></p>
 <h2 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h2><p>我们先讲一下其中的一块内存区域栈，大家都知道栈是存储局部变量的，也是线程独有的区域，也就是每一个线程都会有自己独立的栈区域。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Math</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> initData = <span class="number">666</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> User user = <span class="keyword">new</span> User();</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> b = <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">int</span> c = (a+b) * <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">return</span> c;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Math math = <span class="keyword">new</span> Math();</span><br><span class="line">    math.compute();</span><br><span class="line">    System.out.println(<span class="string">&quot;test&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>说起栈大家都不会陌生，数据结构中就有学，这里线程栈中存储数据的部分使用的就是栈，先进后出。</p>
 <p>大家都知道每个方法都有自己的局部变量，比如上图中<font color=#98F5FF>main</font>方法中的<font color=#FF6A6A>math</font>，<font color=#FF6A6A>compute</font>方法中的<font color=#98F5FF>a b c</font>，那么java虚拟机为了区分不同方法中局部变量作用域范围的内存区域，每个方法在运行的时候都会分配一块独立的栈帧内存区域，我们试着按上图中的程序来简单画一下代码执行的内存活动。</p>
-<p><img src="https://img-blog.csdnimg.cn/20191125161338493.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191125161338493.png" alt="img"></p>
 <p>执行<font color=#FF69B4>main</font>方法中的第一行代码是，栈中会分配<font color=#FF6A6A>main()</font>方法的栈帧，并存储<font color=#FFA500>math</font>局部变量,，接着执行<font color=#FF6A6A>compute()</font>方法，那么栈又会分配<font color=#FFA500>compute()</font>的栈帧区域。</p>
 <p>这里的栈存储数据的方式和数据结构中学习的栈是一样的，先进后出。当<font color=#FFA500>compute()</font>方法执行完之后，就会出栈被释放，也就符合先进后出的特点，后调用的方法先出栈。</p>
 <p><strong>栈帧</strong><br>那么栈帧内部其实不只是存放局部变量的，它还有一些别的东西，主要由四个部分组成。</p>
-<p><img src="https://img-blog.csdnimg.cn/2019112516224297.png" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/2019112516224297.png" alt="img"></p>
 <p>那么要讲这个就会涉及到更底层的原理–字节码。我们先看下我们上面代码的字节码文件。</p>
-<p><img src="https://img-blog.csdnimg.cn/20191125164159994.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191125164159994.png" alt="img"></p>
 <p>看着就是一个16字节的文件，看着像乱码，其实每个都是有对应的含义的，oracle官方是有专门的jvm字节码指令手册来查询每组指令对应的含义的。那我们研究的，当然不是这个。</p>
 <p>jdk有自带一个<font color=#FFA500>javap</font>的命令，可以将上述class文件生成一种更可读的字节码文件。</p>
-<p><img src="https://img-blog.csdnimg.cn/20191125170812635.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191125170812635.png" alt="img"></p>
 <p>我们使用<font color=#FFA500>javap -c</font>命令将class文件反编译并输出到TXT文件中。</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">Compiled from <span class="string">&quot;Math.java&quot;</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">com</span>.<span class="title">example</span>.<span class="title">demo</span>.<span class="title">test1</span>.<span class="title">Math</span> &#123;</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> initData;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> com.example.demo.bean.User user;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> com.example.demo.test1.Math();</span><br><span class="line">    Code:</span><br><span class="line">       <span class="number">0</span>: aload_0</span><br><span class="line">       <span class="number">1</span>: invokespecial #<span class="number">1</span>                  <span class="comment">// Method java/lang/Object.&quot;&lt;init&gt;&quot;:()V</span></span><br><span class="line">       <span class="number">4</span>: <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">int</span> compute();</span><br><span class="line">    Code:</span><br><span class="line">       <span class="number">0</span>: iconst_1</span><br><span class="line">       <span class="number">1</span>: istore_1</span><br><span class="line">       <span class="number">2</span>: iconst_2</span><br><span class="line">       <span class="number">3</span>: istore_2</span><br><span class="line">       <span class="number">4</span>: iload_1</span><br><span class="line">       <span class="number">5</span>: iload_2</span><br><span class="line">       <span class="number">6</span>: iadd</span><br><span class="line">       <span class="number">7</span>: bipush        <span class="number">10</span></span><br><span class="line">       <span class="number">9</span>: imul</span><br><span class="line">      <span class="number">10</span>: istore_3</span><br><span class="line">      <span class="number">11</span>: iload_3</span><br><span class="line">      <span class="number">12</span>: ireturn</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(java.lang.<span class="keyword">String</span>[])</span></span>;</span><br><span class="line">    Code:</span><br><span class="line">       <span class="number">0</span>: <span class="keyword">new</span>           #<span class="number">2</span>                  <span class="comment">// class com/example/demo/test1/Math</span></span><br><span class="line">       <span class="number">3</span>: dup</span><br><span class="line">       <span class="number">4</span>: invokespecial #<span class="number">3</span>                  <span class="comment">// Method &quot;&lt;init&gt;&quot;:()V</span></span><br><span class="line">       <span class="number">7</span>: astore_1</span><br><span class="line">       <span class="number">8</span>: aload_1</span><br><span class="line">       <span class="number">9</span>: invokevirtual #<span class="number">4</span>                  <span class="comment">// Method compute:()I</span></span><br><span class="line">      <span class="number">12</span>: pop</span><br><span class="line">      <span class="number">13</span>: getstatic     #<span class="number">5</span>                  <span class="comment">// Field java/lang/System.out:Ljava/io/PrintStream;</span></span><br><span class="line">      <span class="number">16</span>: ldc           #<span class="number">6</span>                  <span class="comment">// String test</span></span><br><span class="line">      <span class="number">18</span>: invokevirtual #<span class="number">7</span>                  <span class="comment">// Method java/io/PrintStream.println:(Ljava/lang/String;)V</span></span><br><span class="line">      <span class="number">21</span>: <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">static</span> &#123;&#125;;</span><br><span class="line">    Code:</span><br><span class="line">       <span class="number">0</span>: sipush        <span class="number">666</span></span><br><span class="line">       <span class="number">3</span>: putstatic     #<span class="number">8</span>                  <span class="comment">// Field initData:I</span></span><br><span class="line">       <span class="number">6</span>: <span class="keyword">new</span>           #<span class="number">9</span>                  <span class="comment">// class com/example/demo/bean/User</span></span><br><span class="line">       <span class="number">9</span>: dup</span><br><span class="line">      <span class="number">10</span>: invokespecial #<span class="number">10</span>                 <span class="comment">// Method com/example/demo/bean/User.&quot;&lt;init&gt;&quot;:()V</span></span><br><span class="line">      <span class="number">13</span>: putstatic     #<span class="number">11</span>                 <span class="comment">// Field user:Lcom/example/demo/bean/User;</span></span><br><span class="line">      <span class="number">16</span>: <span class="keyword">return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -169,7 +191,7 @@ if (autoChangeMode === '1') {
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0</span>: iconst_1     </span><br></pre></td></tr></table></figure>
 
 <p>这一步很简单，就是将1压入操作数栈 </p>
-<p><img src="https://img-blog.csdnimg.cn/20191125173802589.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191125173802589.png" alt="img"></p>
 <ol>
 <li>将int类型值存入局部变量1 </li>
 </ol>
@@ -178,7 +200,7 @@ if (autoChangeMode === '1') {
 
 
 <p>局部变量1，在我们代码中也就是第一个局部变量a，先给a在局部变量表中分配内存，然后将int类型的值，也就是目前唯一的一个1存入局部变量a</p>
-<p><img src="https://img-blog.csdnimg.cn/20191125174002271.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191125174002271.png" alt="img"></p>
 <ol start="2">
 <li>将int类型常量2压入操作数栈</li>
 </ol>
@@ -194,7 +216,7 @@ if (autoChangeMode === '1') {
 
 
 <p>这两行代码就和前两行类似了。</p>
-<p><img src="https://img-blog.csdnimg.cn/20191125175335780.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191125175335780.png" alt="img"></p>
 <ol start="4">
 <li>从局部变量1中装载int类型值</li>
 </ol>
@@ -210,7 +232,7 @@ if (autoChangeMode === '1') {
 
 
 <p>这两个代码是将局部变量1和2，也就是a和b的值装载到操作数栈中</p>
-<p><img src="https://img-blog.csdnimg.cn/20191125195538208.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191125195538208.png" alt="img"></p>
 <ol start="6">
 <li>执行int类型的加法</li>
 </ol>
@@ -219,7 +241,7 @@ if (autoChangeMode === '1') {
 
 
 <p><font color=#FFA500>iadd</font>指令一执行，会将操作数栈中的1和2依次从栈底弹出并相加，然后把运算结果3在压入操作数栈底。</p>
-<p><img src="https://img-blog.csdnimg.cn/20191125195857649.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191125195857649.png" alt="img"></p>
 <ol start="7">
 <li>将一个8位带符号整数压入栈</li>
 </ol>
@@ -228,7 +250,7 @@ if (autoChangeMode === '1') {
 
 
 <p> 这个指令就是将10压入栈</p>
-<p><img src="https://img-blog.csdnimg.cn/20191125200118182.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191125200118182.png" alt="img"></p>
 <ol start="8">
 <li>执行int类型的乘法</li>
 </ol>
@@ -237,7 +259,7 @@ if (autoChangeMode === '1') {
 
 
 <p>这里就类似上面的加法了，将3和10弹出栈，把结果30压入栈</p>
-<p><img src="https://img-blog.csdnimg.cn/20191125200401195.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191125200401195.png" alt="img"></p>
 <ol start="9">
 <li>将将int类型值存入局部变量3 </li>
 </ol>
@@ -246,7 +268,7 @@ if (autoChangeMode === '1') {
 
 
 <p>这里大家就不陌生了吧，和第二步第三步是一样的，将30存入局部变量3，也就是c</p>
-<p><img src="https://img-blog.csdnimg.cn/20191125200811132.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191125200811132.png" alt="img"></p>
 <ol start="10">
 <li>从局部变量3中装载int类型值</li>
 </ol>
@@ -255,7 +277,7 @@ if (autoChangeMode === '1') {
 
 
 <p>这个前面也说了</p>
-<p><img src="https://img-blog.csdnimg.cn/20191125201027757.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191125201027757.png" alt="img"></p>
 <ol start="11">
 <li>返回int类型值</li>
 </ol>
@@ -267,7 +289,7 @@ if (autoChangeMode === '1') {
 <p>方法出口说白了不就是方法执行完了之后要出到哪里，那么我们知道上面<font color=#FF69B4>compute()</font>方法执行完之后应该回到<font color=#FFA500>main()</font>方法第三行那么当<font color=#FF69B4>main()</font>方法调用<font color=#FF34B3>compute()</font>的时候，<font color=#FF34B3>compute()</font>栈帧中的方法出口就存储了当前要回到的位置，那么当<font color=#FF34B3>compute()</font>方法执行完之后，会根据方法出口中存储的相关信息回到<font color=#FFA500>main()</font>方法的相应位置。</p>
 <p>那么<font color=#FFA500>main()</font>方同样有自己的栈帧，在这里有些不同的地方我们讲一下。</p>
 <p>我们上面已经知道局部变量会存放在栈帧中的局部变量表中，那么<font color=#FFA500>main()</font>方法中的<font color=#FF6A6A>math</font>会存入其中，但是这里的math是一个对象，我们知道new出来的对象是存放在堆中的</p>
-<p><img src="https://img-blog.csdnimg.cn/20191125202605931.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191125202605931.png" alt="img"></p>
 <p>那么这个math变量和堆中的对象有什么联系呢？是同一个概念么？</p>
 <p>当然不是的，局部变量表中的math存储的是堆中那个math对象在堆中的内存地址</p>
 <h2 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h2><p>程序计数器也是线程私有的区域，每个线程都会分配程序计数器的内存，是用来存放当前线程正在运行或者即将要运行的<font color=#1E90FF>jvm指令码对应的地址</font>，或者说行号位置。</p>
@@ -285,11 +307,11 @@ if (autoChangeMode === '1') {
 
 <p>那么这个user就有点不一样了，user变量放在方法区，new的User是存放在堆中的</p>
 <p>到这里我们就能意识到栈，堆，方法区之间都是有联系的。</p>
-<p><img src="https://img-blog.csdnimg.cn/20191125204225518.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191125204225518.png" alt="img"></p>
 <p>栈中的局部变量，方法区中的静态变量，如果是对象类型的话都会指向堆中new出来中的对象，那么红色的联系代表什么呢？我们先来了解一下对象。</p>
 <p>对象组成<br>你对对象的了解有多少呢，天天用对象，你是否知道对象在虚拟机中的存储结构呢？</p>
 <p>对象在内存中存储的布局可以分为3块区域：<font color=#1E90FF>对象头（Header）、实例数据（Instance Data）和对齐填充（Padding）</font>。下图是普通对象实例与数组对象实例的数据结构：</p>
-<p><img src="https://img-blog.csdn.net/20170419212953720?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvenF6X3pxeg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="è¿éåå¾çæè¿°"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20170419212953720" alt="è¿éåå¾çæè¿°"></p>
 <p><strong>对象头</strong></p>
 <p>HotSpot虚拟机的对象头包括两部分信息：</p>
 <p><strong>Mark Word</strong></p>
@@ -335,24 +357,24 @@ if (autoChangeMode === '1') {
 <p>大家都知道JAVA是问世的，在那之前一个公司的系统百分之九十九都是使用C语言实现的，但是java出现后，很多项目都要转为java开发，那么新系统和旧系统就免不了要有交互，那么就需要本地方法来实现了，底层是调用C语言中的<font color=#FF69B4>dll</font>库文件，就类似于java中的jar包，当然，如今跨语言的交互方式就很多了，比如thrift，http接口方式，webservice等，当时并没有这些方式，就只能通过本地方法来实现了。</p>
 <p>那么本地方法始终也是方法，每个线程在运行的时候，如果有运行到本地方法，那么必然也要产生局部变量等，那么就需要存储在本地方法栈了。如果没有本地方法，也就没有本地方法栈了。</p>
 <h2 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h2><p>最后我们讲堆，堆是最重要的一块内存区域，我相信大部分人对堆都不陌生。但是对于它的内部结构，运作细节想要搞清楚也没那么简单。</p>
-<p><img src="https://img-blog.csdnimg.cn/20191126141228830.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191126141228830.png" alt="img"></p>
 <p>对于这个基本组成大家应该都有所了解，对就是由<font color=#FF69B4>年轻代</font>和<font color=#87CEFF>老年代</font>组成，年轻代又分为<font color=#EE82EE>伊甸园区</font>和<font color=#90EE90>survivor</font>区，survivor区中又有<font color=#EEA2AD>from区</font>和<font color=#FF7256>to区</font>.</p>
 <p>我们new出来的对象大家都知道是放在堆中，那具体放在堆中的哪个位置呢？</p>
 <p>其实new出来的对象一般都放在<font color=#EE82EE>Eden区</font>，那么为什么叫伊甸园区呢，伊甸园就是亚当夏娃住的地方，不就是造人的地方么？所以我们new出来的对象就是放在这里的，那当Eden区满了之后呢？</p>
 <p>假设我们给对分配600M内存，这个是可以通过参数调节的，我们后文再讲。那么<font color=#87CEFF>老年代</font>默认是占2/3的，也就是差不多400M，那<font color=#FF69B4>年轻代</font>就是200M，<font color=#EE82EE>Eden区</font>160M，<font color=#90EE90>Survivor区</font>40M。</p>
-<h2 id="GC"><a href="#GC" class="headerlink" title="GC"></a>GC</h2><p><img src="https://img-blog.csdnimg.cn/20191126142038375.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<h2 id="GC"><a href="#GC" class="headerlink" title="GC"></a>GC</h2><p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191126142038375.png" alt="img"></p>
 <p>一个程序只要在运行，那么就不会不停的new对象，那么总有一刻Eden区会放满，那么一旦Eden区被放满之后，虚拟机会干什么呢？没错，就是gc，不过这里的gc属于<font color=#EE82EE>minor gc</font>，就是垃圾收集，来收集垃圾对象并清理的，那么什么是垃圾对象呢？</p>
 <p>好比我们上面说的math对象，我们假设我们是一个web应用程序，main线程执行完之后程序不会结束，但是main方法结束了，那么main()方法栈帧会被释放，局部变量会被释放，但是局部变量对应的堆中的对象还是依然存在的，但是又没有指针指向它，那么它就是一个垃圾对象，那就应该被回收掉了，之后如果还会new Math对象，也不会用这个之前的了，因为已经无法找到它了，如果留着这个对象只会占用内存，显然是不合适的。</p>
 <p>这里就涉及到了一个<font color=#EE82EE>GC Root</font>根以及可达性分析算法的概念，也是面试偶尔会被问到的。</p>
 <p>可达性分析算法是将GC Roots对象作为起点，从这些起点开始向下搜索引用的对象，找到的对象都标记为非垃圾对象，其余未标记的都是垃圾对象。</p>
 <p>那么<font color=#EE82EE>GC Roots</font>根对象又是什么呢，<font color=#EE82EE>GC Roots</font>根就是判断一个对象是否可以回收的依据，只要能通过<font color=#EE82EE>GC Roots</font>根向下一直搜索能搜索到的对象，那么这个对象就不算垃圾对象，而可以作为<font color=#EE82EE>GC Roots</font>根的有线程栈的本地变量，静态变量，本地方法栈的变量等等，说白了就是找到和根节点有联系的对象就是有用的对象，其余都认为是垃圾对象来回收。</p>
-<p><img src="https://img-blog.csdnimg.cn/20191126145400951.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191126145400951.png" alt="img"></p>
 <p>经历了第一次<font color=#EE82EE>minor gc</font>后，没有被清理的对象就会被移到<font color=#EEA2AD>From区</font>，如上图。</p>
-<p><img src="https://img-blog.csdnimg.cn/20191126145647900.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191126145647900.png" alt="img"></p>
 <p>上面在说对象组成的时候有写到，在对象头的Mark Word中有存储<font color=#EEA2AD>GC分代年龄</font>，一个对象每经历一次gc，那么它的gc分代年龄就会<font color=red>+1</font>，如上图。</p>
-<p><img src="https://img-blog.csdnimg.cn/20191126151319582.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191126151319582.png" alt="img"></p>
 <p>那么如果第二次新的对象又把Eden区放满了，那么又会执行<font color=#EE82EE>minor gc</font>，但是这次会连着From区一起gc，然后将<font color=#EE82EE>Eden区</font>和<font color=#EEA2AD>From区</font>存活的对象都移到<font color=#FF7256>To区域</font>，对象头中分代年龄都<font color=red>+1</font>，如上图。</p>
-<p><img src="https://img-blog.csdnimg.cn/20191126151616936.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191126151616936.png" alt="img"></p>
 <p>那么当第三次Eden区又满的时候，<font color=#EE82EE>minor gc</font>就是回收<font color=#EE82EE>Eden区</font>和<font color=#FF7256>To区</font>域了，<font color=#EE82EE>Eden区</font>和<font color=#FF7256>To区</font>域还活着的对象就会都移到From区，如上图。说白了就是<font color=#90EE90>Survivor区</font>中总有一块区域是空着的，存活的对象存放是在<font color=#EEA2AD>From区</font>和<font color=#FF7256>To区</font>轮流存放，也就是互相复制拷贝，这也就是垃圾回收算法中的<font color=red>复制-回收算法</font>。</p>
 <p>如果一个对象经历了一个限值15次gc的时候，就会移至老年代。那如果还没有到限值，From区或者To区域也放不下了，就会直接挪到老年代，这只是举例了两种常规规则，还有其他规则也是会把对象存放至老年代的。</p>
 <p>那么随着应用程序的不断运行，老年代最终也是会满的，那么此时也会gc，此时的gc就是<font color=#FF7256>Full gc</font>了。</p>
@@ -364,12 +386,12 @@ if (autoChangeMode === '1') {
 <p>这块代码很明显，就是一个死循环，不断的往list中添加new出来的对象。</p>
 <p>我们这里使用jdk自带的一个jvm调优工具<font color=#87CEFF>jvisualvm</font>来观察一下这个代码执行的的内存结构。</p>
 <p>运行代码打开之后我们可以看到这样的界面：</p>
-<p><img src="https://img-blog.csdnimg.cn/2019112616032778.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/2019112616032778.png" alt="img"></p>
 <p>我们在左边的应用程序中可以看到我们运行的这个代码，右边是它的一些jvm，内存信息，我们这里不关注，我们需要用到的是最后一个Visual GC面板，这是一个插件，如果你的打开没有这一栏的话，可以再工具栏的插件中进行下载安装。</p>
 <p> 打开visual GC，我们先看一下界面大概的布局，</p>
-<p><img src="https://img-blog.csdnimg.cn/2019112616134712.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/2019112616134712.png" alt="img"></p>
 <p>其中<font color=#87CEFF>老年代(Olc)</font>，<font color=#EE82EE>伊甸园区(Eden)</font>，<font color=#EEA2AD>S0(From)</font>，<font color=#FF7256>S1(To)</font>几个区域的内存和动态分配图都是清晰可见，以一对应的。</p>
-<p><img src="https://img-blog.csdnimg.cn/20191126164339736.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191126164339736.png" alt="img"></p>
 <p>我们选择中间一张图给大家对应一下上面所讲的内容：</p>
 <blockquote>
 <p>1：对象放入<font color=#EE82EE>Eden区</font></p>
@@ -378,12 +400,82 @@ if (autoChangeMode === '1') {
 <p>4：<font color=#EE82EE>Eden区</font>再满发生<font color=#EE82EE>minor gc</font></p>
 <p>5：第四步存活的对象移至<font color=#FF7256>To(Survivor 1)</font>区</p>
 </blockquote>
-<p><img src="https://img-blog.csdnimg.cn/20191126171445401.png" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191126171445401.png" alt="img"></p>
 <p>这里可以注意到<font color=#EEA2AD>From</font>和<font color=#FF7256>To区域</font>和我们上面所说移至，总有一个是空的。 </p>
-<p><img src="https://img-blog.csdnimg.cn/20191126164912890.png" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20191126164912890.png" alt="img"></p>
 <p>大家还可以注意到老年代这里，都是一段一段的直线，中间是突然的增加，这就是在<font color=#EE82EE>minor gc</font>中一批一批符合规则的对象被批量移入<font color=#87CEFF>老年代</font>。</p>
 <p> 那当我们老年代满了会发生什么呢？当然是我们上面说过的<font color=red>Full GC</font>，但是你仔细看我们写的这个程序，我们所有new出来的HeapTest对象都是存放在heapLists中的，那就会被这个局部变量所引用，那么<font color=red>Full GC</font>就不会有什么垃圾对象可以回收，可是内存又满了，那怎么办？</p>
-<p><img src="https://img-blog.csdnimg.cn/2019112617183192.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9wb3RhdG8uYmxvZy5jc2RuLm5ldA==,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/2019112617183192.png" alt="img"></p>
 <p>没错，就是我们就算没见过也总听过的<font color=#87CEFF>OOM</font>。</p>
 <p>到这里jvm内存模型简单介绍就结束了，看到这里还不点个赞嘛！ </p>
-</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">MysticalYcc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://gschaos.club/Virtual%20machine%20memory%20model/">https://gschaos.club/Virtual%20machine%20memory%20model/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://gschaos.club" target="_blank">MysticalYcc</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://mysticalyu.gitee.io/pic/img/huifeng-huang-pose-cl05.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/UNSAFE%E5%92%8CJava-%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80/"><img class="prev-cover" src="https://mysticalyu.gitee.io/pic/img/jeong-hyun-jun-front.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">并发编程之Atomic&amp;Unsafe魔法类详解</div></div></a></div><div class="next-post pull-right"><a href="/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AD%97%E6%AE%B5%E5%8A%A8%E6%80%81%E6%89%A9%E5%B1%95%E8%AE%BE%E8%AE%A1/"><img class="next-cover" src="https://mysticalyu.gitee.io/pic/img/p8g3le.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">数据库字段动态扩展</div></div></a></div></nav></article></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2020 By MysticalYcc</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="icp"><a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/state/outPortal/loginPortal.action"><img class="icp-icon" src="/img/icp.png"/><span>皖ICP备19015872号-1</span></a></div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">MysticalYcc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://gschaos.club/Virtual%20machine%20memory%20model/">https://gschaos.club/Virtual%20machine%20memory%20model/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://gschaos.club" target="_blank">MysticalYcc</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://mysticalyu.gitee.io/pic/img/huifeng-huang-pose-cl05.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/UNSAFE%E5%92%8CJava-%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80/"><img class="prev-cover" src="https://mysticalyu.gitee.io/pic/img/jeong-hyun-jun-front.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">并发编程之Atomic&amp;Unsafe魔法类详解</div></div></a></div><div class="next-post pull-right"><a href="/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AD%97%E6%AE%B5%E5%8A%A8%E6%80%81%E6%89%A9%E5%B1%95%E8%AE%BE%E8%AE%A1/"><img class="next-cover" src="https://mysticalyu.gitee.io/pic/img/p8g3le.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">数据库字段动态扩展</div></div></a></div></nav></article></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2020 By MysticalYcc</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="icp"><a target="_blank" rel="noopener" href="http://www.beian.miit.gov.cn/state/outPortal/loginPortal.action"><img class="icp-icon" src="/img/icp.png"/><span>皖ICP备19015872号-1</span></a></div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div class="aplayer no-destroy" data-id="2920702828" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="true" muted></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = [
+  'title',
+  'meta[name=description]',
+  '#config_change',
+  '#body-wrap',
+  '#rightside-config-hide',
+  '#rightside-config-show',
+  '.js-pjax'
+]
+
+if (false) {
+  pjaxSelectors.unshift('meta[property="og:image"]', 'meta[property="og:title"]', 'meta[property="og:url"]')
+}
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  $('script[data-pjax]').each(function () {
+    $(this).parent().append($(this).remove())
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  if (typeof gtag === 'function') {
+    gtag('config', '', {'page_path': window.location.pathname});
+  }
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // Analytics
+  if (false) {
+    MtaH5.pgv()
+  }
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+
+document.addEventListener('pjax:send', function () {
+  typeof preloader === 'object' && preloader.initLoading()
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  $(window).off('scroll')
+
+  //reset readmode
+  $('body').hasClass('read-mode') && $('body').removeClass('read-mode')
+
+})</script></div></body></html>
