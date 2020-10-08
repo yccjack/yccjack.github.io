@@ -1,0 +1,391 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>操做系统-虚拟存储管理 | MysticalYcc</title><meta name="keywords" content="操做系统"><meta name="author" content="MysticalYcc"><meta name="copyright" content="MysticalYcc"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="程序局部性原理表现为时间局部性和空间局部性 时间局部性是指如果程序中某条指令一旦执行,则不久的将来该指令可能会再次执行 产生时间局部性的典型原因是在程序中存在着大量的循环操作 空间局部性是指如果某个存储单元被访问,则不久以后该存储单元以及与该存储单元相邻的那些存储单元也最有可能被访问,即程序在一段时间内所访问的地址可能集中在一定的范围内.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操做系统-虚拟存储管理">
+<meta property="og:url" content="https://gschaos.club/%E6%93%8D%E5%81%9A%E7%B3%BB%E7%BB%9F-%E8%99%9A%E6%8B%9F%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="MysticalYcc">
+<meta property="og:description" content="程序局部性原理表现为时间局部性和空间局部性 时间局部性是指如果程序中某条指令一旦执行,则不久的将来该指令可能会再次执行 产生时间局部性的典型原因是在程序中存在着大量的循环操作 空间局部性是指如果某个存储单元被访问,则不久以后该存储单元以及与该存储单元相邻的那些存储单元也最有可能被访问,即程序在一段时间内所访问的地址可能集中在一定的范围内.">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mysticalyu.gitee.io/pic/img/li-shan-699fe42bjw1esamfi8814j21kw24tgzp.jpg">
+<meta property="article:published_time" content="2020-09-27T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-09-28T00:55:04.000Z">
+<meta property="article:author" content="MysticalYcc">
+<meta property="article:tag" content="操做系统">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mysticalyu.gitee.io/pic/img/li-shan-699fe42bjw1esamfi8814j21kw24tgzp.jpg"><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="canonical" href="https://gschaos.club/%E6%93%8D%E5%81%9A%E7%B3%BB%E7%BB%9F-%E8%99%9A%E6%8B%9F%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  hexoversion: '5.1.1',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: false,
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true,
+  postUpdate: '2020-09-28 08:55:04'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+  }
+}
+
+var autoChangeMode = 'false'
+var t = saveToLocal.get('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (saveToLocal.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><meta name="generator" content="Hexo 5.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="https://gschaos.club/ico/me.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">44</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">30</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">17</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-camera-retro"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 画廊</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div id="body-wrap"><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%A4%E6%8D%A2%E6%8A%80%E6%9C%AF"><span class="toc-number">1.</span> <span class="toc-text">交换技术</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5"><span class="toc-number">2.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%B7%E6%B1%82%E6%AE%B5%E9%A1%B5%E5%BC%8F%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86"><span class="toc-number">3.</span> <span class="toc-text">请求段页式存储管理</span></a></li></ol></div></div></div><header class="post-bg" id="page-header" style="background-image: url(https://mysticalyu.gitee.io/pic/img/li-shan-699fe42bjw1esamfi8814j21kw24tgzp.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">MysticalYcc</a></span><span id="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-camera-retro"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 画廊</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">操做系统-虚拟存储管理</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-09-27T16:00:00.000Z" title="发表于 2020-09-28 00:00:00">2020-09-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2020-09-28T00:55:04.000Z" title="更新于 2020-09-28 08:55:04">2020-09-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%93%8D%E5%81%9A%E7%B3%BB%E7%BB%9F/">操做系统</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><h2 id="交换技术"><a href="#交换技术" class="headerlink" title="交换技术"></a>交换技术</h2><p>交换（Swapping）技术它的主要特点是：打破了一个程序一旦进入内存，就一直驻留在内存直到运行结束的限制。</p>
+<p>在多道程序环境下，内存中可以同时存在多个进程（程序），其中的一部分进程由于等待某些事件而处于阻塞状态，但这些处于阻塞状态的进程仍然驻留内存，并占据着内存空间；另一方面，外存上可能有许多等待装入内存运行的程序，却因内存不足而未能装入。显然，这是一种严重的系统资源浪费，它会使系统的吞吐量下降。为了解决这个问题，可以在操作系统中增加交换（对换）功能，即由操作系统根据需要，将内存中暂时不具备运行条件的部分程序或数据移到外存（换出），以便腾出足够的内存空间，将外存中需要运行的程序或数据调入内存（换入）投入运行。在操作系统中引入交换（对换）技术，可以显著提高内存资源的利用率并改善系统的性能。</p>
+<p>以交换的单位不同来划分，则有以下两种交换方式。</p>
+<ul>
+<li>以进程为单位的交换。每次换入/换出的是整个进程，我们称这种交换为进程交换（进程对换）或整体交换（整体对换）。进程交换广泛应用于分时系统，主要解决内存紧张问题。</li>
+<li>以页（此处不多做介绍）或段（此处不多做介绍）为单位的交换。这种交换分别称为页置换（页交换或页对换）或段置换（段交换或段对换），页置换和段置换是以进程中的某一部分为交换单位，因此又称为部分交换（部分对换）。部分交换广泛应用于现代操作系统中，是实现虚拟存储器的基础。</li>
+</ul>
+<p>我们这里所说的交换是指进程交换，为了实现进程交换，操作系统需要解决以下两个问题。</p>
+<ul>
+<li>对换空间的管理。在具有交换功能的操作系统中，一般将外存空间分为文件区和交换区（对换区）。文件区用来存放文件，而交换区则用来存放从内存中换出的进程，或等待换入内存的进程。尽管文件区一般采用离散分配方式来分配外存存储空间，但交换区的存储空间分配则宜采用连续分配方式，这是因为交换区中存放的是换入/换出的进程，为了提高交换速度，有必要采用连续分配方式，并且交换区可以采用与可变分区存储管理类似的方法进行管理。例如，使用空闲分区表或空闲分区链来记录外存交换区的使用情况，利用首次适应算法、最佳适应算法或最差适应算法来进行外存交换区的分配。</li>
+<li>交换的时机以及选择哪些进程交换。交换时机一般选择在进程的时间片用完，以及进程等待输入/输出时，或者在进程要求扩充其内存空间而得不到满足时。换出到外存的进程一般选择处于阻塞状态，或优先级低且短时间内不会再次投入运行的进程；换入到内存的进程则应选择换出时间最久且已处于就绪状态的进程。</li>
+</ul>
+<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>​    根据程序的局部性原理，一个进程在运行的某个时间段内只访问其程序的一部分指令或数据，所以就没必要在进程运行之前将其所属的全部程序和数据都装入内存，即只装入进程当前运行所需要的部分程序和部分数据就可启动运行，以后再根据需要逐次装入剩余的部分程序和数据。并且，内存中暂不执行的部分程序和暂不使用部分数据也不必放在内存，可以将其由内存调至外存，释放它们所占用的内存空间。对内存中的各进程也是如此，内存中暂时没有执行的进程也可以将其由内存调至外存，释放它所占用的内存空间，并用来装入外存上需要投入运行的进程，被调出到外存的进程在以后需要运行时，再重新调入内存。这样一来，在内存容量不变的情况下，就可以使一个大程序在较小的内存空间中运行，也可以装入更多的进程（程序）并发执行。</p>
+<p>由于一次性和驻留性在进程运行时不是必需的，因此可以按照以下方式来运行进程，即一个进程只装入其部分程序和数据便投入运行。在进程运行过程中，若需要访问的指令和数据在内存中，则继续执行；若不在内存中，则系统通过调入功能，把进程需要执行或访问的这部分程序和数据由外存自动装入内存（称为部分装入）；若内存已无足够的空闲区装入这部分信息，则系统把该进程在内存中暂时不用的部分程序和数据从内存中调出到外存（称为部分对换），以便腾出内存空间装入该进程需要调入内存的这部分信息。进程按照这种方式运行，会明显提高内存空间利用率和系统吞吐量。对用户而言，所感觉到的是一个容量更大的内存，通常把它称为虚拟存储器，简称虚存。</p>
+<p>实现虚拟内存的必要条件：</p>
+<p>（1）能够完成虚拟地址到物理地址的转换。程序中使用的是虚拟地址（即逻辑地址），为了实现虚拟存储器，就必须完成虚拟地址到内存物理地址的重定位。虚拟地址的大小可以远远超过实际内存容量的大小，它只受地址寄存器的位数限制，如一个 32 位的地址寄存器，其支持的虚拟地址最大可达 4GB。</p>
+<p>（2）实际内存空间。程序装入内存后才能运行，所以内存空间是构成虚拟存储空间的基础。因为虚拟存储器的运行速度接近于内存速度，所以内存空间越大所构成的虚拟存储器的运行速度也就越快。</p>
+<p>（3）外存交换区。为了从逻辑上扩大内存空间，一般将外存空间分为文件区和交换区。交换区中存放的是在内、外存之间交换的程序和数据，交换区可大可小。</p>
+<p>（4）换入、换出机制。它表现为中断请求机构、淘汰算法及换入、换出软件。</p>
+<p>现代操作系统一般都支持虚拟存储器，但不同系统实现虚拟存储器的具体方式存在差异。程序装入内存时，如果以页或段为单位装入，则分别形成请求分页存储管理方式和请求分段存储管理方式；若将分段和分页结合起来，则又可以形成请求段页式存储管理方式。</p>
+<h2 id="请求段页式存储管理"><a href="#请求段页式存储管理" class="headerlink" title="请求段页式存储管理"></a>请求段页式存储管理</h2><p>​    请求段页式存储管理是建立在段页式存储管理基础上的一种段页式虚拟存储管理。根据段页式存储管理的思想，请求段页式存储管理首先按照程序自身的逻辑结构，将其划分为若干个不同的分段，在每个段内则按页的大小划分为不同的页，内存空间则按照页的大小划分为若干个物理块。内存以物理块为单位进行离散分配，不必将进程所有的页装入内存就可启动运行。当进程运行过程中，访问到不在内存的页时，若该页所在的段在内存，则只产生缺页中断，将所缺的页调入内存；若该页所在的段不在内存，则先产生缺段中断再产生缺页中断，将所缺的页调入内存。若进程需要访问的页已在内存，则对页的管理与段页式存储管理相同。</p>
+<p>1．段表及页表机制</p>
+<p>请求段页式存储管理中的页表和段表是两个重要的数据结构。页表的结构与请求分页存储管理中的页表相似，段表则在段页式存储管理中的段表基础上增加了一些新的字段，这些新增的字段包括中断位（状态位）、修改位和外存始址等，用来支持实现虚拟存储器。</p>
+<p>2．中断处理机制</p>
+<p>由于在请求段页式存储管理中内存空间的分配是以页为单位，因此当某个进程在运行过程中发现所要访问的页不在内存时，就要先判断该页所在段的页表是否在内存，若页表已在内存，则只产生缺页中断，由缺页中断处理程序将所缺的页由外存调入内存；若缺页所在段的页表不在内存则表明该段不在内存，这时先产生缺段中断且由缺段中断处理程序为该段在内存中建立一张页表，并将该页表的内存始址存入段表相应的段表项中，然后再产生缺页中断，由缺页中断处理程序将所缺的页由外存调入内存。</p>
+<p>3．地址转换</p>
+<p>请求段页式存储管理与段页式存储管理的地址转换机制类似，但由于请求段页式存储管理支持虚拟存储器，因此在它的地址转换机制中增加了用于实现虚拟存储器的中断功能和置换功能。请求段页式存储管理中的逻辑地址到内存物理地址转换过程如下。</p>
+<p>（1）若系统中设置了快表，则首先在快表中查找该页对应的页表项，若在快表中找到这个页表项，就将该页表项中的物理块号和逻辑地址中的页内地址进行拼接，得到要访问的内存物理地址。</p>
+<p>（2）如果快表中没有所需要的页表项，则在内存中查找页表（实际上是同时查找），从该页对应页表项中的中断位来判断该页是否在内存。若在内存，则将该页表项中的物理块号与逻辑地址中的页内地址拼接为内存物理地址，同时将该页表项放入快表。</p>
+<p>（3）如果要访问的页还没有调入内存，并且包含该页的段所对应的页表也不在内存（意味着该段不在内存），于是就产生缺段中断将该段的页表调入内存，缺段处理完成后再产生缺页中断；若包含该页的段所对应的页表已在内存，则只产生缺页中断。缺页中断则将该页由外存调入内存，然后通过页表查找得到该页对应的物理块号，并将该物理块与逻辑地址中的页内地址拼接形成要访问的内存物理地址，同时将该页表项放入快表。如图</p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/image-20200928084933567.png" alt="image-20200928084933567"></p>
+<p>关联文章：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.gschaos.club/Linux%E8%AE%BE%E7%BD%AE%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/">Linux设置虚拟内存</a></p>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined" rel="external nofollow noreferrer">MysticalYcc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://gschaos.club/%E6%93%8D%E5%81%9A%E7%B3%BB%E7%BB%9F-%E8%99%9A%E6%8B%9F%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/">https://gschaos.club/%E6%93%8D%E5%81%9A%E7%B3%BB%E7%BB%9F-%E8%99%9A%E6%8B%9F%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://gschaos.club" target="_blank">MysticalYcc</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%93%8D%E5%81%9A%E7%B3%BB%E7%BB%9F/">操做系统</a></div><div class="post_share"><div class="social-share" data-image="https://mysticalyu.gitee.io/pic/img/li-shan-699fe42bjw1esamfi8814j21kw24tgzp.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95/"><img class="prev-cover" src="https://mysticalyu.gitee.io/pic/img_min/yueyang.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">jvm垃圾回收算法</div></div></a></div><div class="next-post pull-right"><a href="/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-%E5%88%86%E6%AE%B5%E5%AD%98%E5%82%A8%E5%92%8C%E6%AE%B5%E9%A1%B5%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/"><img class="next-cover" src="https://mysticalyu.gitee.io/pic/img_min/gyu-bin-yun-screenshot011.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">操作系统-分段存储和段页存储管理</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/操作系统-分段存储和段页存储管理/" title="操作系统-分段存储和段页存储管理"><img class="cover" src="https://mysticalyu.gitee.io/pic/img_min/gyu-bin-yun-screenshot011.jpg"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2020-09-27</div><div class="title">操作系统-分段存储和段页存储管理</div></div></a></div><div><a href="/操做系统-同步和通信/" title="操做系统-进程同步与存储管理"><img class="cover" src="https://mysticalyu.gitee.io/pic/img/20200407223243-bora-kim-.jpg"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2020-09-27</div><div class="title">操做系统-进程同步与存储管理</div></div></a></div><div><a href="/操做系统-基础/" title="操做系统-线程与进程"><img class="cover" src="https://mysticalyu.gitee.io/pic/img_min/hj-ahn-4.jpg"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2020-09-27</div><div class="title">操做系统-线程与进程</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></article></main><footer id="footer" style="background-image: url(https://mysticalyu.gitee.io/pic/img/li-shan-699fe42bjw1esamfi8814j21kw24tgzp.jpg)"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2020 By MysticalYcc</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="icp"><a target="_blank" rel="noopener external nofollow noreferrer" href="http://www.beian.miit.gov.cn/state/outPortal/loginPortal.action"><img class="icp-icon" src="/img/icp.png"/><span>皖ICP备19015872号-1</span></a></div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',()=> {preloader.endLoading()})</script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const initData = {
+      el: '#vcomment',
+      appId: 'J2f6Gx43ptrGYdf1rHPAS5sJ-gzGzoHsz',
+      appKey: 'cSywIQR7CfBFaNI8iiPTYy41',
+      placeholder: 'Please leave your footprints',
+      avatar: 'monsterid',
+      meta: 'nick,mail,link'.split(','),
+      pageSize: '10',
+      lang: 'en',
+      recordIP: false,
+      serverURLs: '',
+      emojiCDN: '',
+      emojiMaps: "",
+      enableQQ: false,
+      path: window.location.pathname,
+    }
+
+    if (true) { 
+      initData.requiredFields= ('nick,mail'.split(','))
+    }
+
+    const valine = new Valine(initData)
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else $.getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js', initValine)
+}
+
+if ('Valine' === 'Valine' || !false) {
+  if (false) btf.loadComment(document.querySelector('#vcomment'),loadValine)
+  else setTimeout(() => loadValine(), 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.17.0/js/md5.min.js"></script><script>window.addEventListener('load', () => {
+  const changeContent = (content) => {
+    if (content === '') return content
+
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+    content = content.replace(/(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|jpeg|gif|png|webp)/g, '') // remove image link
+    content = content.replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi, '') // remove url
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const getIcon = (icon, mail) => {
+    if (icon) return icon 
+    let defaultIcon = ''
+    let iconUrl = `https://gravatar.loli.net/avatar/${md5(mail.toLowerCase()) + defaultIcon}`
+    return iconUrl
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    for (let i = 0; i < array.length; i++) {
+      result += '<div class=\'aside-list-item\'>'
+
+      if (true) {
+        result += `<a href='${array[i].url}' class="thumbnail"><img src='${getIcon(array[i].avatar, array[i].mail)}' alt='${array[i].nick}'></a>`
+      }
+
+      result += `<div class='content'>
+      <a class='comment' href='${array[i].url}'>${array[i].content}</a>
+      <div class='name'><span>${array[i].nick}</span><time> / ${btf.diffDate(array[i].date, true)}</time></div>
+      </div></div>`
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom.innerHTML= result
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const getValineData = () => {
+      let serverURL = ''
+      if (true) {
+        serverURL = 'https://j2f6gx43.lc-cn-n1-shared.com'
+      } else {
+        serverURL = 'https://J2f6Gx43.api.lncldglobal.com'
+      }
+
+    var settings = {
+      "url": `${serverURL}/1.1/classes/Comment?limit=6&order=-createdAt`,
+      "method": "GET",
+      "timeout": 0,
+      "headers": {
+        "X-LC-Id": 'J2f6Gx43ptrGYdf1rHPAS5sJ-gzGzoHsz',
+        "X-LC-Key": 'cSywIQR7CfBFaNI8iiPTYy41',
+        "Content-Type": "application/json"
+      },
+    }
+
+    $.ajax(settings).done((response) => {
+      var valineArray = []
+      response.results.forEach((e)=>{
+        valineArray.push({
+          'avatar': e.QQAvatar,
+          'content': changeContent(e.comment),
+          'mail': e.mail,
+          'nick': e.nick,
+          'url': e.url,
+          'date': e.createdAt,
+        })
+      })
+      
+      saveToLocal.set('leancloud-newest-comments', JSON.stringify(valineArray), 10/(60*24))
+      generateHtml(valineArray)
+
+    }).fail(()=>{
+      const $dom = document.querySelector('#card-newest-comments .aside-list')
+      $dom.innerHTML= "无法获取资料，请确认相关配置是否正确"
+    })
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('leancloud-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getValineData()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><div class="aplayer no-destroy" data-id="2920702828" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="true" muted></div><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = [
+  'title',
+  'meta[name=description]',
+  '#config_change',
+  '#body-wrap',
+  '#rightside-config-hide',
+  '#rightside-config-show',
+  '.js-pjax'
+]
+
+if (false) {
+  pjaxSelectors.unshift('meta[property="og:image"]', 'meta[property="og:title"]', 'meta[property="og:url"]')
+}
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  $('script[data-pjax]').each(function () {
+    $(this).parent().append($(this).remove())
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  if (typeof gtag === 'function') {
+    gtag('config', '', {'page_path': window.location.pathname});
+  }
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // Analytics
+  if (false) {
+    MtaH5.pgv()
+  }
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+
+document.addEventListener('pjax:send', function () {
+  typeof preloader === 'object' && preloader.initLoading()
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  $(window).off('scroll')
+
+  //reset readmode
+  $('body').hasClass('read-mode') && $('body').removeClass('read-mode')
+
+})</script></div></body></html>
