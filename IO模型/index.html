@@ -1,0 +1,541 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>IO模型 | MysticalYcc</title><meta name="keywords" content="java,操作系统"><meta name="author" content="MysticalYcc"><meta name="copyright" content="MysticalYcc"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="I&#x2F;O 操作比在内存中进行数据处理任务所需时间更长，差别要以数量级计。许多程序员一门心思扑在他们的对象如何加工数据上，对影响数据读取和存储的环境问题却不屑一顾。影响应用程序执行效率的限定性因素，往往并非处理速率，而是 I&#x2F;O。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IO模型">
+<meta property="og:url" content="https://gschaos.club/IO%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:site_name" content="MysticalYcc">
+<meta property="og:description" content="I&#x2F;O 操作比在内存中进行数据处理任务所需时间更长，差别要以数量级计。许多程序员一门心思扑在他们的对象如何加工数据上，对影响数据读取和存储的环境问题却不屑一顾。影响应用程序执行效率的限定性因素，往往并非处理速率，而是 I&#x2F;O。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gschaos.club/ico/img/pop-cg-gewen-ps3.jpg">
+<meta property="article:published_time" content="2020-10-26T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-10-27T13:18:51.000Z">
+<meta property="article:author" content="MysticalYcc">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="操作系统">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gschaos.club/ico/img/pop-cg-gewen-ps3.jpg"><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="canonical" href="https://gschaos.club/IO%E6%A8%A1%E5%9E%8B/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  hexoversion: '5.1.1',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: false,
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true,
+  postUpdate: '2020-10-27 21:18:51'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+  }
+}
+
+var autoChangeMode = 'false'
+var t = saveToLocal.get('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (saveToLocal.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><meta name="generator" content="Hexo 5.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="https://gschaos.club/ico/me.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">48</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">30</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">18</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-camera-retro"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 画廊</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div id="body-wrap"><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#IO%E6%A8%A1%E5%9E%8B%E4%B8%80%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">IO模型一基础知识</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81I-O%E4%B8%8ECPU%E6%97%B6%E9%97%B4%E7%9A%84%E6%AF%94%E8%BE%83"><span class="toc-number">1.1.</span> <span class="toc-text">一、I&#x2F;O与CPU时间的比较</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E4%B8%8E%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4"><span class="toc-number">1.2.</span> <span class="toc-text">二、用户空间与内核空间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%BC%93%E5%86%B2%E5%8C%BA%E6%93%8D%E4%BD%9C"><span class="toc-number">1.3.</span> <span class="toc-text">三、缓冲区操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E5%8F%91%E6%95%A3%EF%BC%8F%E6%B1%87%E8%81%9A"><span class="toc-number">1.4.</span> <span class="toc-text">四、发散／汇聚</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98"><span class="toc-number">1.5.</span> <span class="toc-text">五、虚拟内存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%86%85%E5%AD%98%E9%A1%B5%E9%9D%A2%E8%B0%83%E5%BA%A6"><span class="toc-number">1.6.</span> <span class="toc-text">六、内存页面调度</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E6%96%87%E4%BB%B6I-O"><span class="toc-number">1.7.</span> <span class="toc-text">七、文件I&#x2F;O</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6"><span class="toc-number">1.7.1.</span> <span class="toc-text">内存映射文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E9%94%81%E5%AE%9A"><span class="toc-number">1.7.2.</span> <span class="toc-text">文件锁定</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E6%B5%81I-O"><span class="toc-number">1.8.</span> <span class="toc-text">八、流I&#x2F;O</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#IO%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3"><span class="toc-number">2.</span> <span class="toc-text">IO模型详解</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81-%E6%A6%82%E5%BF%B5%E8%AF%B4%E6%98%8E"><span class="toc-number">2.1.</span> <span class="toc-text">一、 概念说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-IO%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.2.</span> <span class="toc-text">二、 IO模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%BB%E5%A1%9E-I-O%EF%BC%88blocking-IO%EF%BC%89"><span class="toc-number">2.2.1.</span> <span class="toc-text">阻塞 I&#x2F;O（blocking IO）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E9%98%BB%E5%A1%9E-I-O%EF%BC%88nonblocking-IO%EF%BC%89"><span class="toc-number">2.2.2.</span> <span class="toc-text">非阻塞 I&#x2F;O（nonblocking IO）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#I-O-%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%EF%BC%88-IO-multiplexing%EF%BC%89"><span class="toc-number">2.2.3.</span> <span class="toc-text">I&#x2F;O 多路复用（ IO multiplexing）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%82%E6%AD%A5-I-O%EF%BC%88asynchronous-IO%EF%BC%89"><span class="toc-number">2.2.4.</span> <span class="toc-text">异步 I&#x2F;O（asynchronous IO）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">2.2.5.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81-I-O-%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E4%B9%8Bselect%E3%80%81poll%E3%80%81epoll"><span class="toc-number">2.3.</span> <span class="toc-text">三、 I&#x2F;O 多路复用之select、poll、epoll</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#select"><span class="toc-number">2.3.1.</span> <span class="toc-text">select</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#poll"><span class="toc-number">2.3.2.</span> <span class="toc-text">poll</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#epoll"><span class="toc-number">2.3.3.</span> <span class="toc-text">epoll</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81epoll%E8%AF%A6%E8%A7%A3"><span class="toc-number">2.4.</span> <span class="toc-text">四、epoll详解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#epoll%E6%93%8D%E4%BD%9C%E8%BF%87%E7%A8%8B"><span class="toc-number">2.4.1.</span> <span class="toc-text">epoll操作过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#epoll%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.4.2.</span> <span class="toc-text">epoll工作模式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#LT%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.4.2.1.</span> <span class="toc-text">LT模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ET%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.4.2.2.</span> <span class="toc-text">ET模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#epoll%E5%B7%A5%E4%BD%9C%E6%A8%A1%E5%BC%8F%E6%80%BB%E7%BB%93"><span class="toc-number">2.4.2.3.</span> <span class="toc-text">epoll工作模式总结</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Linux%E4%B8%AD%E7%9A%84EAGAIN%E5%90%AB%E4%B9%89"><span class="toc-number">2.4.2.4.</span> <span class="toc-text">Linux中的EAGAIN含义</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#epoll%E6%80%BB%E7%BB%93"><span class="toc-number">2.4.3.</span> <span class="toc-text">epoll总结</span></a></li></ol></li></ol></li></ol></div></div></div><header class="post-bg" id="page-header" style="background-image: url(https://gschaos.club/ico/img/pop-cg-gewen-ps3.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">MysticalYcc</a></span><span id="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-camera-retro"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 画廊</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">IO模型</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-10-26T16:00:00.000Z" title="发表于 2020-10-27 00:00:00">2020-10-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2020-10-27T13:18:51.000Z" title="更新于 2020-10-27 21:18:51">2020-10-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/jvm/">jvm</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><p>I/O 操作比在内存中进行数据处理任务所需时间更长，差别要以数量级计。许多程序员一门心思扑在他们的对象如何加工数据上，对影响数据读取和存储的环境问题却不屑一顾。影响应用程序执行效率的限定性因素，往往并非处理速率，而是 I/O。</p>
+<blockquote>
+<p>作者：keep_trying_gogo</p>
+<p>出处：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://blog.csdn.net/yjp198713/column/info/18912">https://blog.csdn.net/yjp198713/column/info/18912</a></p>
+</blockquote>
+<h1 id="IO模型一基础知识"><a href="#IO模型一基础知识" class="headerlink" title="IO模型一基础知识"></a>IO模型一基础知识</h1><h2 id="一、I-O与CPU时间的比较"><a href="#一、I-O与CPU时间的比较" class="headerlink" title="一、I/O与CPU时间的比较"></a>一、I/O与CPU时间的比较</h2><p>I/O 操作比在内存中进行数据处理任务所需时间更长，差别要以数量级计。许多程序员一门心思扑在他们的对象如何加工数据上，对影响数据读取和存储的环境问题却不屑一顾。</p>
+<p>表 1-1 所示为对数据单元进行磁盘读写所需时间的假设值。</p>
+<ul>
+<li>第一列为处理一个数据单元所需平均时间</li>
+<li>第二列为对该数据单元进行磁盘读写所需时间</li>
+<li>第三列为每秒所能处理的数据单元数</li>
+<li>第四列为改变第一第二列的值所能产生的数据吞吐率的提升值</li>
+</ul>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20180224150554319.png" alt="这里写图片描述"></p>
+<p>前三行显示了处理阶段的效率提升会如何影响吞吐率。把单位处理时间减半，仅能提高吞吐率<br>2.2％。而另一方面，仅仅缩短 I/O 延迟 10％，就可使吞吐率增加 9.7％；把 I/O 时间减半，吞吐率几乎翻番。当您了解到 I/O 花在一个数据单元上的时间是处理时间的 20 倍，这样的结果就不足为奇了。表中所列并非真实数据，目的只在说明相对时间度量，现实情况绝非如此简单。正如您所看到的，影响应用程序执行效率的限定性因素，往往并非处理速率，而是 I/O。</p>
+<h2 id="二、用户空间与内核空间"><a href="#二、用户空间与内核空间" class="headerlink" title="二、用户空间与内核空间"></a>二、用户空间与内核空间</h2><p>现在操作系统都是采用虚拟存储器，那么对32位操作系统而言，它的寻址空间（虚拟存储空间）为4G（2的32次方）。操作系统的核心是内核，独立于普通的应用程序，可以访问受保护的内存空间，也有访问底层硬件设备的所有权限。为了保证用户进程不能直接操作内核（kernel），保证内核的安全，操心系统将虚拟空间划分为两部分，一部分为内核空间，一部分为用户空间。针对linux操作系统而言，将最高的1G字节（从虚拟地址0xC0000000到0xFFFFFFFF），供内核使用，称为内核空间，而将较低的3G字节（从虚拟地址0x00000000到0xBFFFFFFF），供各个进程使用，称为用户空间。</p>
+<h2 id="三、缓冲区操作"><a href="#三、缓冲区操作" class="headerlink" title="三、缓冲区操作"></a>三、缓冲区操作</h2><p>缓冲区，以及缓冲区如何工作，是所有 I/O 的基础。所谓“输入／输出”讲的无非就是把数据移进或移出缓冲区。进程执行 I/O 操作，归结起来，也就是向操作系统发出请求，让它要么把缓冲区里的数据排干（写），要么用数据把缓冲区填满（读）。进程使用这一机制处理所有数据进出操作。操作系统内部处理这一任务的机制，其复杂程度可能超乎想像，但就概念而言，却非常直白易懂。</p>
+<p>图 1-1. I/O 缓冲区操作简图<br><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20180224161540836.png" alt="图1.1"><br>图中明显忽略了很多细节，仅显示了涉及到的基本步骤。</p>
+<p>上图1.1 简单描述了数据从外部磁盘向运行中的进程的内存区域移动的过程。进程使用 read( )系<br>统调用，要求其缓冲区被填满。内核随即向磁盘控制硬件发出命令，要求其从磁盘读取数据。磁盘控制器把数据直接写入内核内存缓冲区，这一步通过 DMA 完成，无需主 CPU 协助。一旦磁盘控制器把缓冲区装满，内核即把数据从内核空间的临时缓冲区拷贝到进程执行 read( )调用时指定的缓冲区。</p>
+<p>注意图中用户空间和内核空间的概念。用户空间是常规进程所在区域。 JVM 就是常规进程，<br>驻守于用户空间。用户空间是非特权区域：比如，在该区域执行的代码就不能直接访问硬件设备。内核空间是操作系统所在区域。内核代码有特别的权力：它能与设备控制器通讯，控制着用户区域进程的运行状态，等等。最重要的是，所有 I/O 都直接（如这里所述）或间接通<br>过内核空间。</p>
+<p>当进程请求 I/O 操作的时候，它执行一个系统调用（有时称为陷阱）将控制权移交给内核。<br>C/C++程序员所熟知的底层函数 open( )、 read( )、 write( )和 close( )要做的无非就是建立和执行适当的系统调用。当内核以这种方式被调用，它随即采取任何必要步骤，找到进程所需数据，并把数据传送到用户空间内的指定缓冲区。内核试图对数据进行高速缓存或预读取，因此进程所需数据可能已经在内核空间里了。如果是这样，该数据只需简单地拷贝出来即可。如果数据不在内核空间，则进程被挂起，内核着手把数据读进内存。</p>
+<p>看了图 1-1，您可能会觉得，把数据从内核空间拷贝到用户空间似乎有些多余。为什么不直接<br>让磁盘控制器把数据送到用户空间的缓冲区呢？这样做有几个问题。</p>
+<ul>
+<li>首先，硬件通常不能直接访问用户空间 。</li>
+<li>其次，像磁盘这样基于块存储的硬件设备操作的是固定大小的数据块，而用户进程请求的可能是任意大小的或非对齐的数据块。</li>
+<li>在数据往来于用户空间与存储设备的过程中，内核负责数据的分解、再组合工作，因此充当着中间人的角色。</li>
+</ul>
+<h2 id="四、发散／汇聚"><a href="#四、发散／汇聚" class="headerlink" title="四、发散／汇聚"></a>四、发散／汇聚</h2><p>许多操作系统能把组装／分解过程进行得更加高效。根据发散／汇聚的概念，进程只需一个系<br>统调用，就能把一连串缓冲区地址传递给操作系统。然后，内核就可以顺序填充或排干多个缓冲<br>区，读的时候就把数据发散到多个用户空间缓冲区，写的时候再从多个缓冲区把数据汇聚起来，如下 图。</p>
+<p>图 1-2. 三个缓冲区的发散读操作<br><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20180224162648791.png" alt="这里写图片描述"><br>这样用户进程就不必多次执行系统调用（那样做可能代价不菲），内核也可以优化数据的处理<br>过程，因为它已掌握待传输数据的全部信息。如果系统配有多个 CPU，甚至可以同时填充或排干多个缓冲区</p>
+<h2 id="五、虚拟内存"><a href="#五、虚拟内存" class="headerlink" title="五、虚拟内存"></a>五、虚拟内存</h2><p>所有现代操作系统都使用虚拟内存。虚拟内存意为使用虚假（或虚拟）地址取代物理（硬件<br>RAM）内存地址。这样做好处颇多，总结起来可分为两大类：</p>
+<ul>
+<li>一个以上的虚拟地址可指向同一个物理内存地址。</li>
+<li>虚拟内存空间可大于实际可用的硬件内存。</li>
+</ul>
+<p>前面提到，设备控制器不能通过 DMA 直接存储到用户空间，但通过利用上面提到的第一项，则可以达到相同效果。把内核空间地址与用户空间的虚拟地址映射到同一个物理地址，这样，<br>DMA 硬件（只能访问物理内存地址）就可以填充对内核与用户空间进程同时可见的缓冲区，如下图。</p>
+<p>图 1-3. 内存空间多重映射<br><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20180224163220214.png" alt="这里写图片描述"></p>
+<p>这样省去了内核与用户空间的往来拷贝，但前提条件是，内核与用户缓冲区必须使用相同的页对齐，缓冲区的大小还必须是磁盘控制器块大小（通常为 512 字节磁盘扇区）的倍数。操作系统把内存地址空间划分为页，即固定大小的字节组。内存页的大小总是磁盘块大小的倍数，通常为 2 次幂（这样可简化寻址操作）。典型的内存页为 1,024、 2,048 和 4,096 字节。虚拟和物理内存页的大小总是相同的。图 1-4 显示了来自多个虚拟地址的虚拟内存页是如何映射到物理内的。</p>
+<p>图 1-4. 内存页<br><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/2018022416350235.png" alt="这里写图片描述"></p>
+<h2 id="六、内存页面调度"><a href="#六、内存页面调度" class="headerlink" title="六、内存页面调度"></a>六、内存页面调度</h2><p>为了支持虚拟内存的第二个特性（寻址空间大于物理内存），就必须进行虚拟内存分页（经常<br>称为交换，虽然真正的交换是在进程层面完成，而非页层面）。依照该方案，虚拟内存空间的页面能够继续存在于外部磁盘存储，这样就为物理内存中的其他虚拟页面腾出了空间。从本质上说，物理内存充当了分页区的高速缓存；而所谓分页区，即从物理内存置换出来，转而存储于磁盘上的内存页面。</p>
+<p>图 1-5 显示了分属于四个进程的虚拟页面，其中每个进程都有属于自己的虚拟内存空间。进程A 有五个页面，其中两个装入内存，其余存储于磁盘。</p>
+<p>图 1-5. 用于分页区高速缓存的物理内存<br><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20180224163940644.png" alt="这里写图片描述"></p>
+<p>把内存页大小设定为磁盘块大小的倍数，这样内核就可直接向磁盘控制硬件发布命令，把内存<br>页写入磁盘，在需要时再重新装入。结果是，所有磁盘 I/O 都在页层面完成。对于采用分页技术的现代操作系统而言，这也是数据在磁盘与物理内存之间往来的唯一方式。</p>
+<p>现代 CPU 包含一个称为内存管理单元（MMU）的子系统，逻辑上位于 CPU 与物理内存之<br>间。该设备包含虚拟地址向物理内存地址转换时所需映射信息。当 CPU 引用某内存地址时， MMU负责确定该地址所在页（往往通过对地址值进行移位或屏蔽位操作实现），并将虚拟页号转换为物理页号（这一步由硬件完成，速度极快）。如果当前不存在与该虚拟页形成有效映射的物理内存页， MMU 会向 CPU 提交一个页错误。</p>
+<p>页错误随即产生一个陷阱（类似于系统调用），把控制权移交给内核，附带导致错误的虚拟地址信息，然后内核采取步骤验证页的有效性。内核会安排页面调入操作，把缺失的页内容读回物理内存。这往往导致别的页被移出物理内存，好给新来的页让地方。在这种情况下，如果待移出的页已经被碰过了（自创建或上次页面调入以来，内容已发生改变），还必须首先执行页面调出，把页内容拷贝到磁盘上的分页区。</p>
+<p>如果所要求的地址不是有效的虚拟内存地址（不属于正在执行的进程的任何一个内存段），则该页不能通过验证，段错误随即产生。于是，控制权转交给内核的另一部分，通常导致的结果就是进程被强令关闭。</p>
+<p>一旦出错的页通过了验证， MMU 随即更新，建立新的虚拟到物理的映射（如有必要，中断被移出页的映射），用户进程得以继续。造成页错误的用户进程对此不会有丝毫察觉，一切都在不知不觉中进行。</p>
+<h2 id="七、文件I-O"><a href="#七、文件I-O" class="headerlink" title="七、文件I/O"></a>七、文件I/O</h2><p>文件 I/O 属文件系统范畴，文件系统与磁盘迥然不同。磁盘把数据存在扇区上，通常一个扇区<br>512 字节。磁盘属硬件设备，对何谓文件一无所知，它只是提供了一系列数据存取窗口。在这点<br>上，磁盘扇区与内存页颇有相似之处：都是统一大小，都可作为大的数组被访问。<br>文件系统是更高层次的抽象，是安排、解释磁盘（或其他随机存取块设备）数据的一种独特方<br>式。您所写代码几乎无一例外地要与文件系统打交道，而不是直接与磁盘打交道。是文件系统定义了文件名、路径、文件、文件属性等抽象概念。</p>
+<p>前面讲到，所有 I/O 都是通过请求页面调度完成的。您应该还记得，页面调度是非常底层的<br>操作，仅发生于磁盘扇区与内存页之间的直接传输。而文件 I/O 则可以任意大小、任意定位。那么，底层的页面调度是如何转换为文件 I/O 的？</p>
+<p>文件系统把一连串大小一致的数据块组织到一起。有些块存储元信息，如空闲块、目录、索引<br>等的映射，有些包含文件数据。单个文件的元信息描述了哪些块包含文件数据、数据在哪里结束、最后一次更新是什么时候，等等。</p>
+<p>当用户进程请求读取文件数据时，文件系统需要确定数据具体在磁盘什么位置，然后着手把相关磁盘扇区读进内存。老式的操作系统往往直接向磁盘驱动器发布命令，要求其读取所需磁盘扇区。而采用分页技术的现代操作系统则利用请求页面调度取得所需数据。</p>
+<p>操作系统还有个页的概念，其大小或者与基本内存页一致，或者是其倍数。典型的操作系统页<br>从 2,048 到 8,192 字节不等，且始终是基本内存页大小的倍数。采用分页技术的操作系统执行 I/O 的全过程可总结为以下几步：</p>
+<ul>
+<li>确定请求的数据分布在文件系统的哪些页（磁盘扇区组）。磁盘上的文件内容和元数据可能跨越多个文件系统页，而且这些页可能也不连续。</li>
+<li>在内核空间分配足够数量的内存页，以容纳得到确定的文件系统页。</li>
+<li>在内存页与磁盘上的文件系统页之间建立映射。</li>
+<li>为每一个内存页产生页错误。</li>
+<li>虚拟内存系统俘获页错误，安排页面调入，从磁盘上读取页内容，使页有效。</li>
+<li>一旦页面调入操作完成，文件系统即对原始数据进行解析，取得所需文件内容或属性 信息。</li>
+</ul>
+<p>需要注意的是，这些文件系统数据也会同其他内存页一样得到高速缓存。对于随后发生的 I/O<br>请求，文件数据的部分或全部可能仍旧位于物理内存当中，无需再从磁盘读取即可重复使用。<br>大多数操作系统假设进程会继续读取文件剩余部分，因而会预读额外的文件系统页。如果内存<br>争用情况不严重，这些文件系统页可能在相当长的时间内继续有效。这样的话，当稍后该文件又被相同或不同的进程再次打开，可能根本无需访问磁盘。这种情况您可能也碰到过：当重复执行类似的操作，如在几个文件中进行字符串检索，第二遍运行得似乎快多了。</p>
+<p>类似的步骤在写文件数据时也会采用。这时，文件内容的改变（通过 write( )）将导致文件系<br>统页变脏，随后通过页面调出，与磁盘上的文件内容保持同步。文件的创建方式是，先把文件映射到空闲文件系统页，在随后的写操作中，再将文件系统页刷新到磁盘。</p>
+<h3 id="内存映射文件"><a href="#内存映射文件" class="headerlink" title="内存映射文件"></a>内存映射文件</h3><p>传统的文件 I/O 是通过用户进程发布 read( )和 write( )系统调用来传输数据的。为了在内核空间<br>的文件系统页与用户空间的内存区之间移动数据，一次以上的拷贝操作几乎总是免不了的。这是因为，在文件系统页与用户缓冲区之间往往没有一一对应关系。但是，还有一种大多数操作系统都支持的特殊类型的 I/O 操作，允许用户进程最大限度地利用面向页的系统 I/O 特性，并完全摒弃缓冲区拷贝。这就是内存映射 I/O，如图 1-6 所示。</p>
+<p>图 1-6. 用户内存到文件系统页的映射<br><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20180224165650435.png" alt="这里写图片描述"></p>
+<p>内存映射 I/O 使用文件系统建立从用户空间直到可用文件系统页的虚拟内存映射。这样做有几<br>个好处：</p>
+<ul>
+<li>用户进程把文件数据当作内存，所以无需发布 read( )或 write( )系统调用。</li>
+<li>当用户进程碰触到映射内存空间，页错误会自动产生，从而将文件数据从磁盘读进内存。如果用户修改了映射内存空间，相关页会自动标记为脏，随后刷新到磁盘，文件得到更新。</li>
+<li>操作系统的虚拟内存子系统会对页进行智能高速缓存，自动根据系统负载进行内存管理。</li>
+<li>数据总是按页对齐的，无需执行缓冲区拷贝。</li>
+<li>大型文件使用映射，无需耗费大量内存，即可进行数据拷贝。</li>
+</ul>
+<p>虚拟内存和磁盘 I/O 是紧密关联的，从很多方面看来，它们只是同一件事物的两面。在处理大<br>量数据时，尤其要记得这一点。如果数据缓冲区是按页对齐的，且大小是内建页大小的倍数，那么，对大多数操作系统而言，其处理效率会大幅提升。</p>
+<h3 id="文件锁定"><a href="#文件锁定" class="headerlink" title="文件锁定"></a>文件锁定</h3><p>文件锁定机制允许一个进程阻止其他进程存取某文件，或限制其存取方式。通常的用途是控制<br>共享信息的更新方式，或用于事务隔离。在控制多个实体并行访问共同资源方面，文件锁定是必不可少的。数据库等复杂应用严重信赖于文件锁定。</p>
+<p>“文件锁定”从字面上看有锁定整个文件的意思（通常的确是那样），但锁定往往可以发生在更<br>为细微的层面，锁定区域往往可以细致到单个字节。锁定与特定文件相关，开始于文件的某个特定字节地址，包含特定数量的连续字节。这对于协调多个进程互不影响地访问文件不同区域，是至关重要的。</p>
+<p>文件锁定有两种方式：<strong>共享的和独占的</strong>。多个共享锁可同时对同一文件区域发生作用；独占锁则不同，它要求相关区域不能有其他锁定在起作用。</p>
+<p>共享锁和独占锁的经典应用，是控制最初用于读取的共享文件的更新。某个进程要读取文件，<br>会先取得该文件或该文件部分区域的共享锁。第二个希望读取相同文件区域的进程也会请求共享<br>锁。两个进程可以并行读取，互不影响。但是，假如有第三个进程要更新该文件，它会请求独占<br>锁。该进程会处于阻滞状态，直到既有锁定（共享的、独占的）全部解除。一旦给予独占锁，其他共享锁的读取进程会处于阻滞状态，直到独占锁解除。这样，更新进程可以更改文件，而其他读取进程不会因为文件的更改得到前后不一致的结果。图 1-7 和图 1-8 描述了这一过程。</p>
+<p>图 1-7. 共享锁阻断独占锁请求<br><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20180224170859406.png" alt="这里写图片描述"></p>
+<p>图 1-8. 独占锁阻断共享锁请求<br><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/2018022417091637.png" alt="这里写图片描述"></p>
+<p>文件锁有建议使用和强制使用之分。建议型文件锁会向提出请求的进程提供当前锁定信息，但<br>操作系统并不要求一定这样做，而是由相关进程进行协调并关注锁定信息。多数 Unix 和类Unix 操作系统使用建议型锁，有些也使用强制型锁或兼而有之。</p>
+<p>强制型锁由操作系统或文件系统强行实施，不管进程对锁的存在知道与否，都会阻止其对文件<br>锁定区域的访问。微软的操作系统往往使用的是强制型锁。假定所有文件锁均为建议型，并在访问共同资源的各个应用程序间使用一致的文件锁定，是明智之举，也是唯一可行的跨平台策略。依赖于强制文件锁定的应用程序，从根子上讲就是不可移植的。</p>
+<h2 id="八、流I-O"><a href="#八、流I-O" class="headerlink" title="八、流I/O"></a>八、流I/O</h2><p>并非所有 I/O 都像前面讲的是面向块的，也有流 I/O，其原理模仿了通道。 I/O 字节流必须顺<br>序存取，常见的例子有 TTY（控制台）设备、打印机端口和网络连接。</p>
+<p>流的传输一般（也不必然如此）比块设备慢，经常用于间歇性输入。多数操作系统允许把流置于非块模式，这样，进程可以查看流上是否有输入，即便当时没有也不影响它干别的。这样一种能力使得进程可以在有输入的时候进行处理， 输入流闲置的时候执行其他功能。</p>
+<p>比非块模式再进一步，就是就绪性选择。就绪性选择与非块模式类似（常常就是建立在非块模<br>式之上），但是把查看流是否就绪的任务交给了操作系统。操作系统受命查看一系列流，并提醒进程哪些流已经就绪。这样，仅仅凭借操作系统返回的就绪信息，进程就可以使用相同代码和单一线程，实现多活动流的多路传输。这一技术广泛用于网络服务器领域，用来处理数量庞大的网络连接。就绪性选择在大容量缩放方面是必不可少的。</p>
+<p>同步IO和异步IO，阻塞IO和非阻塞IO分别是什么，到底有什么区别？不同的人在不同的上下文下给出的答案是不同的。所以先限定一下本文的上下文。<br>本文讨论的背景是Linux环境下的network IO。</p>
+<h1 id="IO模型详解"><a href="#IO模型详解" class="headerlink" title="IO模型详解"></a>IO模型详解</h1><h2 id="一、-概念说明"><a href="#一、-概念说明" class="headerlink" title="一、 概念说明"></a>一、 概念说明</h2><p>在进行解释之前，首先要说明几个概念：</p>
+<p><strong>进程切换</strong><br>为了控制进程的执行，内核必须有能力挂起正在CPU上运行的进程，并恢复以前挂起的某个进程的执行。这种行为被称为进程切换。因此可以说，任何进程都是在操作系统内核的支持下运行的，是与内核紧密相关的。从一个进程的运行转到另一个进程上运行，这个过程中经过下面这些变化：</p>
+<ul>
+<li>保存处理机上下文，包括程序计数器和其他寄存器。</li>
+<li>更新PCB信息。</li>
+<li>把进程的PCB移入相应的队列，如就绪、在某事件阻塞等队列。</li>
+<li>选择另一个进程执行，并更新其PCB。</li>
+<li>更新内存管理的数据结构。</li>
+<li>恢复处理机上下文。</li>
+</ul>
+<p>注：总而言之就是很耗资源</p>
+<p><strong>进程的阻塞</strong><br>正在执行的进程，由于期待的某些事件未发生，如请求系统资源失败、等待某种操作的完成、新数据尚未到达或无新工作做等，则由系统自动执行阻塞原语(Block)，使自己由运行状态变为阻塞状态。可见，进程的阻塞是进程自身的一种主动行为，也因此只有处于运行态的进程（获得CPU），才可能将其转为阻塞状态。当进程进入阻塞状态，是不占用CPU资源的。</p>
+<p><strong>文件描述符fd</strong><br>文件描述符（File descriptor）是计算机科学中的一个术语，是一个用于表述指向文件的引用的抽象化概念。</p>
+<p>文件描述符在形式上是一个非负整数。实际上，它是一个索引值，指向内核为每一个进程所维护的该进程打开文件的记录表。当程序打开一个现有文件或者创建一个新文件时，内核向进程返回一个文件描述符。在程序设计中，一些涉及底层的程序编写往往会围绕着文件描述符展开。但是文件描述符这一概念往往只适用于UNIX、Linux这样的操作系统。</p>
+<p><strong>缓存 I/O</strong><br>缓存 I/O 又被称作标准 I/O，大多数文件系统的默认 I/O 操作都是缓存 I/O。在 Linux 的缓存 I/O 机制中，操作系统会将 I/O 的数据缓存在文件系统的页缓存（ page cache ）中，也就是说，数据会先被拷贝到操作系统内核的缓冲区中，然后才会从操作系统内核的缓冲区拷贝到应用程序的地址空间。</p>
+<p>缓存 I/O 的缺点：<br>数据在传输过程中需要在应用程序地址空间和内核进行多次数据拷贝操作，这些数据拷贝操作所带来的 CPU 以及内存开销是非常大的。</p>
+<h2 id="二、-IO模式"><a href="#二、-IO模式" class="headerlink" title="二、 IO模式"></a>二、 IO模式</h2><p>刚才说了，对于一次IO访问（以read举例），数据会先被拷贝到操作系统内核的缓冲区中，然后才会从操作系统内核的缓冲区拷贝到应用程序的地址空间。所以说，当一个read操作发生时，它会经历两个阶段：<br><strong>第一阶段：等待数据准备 (Waiting for the data to be ready)。</strong><br><strong>第二阶段：将数据从内核拷贝到进程中 (Copying the data from the kernel to the process)。</strong></p>
+<p>对于socket流而言，<br><strong>第一步：通常涉及等待网络上的数据分组到达，然后被复制到内核的某个缓冲区。</strong><br><strong>第二步：把数据从内核缓冲区复制到应用进程缓冲区。</strong></p>
+<p>网络应用需要处理的无非就是两大类问题，网络IO，数据计算。相对于后者，网络IO的延迟，给应用带来的性能瓶颈大于后者。网络IO的模型大致有如下几种：<br><strong>同步模型（synchronous IO）</strong></p>
+<ul>
+<li>阻塞IO（bloking IO）</li>
+<li>非阻塞IO（non-blocking IO）</li>
+<li>多路复用IO（multiplexing IO）</li>
+<li>信号驱动式IO（signal-driven IO）</li>
+</ul>
+<p><strong>异步IO（asynchronous IO）</strong></p>
+<p>注：由于signal driven IO在实际中并不常用，所以我这只提及剩下的四种IO Model。</p>
+<h3 id="阻塞-I-O（blocking-IO）"><a href="#阻塞-I-O（blocking-IO）" class="headerlink" title="阻塞 I/O（blocking IO）"></a>阻塞 I/O（blocking IO）</h3><p>在linux中，默认情况下所有的socket都是blocking，一个典型的读操作流程大概是这样：<br><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20180224173911107.png" alt="这里写图片描述"><br>当用户进程调用了recvfrom这个系统调用，kernel就开始了IO的第一个阶段：准备数据（对于网络IO来说，很多时候数据在一开始还没有到达。比如，还没有收到一个完整的UDP包。这个时候kernel就要等待足够的数据到来）。这个过程需要等待，也就是说数据被拷贝到操作系统内核的缓冲区中是需要一个过程的。而在用户进程这边，整个进程会被阻塞（当然，是进程自己选择的阻塞）。当kernel一直等到数据准备好了，它就会将数据从kernel中拷贝到用户内存，然后kernel返回结果，用户进程才解除block的状态，重新运行起来。所以，blocking IO的特点就是在IO执行的两个阶段都被block了。</p>
+<h3 id="非阻塞-I-O（nonblocking-IO）"><a href="#非阻塞-I-O（nonblocking-IO）" class="headerlink" title="非阻塞 I/O（nonblocking IO）"></a>非阻塞 I/O（nonblocking IO）</h3><p>linux下，可以通过设置socket使其变为non-blocking。当对一个non-blocking socket执行读操作时，流程是这个样子：<br><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20180224174125912.png" alt="这里写图片描述"><br>当用户进程发出read操作时，如果kernel中的数据还没有准备好，那么它并不会block用户进程，而是立刻返回一个error。从用户进程角度讲 ，它发起一个read操作后，并不需要等待，而是马上就得到了一个结果。用户进程判断结果是一个error时，它就知道数据还没有准备好，于是它可以再次发送read操作。一旦kernel中的数据准备好了，并且又再次收到了用户进程的system call，那么它马上就将数据拷贝到了用户内存，然后返回。所以，nonblocking IO的特点是用户进程需要不断的主动询问kernel数据好了没有。</p>
+<h3 id="I-O-多路复用（-IO-multiplexing）"><a href="#I-O-多路复用（-IO-multiplexing）" class="headerlink" title="I/O 多路复用（ IO multiplexing）"></a>I/O 多路复用（ IO multiplexing）</h3><p>IO multiplexing就是我们说的select，poll，epoll，有些地方也称这种IO方式为event driven IO。select/epoll的好处就在于单个process就可以同时处理多个网络连接的IO。它的基本原理就是select，poll，epoll这个function会不断的轮询所负责的所有socket，当某个socket有数据到达了，就通知用户进程。<br><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20180224174436798.png" alt="这里写图片描述"><br>当用户进程调用了select，那么整个进程会被block，而同时，kernel会“监视”所有select负责的socket，当任何一个socket中的数据准备好了，select就会返回。这个时候用户进程再调用read操作，将数据从kernel拷贝到用户进程。</p>
+<p>所以，I/O 多路复用的特点是通过一种机制一个进程能同时等待多个文件描述符，而这些文件描述符（套接字描述符）其中的任意一个进入读就绪状态，select()函数就可以返回。<br>这个图和blocking IO的图其实并没有太大的不同，事实上，还更差一些。因为这里需要使用两个system call (select 和 recvfrom)，而blocking IO只调用了一个system call (recvfrom)。<strong>但是，用select的优势在于它可以同时处理多个connection。</strong></p>
+<p>所以，如果处理的连接数不是很高的话，使用select/epoll的web server不一定比使用multi-threading + blocking IO的web server性能更好，可能延迟还更大。select/epoll的优势并不是对于单个连接能处理得更快，而是在于能处理更多的连接。）</p>
+<p>在IO multiplexing Model中，实际中，对于每一个socket，一般都设置成为non-blocking，但是，如上图所示，<strong>整个用户的process其实是一直被block的。只不过process是被select这个函数block，而不是被socket IO给block。</strong></p>
+<h3 id="异步-I-O（asynchronous-IO）"><a href="#异步-I-O（asynchronous-IO）" class="headerlink" title="异步 I/O（asynchronous IO）"></a>异步 I/O（asynchronous IO）</h3><p>linux下的asynchronous IO其实用得很少。先看一下它的流程：</p>
+<p><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20180224175148476.png" alt="这里写图片描述"></p>
+<p>用户进程发起read操作之后，立刻就可以开始去做其它的事。而另一方面，从kernel的角度，当它受到一个asynchronous read之后，首先它会立刻返回，所以不会对用户进程产生任何block。然后，kernel会等待数据准备完成，然后将数据拷贝到用户内存，当这一切都完成之后，kernel会给用户进程发送一个signal，告诉它read操作完成了。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><strong>blocking和non-blocking的区别</strong><br>调用blocking IO会一直block住对应的进程直到操作完成，而non-blocking IO在kernel还准备数据的情况下会立刻返回。</p>
+<p><strong>synchronous IO和asynchronous IO的区别</strong><br>在说明synchronous IO和asynchronous IO的区别之前，需要先给出两者的定义。POSIX的定义是这样子的：</p>
+<ul>
+<li>A synchronous I/O operation causes the requesting process to be<br>blocked until that I/O operation completes;</li>
+<li>An asynchronous I/O operation does not cause the requesting process to be blocked;</li>
+</ul>
+<p><strong>两者的区别就在于synchronous IO做”IO operation”的时候会将process阻塞</strong>。按照这个定义，之前所述的<strong>blocking IO，non-blocking IO，IO multiplexing都属于synchronous IO</strong>。</p>
+<p>有人会说，non-blocking IO并没有被block啊。这里有个非常“狡猾”的地方，定义中所指的”IO operation”是指真实的IO操作，就是例子中的recvfrom这个system call。non-blocking IO在执行recvfrom这个system call的时候，如果kernel的数据没有准备好，这时候不会block进程。但是，当kernel中数据准备好的时候，<strong>recvfrom会将数据从kernel拷贝到用户内存中，这个时候进程是被block了，在这段时间内，进程是被block的。</strong></p>
+<p>而asynchronous IO则不一样，当进程发起IO 操作之后，就直接返回再也不理睬了，直到kernel发送一个信号，告诉进程说IO完成（看图可以发现系统已经把数据从内核空间copy到用户空间，用户线程可以直接操作数据）。在这整个过程中，进程完全没有被block。<br>各个IO Model的比较如图所示：<br><img src="https://gitee.com/MysticalYu/pic/raw/master/hexo/20180224180103432.png" alt="这里写图片描述"><br>通过上面的图片，可以发现non-blocking IO和asynchronous IO的区别还是很明显的。在non-blocking IO中，虽然进程大部分时间都不会被block，但是它仍然要求进程去主动的check，并且当数据准备完成以后，也需要进程主动的再次调用recvfrom来将数据拷贝到用户内存。而asynchronous IO则完全不同。它就像是用户进程将整个IO操作交给了他人（kernel）完成，然后他人做完后发信号通知。在此期间，用户进程不需要去检查IO操作的状态，也不需要主动的去拷贝数据。</p>
+<h2 id="三、-I-O-多路复用之select、poll、epoll"><a href="#三、-I-O-多路复用之select、poll、epoll" class="headerlink" title="三、 I/O 多路复用之select、poll、epoll"></a>三、 I/O 多路复用之select、poll、epoll</h2><p><strong>select，poll，epoll都是IO多路复用的机制</strong>。I/O多路复用就是通过一种机制，一个进程可以监视多个描述符，一旦某个描述符就绪（一般是读就绪或者写就绪），能够通知程序进行相应的读写操作。但select，poll，epoll本质上都是同步I/O，因为他们都需要在读写事件就绪后自己负责进行读写，也就是说这个读写过程是阻塞的，而异步I/O则无需自己负责进行读写，异步I/O的实现会包括把数据从内核拷贝到用户空间。</p>
+<h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int select (int n, fd_set *readfds, fd_set *writefds, </span><br><span class="line">fd_set *exceptfds, struct timeval *timeout);12</span><br></pre></td></tr></table></figure>
+
+<p>select 函数监视的文件描述符分3类，分别是writefds、readfds、和exceptfds。调用后select函数会阻塞，直到有描述符就绪（有数据 可读、可写、或者有except），或者超时（timeout指定等待时间，如果立即返回设为null即可），函数返回。当select函数返回后，可以 通过遍历fdset，来找到就绪的描述符。</p>
+<p>select目前几乎在所有的平台上支持，其良好跨平台支持也是它的一个优点。select的一 个缺点在于单个进程能够监视的文件描述符的数量存在最大限制，在Linux上一般为1024，可以通过修改宏定义甚至重新编译内核的方式提升这一限制，但 是这样也会造成效率的降低。</p>
+<h3 id="poll"><a href="#poll" class="headerlink" title="poll"></a>poll</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int poll (struct pollfd *fds, unsigned int nfds, int timeout);1</span><br></pre></td></tr></table></figure>
+
+<p>不同与select使用三个位图来表示三个fdset的方式，poll使用一个 pollfd的指针实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">struct pollfd &#123;</span><br><span class="line">    int fd; &#x2F;* file descriptor *&#x2F;</span><br><span class="line">    short events; &#x2F;* requested events to watch *&#x2F;</span><br><span class="line">    short revents; &#x2F;* returned events witnessed *&#x2F;</span><br><span class="line">&#125;;12345</span><br></pre></td></tr></table></figure>
+
+<p>pollfd结构包含了要监视的event和发生的event，不再使用select“参数-值”传递的方式。同时，pollfd并没有最大数量限制（但是数量过大后性能也是会下降）。 和select函数一样，poll返回后，需要轮询pollfd来获取就绪的描述符。</p>
+<p>从上面看，select和poll都需要在返回后，通过遍历文件描述符来获取已经就绪的socket。事实上，同时连接的大量客户端在同一时刻可能只有很少处于就绪的状态，因此随着监视的描述符数量的增长，其效率也会线性下降。</p>
+<h3 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h3><p><strong>epoll是在2.6内核中提出的</strong>，是之前的select和poll的增强版本。相对于select和poll来说，epoll更加灵活，没有描述符限制<strong>。epoll使用一个文件描述符管理多个描述符</strong>，将用户关系的文件描述符的事件存放到内核的一个事件表中，这样在用户空间和内核空间的copy只需一次。</p>
+<h2 id="四、epoll详解"><a href="#四、epoll详解" class="headerlink" title="四、epoll详解"></a>四、epoll详解</h2><h3 id="epoll操作过程"><a href="#epoll操作过程" class="headerlink" title="epoll操作过程"></a>epoll操作过程</h3><p>epoll操作过程需要三个接口，分别如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;创建一个epoll的句柄，size用来告诉内核这个监听的数目一共有多大</span><br><span class="line">int epoll_create(int size)；</span><br><span class="line">int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)；</span><br><span class="line">int epoll_wait(int epfd, struct epoll_event * events, int maxevents, int timeout);1234</span><br></pre></td></tr></table></figure>
+
+<p><strong>int epoll_create(int size);</strong><br>创建一个epoll的句柄，size用来告诉内核这个监听的数目一共有多大，这个参数不同于select()中的第一个参数，给出最大监听的fd+1的值，参数size并不是限制了epoll所能监听的描述符最大个数，只是对内核初始分配内部数据结构的一个建议。<br>当创建好epoll句柄后，它就会占用一个fd值，在linux下如果查看/proc/进程id/fd/，是能够看到这个fd的，所以在使用完epoll后，必须调用close()关闭，否则可能导致fd被耗尽。</p>
+<p><strong>int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)；</strong><br>函数是对指定描述符fd执行op操作。<br>- epfd：是epoll_create()的返回值。<br>- op：表示op操作，用三个宏来表示：添加EPOLL_CTL_ADD，删除EPOLL_CTL_DEL，修改EPOLL_CTL_MOD。分别添加、删除和修改对fd的监听事件。<br>- fd：是需要监听的fd（文件描述符）<br>- epoll_event：是告诉内核需要监听什么事，struct epoll_event结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">struct epoll_event &#123;</span><br><span class="line">  __uint32_t events;  &#x2F;* Epoll events *&#x2F;</span><br><span class="line">  epoll_data_t data;  &#x2F;* User data variable *&#x2F;</span><br><span class="line">&#125;;1234</span><br></pre></td></tr></table></figure>
+
+<p>events可以是以下几个宏的集合：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">EPOLLIN ：表示对应的文件描述符可以读（包括对端SOCKET正常关闭）；</span><br><span class="line">EPOLLOUT：表示对应的文件描述符可以写；</span><br><span class="line">EPOLLPRI：表示对应的文件描述符有紧急的数据可读（这里应该表示有带外数据到来）；</span><br><span class="line">EPOLLERR：表示对应的文件描述符发生错误；</span><br><span class="line">EPOLLHUP：表示对应的文件描述符被挂断；</span><br><span class="line">EPOLLET： 将EPOLL设为边缘触发(Edge Triggered)模式，这是相对于水平触发(Level Triggered)来说的。</span><br><span class="line">EPOLLONESHOT：只监听一次事件，当监听完这次事件之后，如果还需要继续监听这个socket的话，需要再次把这个socket加入到EPOLL队列里1234567</span><br></pre></td></tr></table></figure>
+
+<p><strong>int epoll_wait(int epfd, struct epoll_event * events, int maxevents, int timeout);</strong><br>等待epfd上的io事件，最多返回maxevents个事件。<br>参数events用来从内核得到事件的集合，maxevents告之内核这个events有多大，这个maxevents的值不能大于创建epoll_create()时的size，参数timeout是超时时间（毫秒，0会立即返回，-1将不确定，也有说法说是永久阻塞）。该函数返回需要处理的事件数目，如返回0表示已超时。</p>
+<h3 id="epoll工作模式"><a href="#epoll工作模式" class="headerlink" title="epoll工作模式"></a>epoll工作模式</h3><p>epoll对文件描述符的操作有两种模式：LT（level trigger）和ET（edge trigger）。LT模式是默认模式，LT模式与ET模式的区别如下：</p>
+<ul>
+<li>LT模式：当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件。下次调用epoll_wait时，会再次响应应用程序并通知此事件。</li>
+<li>ET模式：当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件。如果不处理，下次调用epoll_wait时，不会再次响应应用程序并通知此事件。</li>
+</ul>
+<h4 id="LT模式"><a href="#LT模式" class="headerlink" title="LT模式"></a>LT模式</h4><p>LT(level triggered)是缺省的工作方式，并且同时支持block和no-block socket.在这种做法中，内核告诉你一个文件描述符是否就绪了，然后你可以对这个就绪的fd进行IO操作。如果你不作任何操作，内核还是会继续通知你的。</p>
+<h4 id="ET模式"><a href="#ET模式" class="headerlink" title="ET模式"></a>ET模式</h4><p>ET(edge-triggered)是高速工作方式，只支持no-block socket。在这种模式下，当描述符从未就绪变为就绪时，内核通过epoll告诉你。然后它会假设你知道文件描述符已经就绪，并且不会再为那个文件描述符发送更多的就绪通知，直到你做了某些操作导致那个文件描述符不再为就绪状态了(比如，你在发送，接收或者接收请求，或者发送接收的数据少于一定量时导致了一个EWOULDBLOCK 错误）。但是请注意，如果一直不对这个fd作IO操作(从而导致它再次变成未就绪)，内核不会发送更多的通知(only once)</p>
+<p>ET模式在很大程度上减少了epoll事件被重复触发的次数，因此效率要比LT模式高。epoll工作在ET模式的时候，必须使用非阻塞套接口，以避免由于一个文件句柄的阻塞读/阻塞写操作把处理多个文件描述符的任务饿死。</p>
+<h4 id="epoll工作模式总结"><a href="#epoll工作模式总结" class="headerlink" title="epoll工作模式总结"></a>epoll工作模式总结</h4><p>假如有这样一个例子：</p>
+<ol>
+<li>我们已经把一个用来从管道中读取数据的文件句柄(RFD)添加到epoll描述符</li>
+<li>这个时候从管道的另一端被写入了2KB的数据</li>
+<li>调用epoll_wait(2)，并且它会返回RFD，说明它已经准备好读取操作</li>
+<li>然后我们读取了1KB的数据</li>
+<li>调用epoll_wait(2)……</li>
+</ol>
+<p>LT模式：<br>如果是LT模式，那么在第5步调用epoll_wait(2)之后，仍然能受到通知。</p>
+<p>ET模式：<br>如果我们在第1步将RFD添加到epoll描述符的时候使用了EPOLLET标志，那么在第5步调用epoll_wait(2)之后将有可能会挂起，因为剩余的数据还存在于文件的输入缓冲区内，而且数据发出端还在等待一个针对已经发出数据的反馈信息。只有在监视的文件句柄上发生了某个事件的时候 ET 工作模式才会汇报事件。因此在第5步的时候，调用者可能会放弃等待仍在存在于文件输入缓冲区内的剩余数据。<br>当使用epoll的ET模型来工作时，当产生了一个EPOLLIN事件后，读数据的时候需要考虑的是当recv()返回的大小如果等于请求的大小，那么很有可能是缓冲区还有数据未读完，也意味着该次事件还没有处理完，所以还需要再次读取</p>
+<h4 id="Linux中的EAGAIN含义"><a href="#Linux中的EAGAIN含义" class="headerlink" title="Linux中的EAGAIN含义"></a>Linux中的EAGAIN含义</h4><p>Linux环境下开发经常会碰到很多错误(设置errno)，其中EAGAIN是其中比较常见的一个错误(比如用在非阻塞操作中)。</p>
+<p>从字面上来看，是提示再试一次。这个错误经常出现在当应用程序进行一些非阻塞(non-blocking)操作(对文件或socket)的时候。</p>
+<p>例如，以 O_NONBLOCK的标志打开文件/socket/FIFO，如果你连续做read操作而没有数据可读。此时程序不会阻塞起来等待数据准备就绪返回，read函数会返回一个错误EAGAIN，提示你的应用程序现在没有数据可读请稍后再试。</p>
+<p>又例如，当一个系统调用(比如fork)因为没有足够的资源(比如虚拟内存)而执行失败，返回EAGAIN提示其再调用一次(也许下次就能成功)。</p>
+<h3 id="epoll总结"><a href="#epoll总结" class="headerlink" title="epoll总结"></a>epoll总结</h3><p>在 select/poll中，进程只有在调用一定的方法后，内核才对所有监视的文件描述符进行扫描，而epoll事先通过epoll_ctl()来注册一 个文件描述符，一旦基于某个文件描述符就绪时，内核会采用类似callback的回调机制，迅速激活这个文件描述符，当进程调用epoll_wait() 时便得到通知。(此处去掉了遍历文件描述符，而是通过监听回调的的机制。这正是epoll的魅力所在。)</p>
+<p>epoll的优点主要是以下几个方面：</p>
+<ul>
+<li>监视的描述符数量不受限制它所支持的FD上限是最大可以打开文件的数目，这个数字一般远大于2048,举个例子,在1GB内存的机器上大约是10万左右，具体数目可以cat /proc/sys/fs/file-max察看,一般来说这个数目和系统内存关系很大。select的最大缺点就是进程打开的fd是有数量限制的。这对于连接数量比较大的服务器来说根本不能满足。虽然也可以选择多进程的解决方案( Apache就是这样实现的)，不过虽然linux上面创建进程的代价比较小，但仍旧是不可忽视的，加上进程间数据同步远比不上线程间同步的高效，所以也不是一种完美的方案。<br>IO的效率不会随着监视fd的数量的增长而下降。epoll不同于select和poll轮询的方式，而是通过每个fd定义的回调函数来实现的。<strong>只有就绪的fd才会执行回调函数。</strong></li>
+<li>如果没有大量的idle-connection或者dead-connection，epoll的效率并不会比select/poll高很多，但是当遇到大量的idle-connection，就会发现epoll的效率大大高于select/poll。</li>
+</ul>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined" rel="external nofollow noreferrer">MysticalYcc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://gschaos.club/IO%E6%A8%A1%E5%9E%8B/">https://gschaos.club/IO%E6%A8%A1%E5%9E%8B/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://gschaos.club" target="_blank">MysticalYcc</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/java/">java</a><a class="post-meta__tags" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></div><div class="post_share"><div class="social-share" data-image="https://gschaos.club/ico/img/pop-cg-gewen-ps3.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/kafka%E9%85%8D%E7%BD%AE%E6%B3%A8%E6%84%8F%E7%82%B9/"><img class="prev-cover" src="https://gschaos.club/ico/img/wayne-wan-.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">kafka配置注意点</div></div></a></div><div class="next-post pull-right"><a href="/Linux-%E4%B8%AD%E7%9A%84%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF/"><img class="next-cover" src="https://gschaos.club/ico/img/kki-ming-screenshot003.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Linux 中的零拷贝技术</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/Spring Cloud Gateway截断/" title="Spring Cloud Gateway 读取、修改请求体（解决request body内容被截断）"><img class="cover" src="https://gschaos.club/ico/img/vahid-ahmadi-8a-sx-by-vahid-ahmadi-zbrush-work.jpg"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2020-10-25</div><div class="title">Spring Cloud Gateway 读取、修改请求体（解决request body内容被截断）</div></div></a></div><div><a href="/分页存储管理的基本原理/" title="分页存储管理的基本原理"><img class="cover" src="https://gschaos.club/ico/img/huifeng-huang-pose-final.jpg"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2020-10-25</div><div class="title">分页存储管理的基本原理</div></div></a></div><div><a href="/Java 8 日期时间 API/" title="Java 8 日期时间 API"><img class="cover" src="https://gschaos.club/ico/img/20200407235917-www-ycfcg-com-3.jpg"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2020-10-25</div><div class="title">Java 8 日期时间 API</div></div></a></div><div><a href="/Linux设置虚拟内存/" title="Linux设置虚拟内存"><img class="cover" src="https://gschaos.club/ico/img/20200605013054948.jpg"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2020-10-25</div><div class="title">Linux设置虚拟内存</div></div></a></div><div><a href="/Spring是如何启用aop切面/" title="Spring是如何启用aop切面"><img class="cover" src="https://gschaos.club/ico/img/d-long-5k.jpg"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2020-10-25</div><div class="title">Spring是如何启用aop切面</div></div></a></div><div><a href="/Ubuntu Shadowsocks/" title="Ubuntu 16.04下Shadowsocks服务器端安装及优化"><img class="cover" src="https://gschaos.club/ico/img/gyul-bae-templar-20-g.jpg"><div class="content is-center"><div class="date"><i class="fas fa-history fa-fw"></i> 2020-10-25</div><div class="title">Ubuntu 16.04下Shadowsocks服务器端安装及优化</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></article></main><footer id="footer" style="background-image: url(https://gschaos.club/ico/img/pop-cg-gewen-ps3.jpg)"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2020 By MysticalYcc</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="icp"><a target="_blank" rel="noopener external nofollow noreferrer" href="http://www.beian.miit.gov.cn/state/outPortal/loginPortal.action"><img class="icp-icon" src="/img/icp.png"/><span>皖ICP备19015872号-1</span></a></div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',()=> {preloader.endLoading()})</script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const initData = {
+      el: '#vcomment',
+      appId: 'J2f6Gx43ptrGYdf1rHPAS5sJ-gzGzoHsz',
+      appKey: 'cSywIQR7CfBFaNI8iiPTYy41',
+      placeholder: 'Please leave your footprints',
+      avatar: 'monsterid',
+      meta: 'nick,mail,link'.split(','),
+      pageSize: '10',
+      lang: 'en',
+      recordIP: false,
+      serverURLs: '',
+      emojiCDN: '',
+      emojiMaps: "",
+      enableQQ: false,
+      path: window.location.pathname,
+    }
+
+    if (true) { 
+      initData.requiredFields= ('nick,mail'.split(','))
+    }
+
+    const valine = new Valine(initData)
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else $.getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js', initValine)
+}
+
+if ('Valine' === 'Valine' || !false) {
+  if (false) btf.loadComment(document.querySelector('#vcomment'),loadValine)
+  else setTimeout(() => loadValine(), 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.17.0/js/md5.min.js"></script><script>window.addEventListener('load', () => {
+  const changeContent = (content) => {
+    if (content === '') return content
+
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+    content = content.replace(/(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|jpeg|gif|png|webp)/g, '') // remove image link
+    content = content.replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi, '') // remove url
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const getIcon = (icon, mail) => {
+    if (icon) return icon 
+    let defaultIcon = ''
+    let iconUrl = `https://gravatar.loli.net/avatar/${md5(mail.toLowerCase()) + defaultIcon}`
+    return iconUrl
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    for (let i = 0; i < array.length; i++) {
+      result += '<div class=\'aside-list-item\'>'
+
+      if (true) {
+        result += `<a href='${array[i].url}' class="thumbnail"><img src='${getIcon(array[i].avatar, array[i].mail)}' alt='${array[i].nick}'></a>`
+      }
+
+      result += `<div class='content'>
+      <a class='comment' href='${array[i].url}'>${array[i].content}</a>
+      <div class='name'><span>${array[i].nick}</span><time> / ${btf.diffDate(array[i].date, true)}</time></div>
+      </div></div>`
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom.innerHTML= result
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const getValineData = () => {
+      let serverURL = ''
+      if (true) {
+        serverURL = 'https://j2f6gx43.lc-cn-n1-shared.com'
+      } else {
+        serverURL = 'https://J2f6Gx43.api.lncldglobal.com'
+      }
+
+    var settings = {
+      "url": `${serverURL}/1.1/classes/Comment?limit=6&order=-createdAt`,
+      "method": "GET",
+      "timeout": 0,
+      "headers": {
+        "X-LC-Id": 'J2f6Gx43ptrGYdf1rHPAS5sJ-gzGzoHsz',
+        "X-LC-Key": 'cSywIQR7CfBFaNI8iiPTYy41',
+        "Content-Type": "application/json"
+      },
+    }
+
+    $.ajax(settings).done((response) => {
+      var valineArray = []
+      response.results.forEach((e)=>{
+        valineArray.push({
+          'avatar': e.QQAvatar,
+          'content': changeContent(e.comment),
+          'mail': e.mail,
+          'nick': e.nick,
+          'url': e.url,
+          'date': e.createdAt,
+        })
+      })
+      
+      saveToLocal.set('leancloud-newest-comments', JSON.stringify(valineArray), 10/(60*24))
+      generateHtml(valineArray)
+
+    }).fail(()=>{
+      const $dom = document.querySelector('#card-newest-comments .aside-list')
+      $dom.innerHTML= "无法获取资料，请确认相关配置是否正确"
+    })
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('leancloud-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getValineData()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><div class="aplayer no-destroy" data-id="2920702828" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="false" muted></div><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = [
+  'title',
+  'meta[name=description]',
+  '#config_change',
+  '#body-wrap',
+  '#rightside-config-hide',
+  '#rightside-config-show',
+  '.js-pjax'
+]
+
+if (false) {
+  pjaxSelectors.unshift('meta[property="og:image"]', 'meta[property="og:title"]', 'meta[property="og:url"]')
+}
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  $('script[data-pjax]').each(function () {
+    $(this).parent().append($(this).remove())
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  if (typeof gtag === 'function') {
+    gtag('config', '', {'page_path': window.location.pathname});
+  }
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // Analytics
+  if (false) {
+    MtaH5.pgv()
+  }
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+
+document.addEventListener('pjax:send', function () {
+  typeof preloader === 'object' && preloader.initLoading()
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  $(window).off('scroll')
+
+  //reset readmode
+  $('body').hasClass('read-mode') && $('body').removeClass('read-mode')
+
+})</script></div></body></html>
