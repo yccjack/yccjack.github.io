@@ -1,0 +1,763 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Feed流系统 | MysticalYcc</title><meta name="keywords" content="架构"><meta name="author" content="MysticalYcc"><meta name="copyright" content="MysticalYcc"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="如何打造千万级Feed流系统Feed流是一个目前非常常见的功能，在众多产品中都有展现，比如微博，朋友圈，消息广场，通知，IM等。通过Feed流可以把动态实时的传播给订阅者，是用户获取信息流的一种有效方式。在大数据时代，如何打造一个千万级规模的Feed流系统仍然是一个挑战。本文中会介绍如何设计一个千万量级的Feed流系统的架构。  作者：少强 链接：https:&#x2F;&#x2F;developer.aliyun.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Feed流系统">
+<meta property="og:url" content="https://gschaos.club/Feed%E6%B5%81%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="MysticalYcc">
+<meta property="og:description" content="如何打造千万级Feed流系统Feed流是一个目前非常常见的功能，在众多产品中都有展现，比如微博，朋友圈，消息广场，通知，IM等。通过Feed流可以把动态实时的传播给订阅者，是用户获取信息流的一种有效方式。在大数据时代，如何打造一个千万级规模的Feed流系统仍然是一个挑战。本文中会介绍如何设计一个千万量级的Feed流系统的架构。  作者：少强 链接：https:&#x2F;&#x2F;developer.aliyun.">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gschaos.club/ico/img/jiyun-lee-ps1q-1.jpg">
+<meta property="article:published_time" content="2020-11-01T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-11-03T00:42:28.000Z">
+<meta property="article:author" content="MysticalYcc">
+<meta property="article:tag" content="架构">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gschaos.club/ico/img/jiyun-lee-ps1q-1.jpg"><link rel="shortcut icon" href="/ico/favicon.ico"><link rel="canonical" href="https://gschaos.club/Feed%E6%B5%81%E7%B3%BB%E7%BB%9F/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  hexoversion: '5.1.1',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: false,
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true,
+  postUpdate: '2020-11-03 08:42:28'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+  }
+}
+
+var autoChangeMode = 'false'
+var t = saveToLocal.get('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (saveToLocal.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><meta name="generator" content="Hexo 5.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="https://gschaos.club/ico/me.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">51</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">32</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">19</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-camera-retro"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 画廊</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div id="body-wrap"><div id="sidebar"><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%89%93%E9%80%A0%E5%8D%83%E4%B8%87%E7%BA%A7Feed%E6%B5%81%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.</span> <span class="toc-text">如何打造千万级Feed流系统</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5"><span class="toc-number">2.</span> <span class="toc-text">概念</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E5%BE%81"><span class="toc-number">2.1.</span> <span class="toc-text">特征</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E7%B1%BB"><span class="toc-number">2.2.</span> <span class="toc-text">分类</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%82%A8"><span class="toc-number">3.1.</span> <span class="toc-text">存储</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A8%E9%80%81"><span class="toc-number">3.2.</span> <span class="toc-text">推送</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TableStore"><span class="toc-number">4.</span> <span class="toc-text">TableStore</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F%E9%80%89%E6%8B%A9"><span class="toc-number">5.</span> <span class="toc-text">存储系统选择</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E8%B4%A6%E5%8F%B7%E5%85%B3%E7%B3%BB"><span class="toc-number">5.1.</span> <span class="toc-text">存储账号关系</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%BC%80%E6%BA%90HBase%E5%AD%98%E5%82%A8%E8%B4%A6%E5%8F%B7%E5%85%B3%E7%B3%BB"><span class="toc-number">5.1.0.1.</span> <span class="toc-text">使用开源HBase存储账号关系</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E8%A1%A8%E6%A0%BC%E5%AD%98%E5%82%A8-TableStore-%E5%AD%98%E5%82%A8%E8%B4%A6%E5%8F%B7%E5%85%B3%E7%B3%BB"><span class="toc-number">5.1.0.2.</span> <span class="toc-text">使用表格存储(TableStore)存储账号关系</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%82%A8Feed%E6%B6%88%E6%81%AF"><span class="toc-number">5.2.</span> <span class="toc-text">存储Feed消息</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BD%9C%E5%9C%A8%E7%9A%84%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F"><span class="toc-number">5.2.0.1.</span> <span class="toc-text">潜在的存储系统</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AD%98%E5%82%A8Feed%E6%B6%88%E6%81%AF"><span class="toc-number">5.2.0.2.</span> <span class="toc-text">使用关系型数据库存储Feed消息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8TableStore%E5%AD%98%E5%82%A8%E8%B4%A6%E5%8F%B7%E5%85%B3%E7%B3%BB"><span class="toc-number">5.2.0.3.</span> <span class="toc-text">使用TableStore存储账号关系</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8E%A8%E9%80%81%E6%96%B9%E6%A1%88"><span class="toc-number">6.</span> <span class="toc-text">推送方案</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A8%E6%A8%A1%E5%BC%8F%E5%92%8C%E6%8B%89%E6%A8%A1%E5%BC%8F%E5%AF%B9%E6%AF%94"><span class="toc-number">6.0.0.1.</span> <span class="toc-text">推模式和拉模式对比</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A8%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%B8%80%E4%B8%AA%E5%89%AF%E4%BD%9C%E7%94%A8"><span class="toc-number">6.0.0.2.</span> <span class="toc-text">推模式的一个副作用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">6.0.0.3.</span> <span class="toc-text">适用场景</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A8%E9%80%81%E7%B3%BB%E7%BB%9F"><span class="toc-number">6.1.</span> <span class="toc-text">推送系统</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8TableStore%E4%BD%9C%E4%B8%BA%E6%8E%A8%E9%80%81%E7%B3%BB%E7%BB%9F"><span class="toc-number">6.1.0.1.</span> <span class="toc-text">使用TableStore作为推送系统</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84%E5%9B%BE"><span class="toc-number">7.</span> <span class="toc-text">架构图</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%82%A8-1"><span class="toc-number">7.1.</span> <span class="toc-text">存储</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%91%E5%B8%83Feed%E6%B5%81%E7%A8%8B"><span class="toc-number">7.2.</span> <span class="toc-text">发布Feed流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96Feed%E6%B5%81%E6%B5%81%E7%A8%8B"><span class="toc-number">7.3.</span> <span class="toc-text">读取Feed流流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E7%AE%80%E5%8D%95%E7%9A%84%E6%8E%A8%E6%A8%A1%E5%BC%8F"><span class="toc-number">7.4.</span> <span class="toc-text">更简单的推模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AA%E6%80%A7%E5%8C%96%E5%92%8C%E5%AE%9A%E5%90%91%E5%B9%BF%E5%91%8A"><span class="toc-number">7.5.</span> <span class="toc-text">个性化和定向广告</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%B6%E7%9B%8A"><span class="toc-number">7.6.</span> <span class="toc-text">收益</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%B8%AA%E8%AE%BE%E8%AE%A1%E7%BC%BA%E9%99%B7"><span class="toc-number">7.7.</span> <span class="toc-text">一个设计缺陷</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5"><span class="toc-number">8.</span> <span class="toc-text">实践</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%92%E8%89%B2"><span class="toc-number">8.1.</span> <span class="toc-text">角色</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84%E5%9B%BE-1"><span class="toc-number">8.2.</span> <span class="toc-text">架构图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E5%88%92"><span class="toc-number">8.3.</span> <span class="toc-text">计划</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%89%A9%E5%B1%95"><span class="toc-number">9.</span> <span class="toc-text">扩展</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%80%E5%90%8E"><span class="toc-number">10.</span> <span class="toc-text">最后</span></a></li></ol></div></div></div><header class="post-bg" id="page-header" style="background-image: url(https://gschaos.club/ico/img/jiyun-lee-ps1q-1.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">MysticalYcc</a></span><span id="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-camera-retro"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 画廊</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">Feed流系统</div></div><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-11-01T16:00:00.000Z" title="发表于 2020-11-02 00:00:00">2020-11-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2020-11-03T00:42:28.000Z" title="更新于 2020-11-03 08:42:28">2020-11-03</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%9E%B6%E6%9E%84/">架构</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><h1 id="如何打造千万级Feed流系统"><a href="#如何打造千万级Feed流系统" class="headerlink" title="如何打造千万级Feed流系统"></a>如何打造千万级Feed流系统</h1><p>Feed流是一个目前非常常见的功能，在众多产品中都有展现，比如微博，朋友圈，消息广场，通知，IM等。通过Feed流可以把动态实时的传播给订阅者，是用户获取信息流的一种有效方式。在大数据时代，如何打造一个千万级规模的Feed流系统仍然是一个挑战。本文中会介绍如何设计一个千万量级的Feed流系统的架构。</p>
+<blockquote>
+<p>作者：少强</p>
+<p>链接：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://developer.aliyun.com/article/224132">https://developer.aliyun.com/article/224132</a></p>
+</blockquote>
+<p>在互联网领域，尤其现在的移动互联网时代，Feed流产品是非常常见的，比如我们每天都会用到的朋友圈，微博，就是一种非常典型的Feed流产品，还有图片分享网站Pinterest，花瓣网等又是另一种形式的Feed流产品。除此之外，很多App的都会有一个模块，要么叫动态，要么叫消息广场，这些也是Feed流产品，可以说，Feed流产品是遍布天下所有的App中。</p>
+<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p>我们在讲如何设计Feed流系统之前，先来看一下Feed流中的一些概念：</p>
+<ul>
+<li>Feed：Feed流中的每一条状态或者消息都是Feed，比如朋友圈中的一个状态就是一个Feed，微博中的一条微博就是一个Feed。</li>
+<li>Feed流：持续更新并呈现给用户内容的信息流。每个人的朋友圈，微博关注页等等都是一个Feed流。</li>
+<li>Timeline：Timeline其实是一种Feed流的类型，微博，朋友圈都是Timeline类型的Feed流，但是由于Timeline类型出现最早，使用最广泛，最为人熟知，有时候也用Timeline来表示Feed流。</li>
+<li>关注页Timeline：展示其他人Feed消息的页面，比如朋友圈，微博的首页等。</li>
+<li>个人页Timeline：展示自己发送过的Feed消息的页面，比如微信中的相册，微博的个人页等。</li>
+</ul>
+<h2 id="特征"><a href="#特征" class="headerlink" title="特征"></a>特征</h2><p>Feed流系统有一些非常典型的特点，比如：</p>
+<ul>
+<li>多账号内容流：Feed流系统中肯定会存在成千上万的账号，账号之间可以关注，取关，加好友和拉黑等操作。只要满足这一条，那么就可以当做Feed流系统来设计。</li>
+<li>非稳定的账号关系：由于存在关注，取关等操作，所以系统中的用户之间的关系就会一直在变化，是一种非稳定的状态。</li>
+<li>读写比例100:1：读写严重不平衡，读多写少，一般读写比例在10：1，甚至100：1以上。</li>
+<li>消息必达性要求高：比如发送了一条朋友圈后，结果部分朋友看到了，部分朋友没看到，如果偏偏女朋友没看到，那么可能会产生很严重的感情矛盾，后果很严重。</li>
+</ul>
+<p>上面的就是Feed流产品的一些特点，下面我们来看一下Feed流系统的分类。</p>
+<h2 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h2><p>Feed流的分类有很多种，但最常见的分类有两种：</p>
+<ul>
+<li>Timeline：按发布的时间顺序排序，先发布的先看到，后发布的排列在最顶端，类似于微信朋友圈，微博等。这也是一种最常见的形式。产品如果选择Timeline类型，那么就是认为<code>Feed流中的Feed不多，但是每个Feed都很重要，都需要用户看到</code>。</li>
+<li>Rank：按某个非时间的因子排序，一般是按照用户的喜好度排序，用户最喜欢的排在最前面，次喜欢的排在后面。这种一般假定用户可能看到的Feed非常多，而用户花费在这里的时间有限，那么就为用户选择出用户最想看的Top N结果，场景的应用场景有图片分享、新闻推荐类、商品推荐等。</li>
+</ul>
+<p>上面两种是最典型，也是最常见的分类方式，另外的话，也有其他的分类标准，在其他的分类标准中的话，会多出两种类型：</p>
+<ul>
+<li>Aggregate：聚合类型，比如好几个朋友都看了同一场电影，这个就可以聚合为一条Feed：A，B，C看了电影《你的名字》，这种聚合功能比较适合在客户端做。一般的Aggregate类型是Timeline类型 + 客户端聚合。</li>
+<li>Notice：通知类型，这种其实已经是功能类型了，通知类型一般用于APP中的各种通知，私信等常见。这种也是Timeline类型，或者是Aggregate类型。</li>
+</ul>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><p>上面介绍了Feed流系统的概念，特征以及分类，接下来开始进入关键部分：如何实现一个千万级Feed流系统。由于系统中的所有用户不可能全部在线，且不可能同时刷新和发布Feed，那么一个能支撑千万量级Feed流的系统，其实在产品上可以支撑上亿的用户。</p>
+<p>如果要设计一个Feed流系统，最关键的两个核心，一个是存储，一个是推送。</p>
+<h2 id="存储"><a href="#存储" class="headerlink" title="存储"></a>存储</h2><p>我们先来看存储，Feed流系统中需要存储的内容分为两部分，一个是账号关系（比如关注列表），一种是Feed消息内容。不管是存储哪一种，都有几个问题需要考虑：</p>
+<ul>
+<li>如何能支持100TB，甚至PB级数据量？</li>
+<li>数据量大了后成本就很关键，成本如何能更便宜？</li>
+<li>如何保证账号关系和Feed不丢失？</li>
+</ul>
+<p>我们后面再解答这三个问题，先继续看推送</p>
+<h2 id="推送"><a href="#推送" class="headerlink" title="推送"></a>推送</h2><p>推送系统需要的功能有两个，一个是发布Feed，一个是读取Feed流。对于提送系统，仍然有一些问题需要在选型之前考虑：</p>
+<ul>
+<li>如何才能提供千万的TPS和QPS？</li>
+<li>如何保证读写延迟在10ms，甚至2ms以下？</li>
+<li>如何保证Feed的必达性？</li>
+</ul>
+<p>再解答这些问题之前，我们先来大概了解下阿里云的表格存储TableStore。</p>
+<h1 id="TableStore"><a href="#TableStore" class="headerlink" title="TableStore"></a>TableStore</h1><p>表格存储(TableStore)是阿里云自主研发的专业级分布式NoSQL数据库，是基于共享存储的高性能、低成本、易扩展、全托管的半结构化数据存储平台，<br>支撑互联网和物联网数据的高效计算与分析。</p>
+<p>目前不管是阿里巴巴集团内部，还是外部公有云用户，都有成千上万的系统在使用。覆盖了重吞吐的离线应用，以及重稳定性，性能敏感的在线应用。目前使用的系统中，有些系统每秒写入行数超过<code>3500万行</code>，<code>每秒流量超过5GB</code>，<code>单表总行数超过10万亿行</code>，<code>单表数据量超过10PB</code>。</p>
+<p>表格存储的具体的特性可以看下面这张图片。<br><img src="https://yqfile.alicdn.com/65fb03c38abcf8c4865f3b745d20c132620e49c2.png" alt="tablestore"></p>
+<p>这里就不详细介绍表格存储(TableStore)的功能和特性了，有兴趣的话可以到官网页面和云栖博客了解，地址如下：</p>
+<ul>
+<li>表格存储的官网地址：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.aliyun.com/product/ots/">https://www.aliyun.com/product/ots/</a></li>
+<li>表格存储云栖博客：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://yq.aliyun.com/teams/4/type_blog-cid_22">https://yq.aliyun.com/teams/4/type_blog-cid_22</a></li>
+<li>表格存储钉钉交流群：11789671</li>
+</ul>
+<h1 id="存储系统选择"><a href="#存储系统选择" class="headerlink" title="存储系统选择"></a>存储系统选择</h1><p>我们接下来解决之前提出来的问题。<br>Feed流系统中需要存储的系统有两类，一类是账号关系（比如关注列表），一类是Feed消息。</p>
+<h2 id="存储账号关系"><a href="#存储账号关系" class="headerlink" title="存储账号关系"></a>存储账号关系</h2><p>我们先来看账号关系（比如关注列表）的存储，对于账号关系，它有一些特点：</p>
+<ul>
+<li>是一系列的<code>变长链表</code>，<code>长度可达亿级别</code>。</li>
+<li>这样就会导致<code>数据量比较大</code>，但是<code>关系极其简单</code>。</li>
+<li>还有一点是性能敏感，直接影响关注，取关的响应速度。</li>
+</ul>
+<p>最适合存账号关系（关注列表）的系统应该是分布式NoSQL数据库，原因是数据量极大，关系简单不需要复杂的join，性能要求高。<br>对内设计实现简单，对外用户体验好。</p>
+<p>除了上面这些特点外，还有一个特点：</p>
+<ul>
+<li>有序性：有序性并不要求具有排序功能，只需要能按照主键排序就行，只要能按照主键排序，那么关注列表和粉丝列表的顺序就是固定的，可预期的。</li>
+</ul>
+<h4 id="使用开源HBase存储账号关系"><a href="#使用开源HBase存储账号关系" class="headerlink" title="使用开源HBase存储账号关系"></a>使用开源HBase存储账号关系</h4><p>能满足有序性的分布式NoSQL数据库中，开源HBase就是一个，所以很多企业会选择开源HBase来存储账号关系，或者是关注列表。</p>
+<p>这样虽然满足了上述四个特征，可以把系统搭建起来，但是会有一些麻烦的问题：</p>
+<ul>
+<li>需要自己运维，调查问题，Fix bug，会带来较大的复杂度和成本开支。</li>
+<li>GC会导致比较大的毛刺，影响用户体验，</li>
+</ul>
+<h4 id="使用表格存储-TableStore-存储账号关系"><a href="#使用表格存储-TableStore-存储账号关系" class="headerlink" title="使用表格存储(TableStore)存储账号关系"></a>使用表格存储(TableStore)存储账号关系</h4><p>除此之外，阿里云的表格存储也属于有序性的分布式NoSQL数据库，之前有不少很有名的系统选择使用表格存储，在下面一些地方给系统带来了收益：</p>
+<ul>
+<li>单表支持<code>10万亿行+，10PB+</code>的数据量，再快的数据增长速度都不用担心。</li>
+<li>数据按<code>主键列排序</code>，保证有序性和可预期性。</li>
+<li>单key读写延迟在<code>毫秒</code>级别，保证关注，取关的响应时间。</li>
+<li>是<code>全托管</code>的分布式NoSQL数据库服务，<code>无需任何运维</code>。</li>
+<li>全部<code>采用C++ </code>实现，彻底<code>无GC问题</code>，也就不会由于GC而导致较大的毛刺。</li>
+</ul>
+<p>使用表格存储(TableStore)来存储账号关系会是一个比较好的选择。</p>
+<p>接下来看一下Feed消息的存储。</p>
+<h2 id="存储Feed消息"><a href="#存储Feed消息" class="headerlink" title="存储Feed消息"></a>存储Feed消息</h2><p>Feed消息有一个最大的特点：</p>
+<ul>
+<li>数据量大，而且在Feed流系统里面很多时候都会选择写扩散（推模式）模式，这时候数据量会再膨胀几个数量级，所以这里的数据量很容易达到100TB，甚至PB级别。</li>
+</ul>
+<p>除此之外，还有一些其他特点：</p>
+<ul>
+<li>数据格式简单</li>
+<li>数据不能丢失，可靠性要求高</li>
+<li>自增主键功能，保证个人发的Feed的消息ID在个人发件箱中都是严格递增的，这样读取时只需要一个范围读取即可。由于个人发布的Feed并发度很低，这里用时间戳也能满足基本需求，但是当应用层队列堵塞，网络延迟变大或时间回退时，用时间戳还是无法保证严格递增。这里最好是有自增功能。</li>
+<li>成本越低越好</li>
+</ul>
+<h4 id="潜在的存储系统"><a href="#潜在的存储系统" class="headerlink" title="潜在的存储系统"></a>潜在的存储系统</h4><p>根据上述这些特征，最佳的系统应该是<code>具有主键自增功能的分布式NoSQL数据库</code>，但是在开源系统里面没有，所以常用的做法有两种：</p>
+<ul>
+<li>关系型数据库 + 分库分表</li>
+<li>关系型数据库 + 分布式NoSQL数据库：其中 关系型数据库提供主键自增功能。</li>
+</ul>
+<h4 id="使用关系型数据库存储Feed消息"><a href="#使用关系型数据库存储Feed消息" class="headerlink" title="使用关系型数据库存储Feed消息"></a>使用关系型数据库存储Feed消息</h4><p>目前业界有很多用户选择了关系系数据库+ 分库分表，包括了一些非常著名的Feed流产品，虽然这个架构可以运行起来，但是存在一些问题。</p>
+<ul>
+<li>分库分表带来了<code>运维复杂性</code>。</li>
+<li>分库分表带来了逻辑层和数据层的<code>极大耦合性</code>。</li>
+<li>关系型数据库，比如开源MySQL数据库的主键自增功能性能差。不管是用MyISAM，还是InnoDB引擎，要保证自增ID严格递增，必须使用表锁，这个粒度非常大，会严重限制并发度，影响性能。</li>
+<li>有些用户觉得关系型数据库的可靠性高一些，但是关系型数据库的可靠性一般也就最多6个9，这个可靠性和分布式数据库完全不在一个层级，要低4到5个级别。</li>
+</ul>
+<h4 id="使用TableStore存储账号关系"><a href="#使用TableStore存储账号关系" class="headerlink" title="使用TableStore存储账号关系"></a>使用TableStore存储账号关系</h4><p>基于上述原因，一些技术公司开始考虑使用表格存储(TableStore)，表格存储是一个具有自增主键功能的分布式NoSQL数据库，这样就只需要使用一种系统，除此之外还有以下的考虑：</p>
+<ul>
+<li>单表可达10PB，10万亿行。</li>
+<li><code>10个9的SLA保障</code>Feed内容不丢失。</li>
+<li>天然分布式数据库，<code>无需分库分表</code></li>
+<li>两种实例类型：高性能实例采用全SSD存储媒介，提供极佳的读写性能。混合存储实例采用SSD+SATA存储媒介，提供极低的存储成本。</li>
+<li>主键自增功能性能极佳，其他所有系统在做自增功能的时候都需要加锁，但是表格存储的主键自增功能在写入自增列行的时候，完全不需要锁，既不需要表锁，也不需要行锁。</li>
+</ul>
+<p>从上面看，使用TableStore的话，不管是在功能，性能，扩展性还是成本方面都要更加适合一些。</p>
+<p>看完推送系统选择后，我们再来看看推送方案的选择。</p>
+<h1 id="推送方案"><a href="#推送方案" class="headerlink" title="推送方案"></a>推送方案</h1><p>我们先来回顾下之前说的Feed流系统最大的特点：</p>
+<ul>
+<li>读写严重不平衡，读多写少，一般读写比例都在10；1，甚至100：1之上。</li>
+</ul>
+<p>除此之外，还有一个方面会被推送方案影响：</p>
+<ul>
+<li>发布， 刷新Feed时的延时本质上由<code>推送方案</code>决定，其他的任何操作都只能是优化，质量量变，无法质变。</li>
+</ul>
+<h4 id="推模式和拉模式对比"><a href="#推模式和拉模式对比" class="headerlink" title="推模式和拉模式对比"></a>推模式和拉模式对比</h4><p>在推送方案里面的，有两种方案，分别是：</p>
+<ul>
+<li>拉方案：也称为<code>读扩散</code>。</li>
+<li>推方案：也成为<code>写扩散</code>。</li>
+</ul>
+<p>对于拉方案和推方案，他们在很多方面完全相反，在看对比之前有一点要强调下：</p>
+<ul>
+<li>对Feed流产品的用户而言，刷新Feed流（读取）时候的延迟敏感度要远远大于发布（写入）的时候。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">拉模式(读扩散)</th>
+<th align="left">推模式(写扩散)</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">发布</td>
+<td align="left">个人页Timeline（发件箱）</td>
+<td>粉丝的关注页（收件箱）</td>
+</tr>
+<tr>
+<td align="left">阅读</td>
+<td align="left">所有关注者的个人页Timeline</td>
+<td>自己的关注页Timeline</td>
+</tr>
+<tr>
+<td align="left">网络最大开销</td>
+<td align="left">用户刷新时</td>
+<td>发布Feed时</td>
+</tr>
+<tr>
+<td align="left">读写放大</td>
+<td align="left">放大读：读写比例到1万:1</td>
+<td>放大写减少读：读写比例到50:50</td>
+</tr>
+<tr>
+<td align="left">个性化</td>
+<td align="left">不支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td align="left">定向广告</td>
+<td align="left">不支持</td>
+<td>支持</td>
+</tr>
+</tbody></table>
+<h4 id="推模式的一个副作用"><a href="#推模式的一个副作用" class="headerlink" title="推模式的一个副作用"></a>推模式的一个副作用</h4><p>在上面的对比中可以明显看出来，推模式要远远比拉模式更好一些，但是也有一个副作用：</p>
+<ul>
+<li>数据会极大膨胀。</li>
+</ul>
+<p>针对这个缺点，可以从两个方面考虑：</p>
+<ul>
+<li>目前的存储价格很低很低了，就以表格存储为例，容量型实例存储10TB的数据量，在现在（2017年10月）每年费用是1万六千元，以后价格会随着硬件技术升级，软件性能优化等继续降低。还有数据量越大价格越便宜。</li>
+<li>想省点钱，那继续可以优化：<ul>
+<li>对大V采用拉模式，普通用户使用推模式，这种模式有个缺点，后面会有分析。</li>
+<li>对活跃粉丝采用推模式，非活跃粉丝采用拉模式（这种方式可以较好的避免大流量对平台的冲击）</li>
+</ul>
+</li>
+</ul>
+<h4 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h4><p>通过上述两个方案的对比后，总结下各个方案的适用场景：</p>
+<ul>
+<li>拉模式：<ul>
+<li>很多Feed流产品的第一版会采用这种方案，但很快就会抛弃。</li>
+<li>另外，拉模式 + 图计算 就会是另一番天地，但是这个时候重心就是图计算了。</li>
+</ul>
+</li>
+<li>推模式：<ul>
+<li>Feed流系统中最常用、有效的模式；</li>
+<li>用户关系数比较均匀，或者有上限，比如朋友圈；</li>
+<li>偏推荐类，同一个Feed对不同用户价值不同，需要为不同用户计算分数，比如pinterest。</li>
+</ul>
+</li>
+<li>推拉结合<ul>
+<li>大部分用户的账号关系都是几百个，但是有个别用户是1000万以上，比如微博。</li>
+</ul>
+</li>
+</ul>
+<p>上面了解了推送方案，接下来看下推送系统选择</p>
+<h2 id="推送系统"><a href="#推送系统" class="headerlink" title="推送系统"></a>推送系统</h2><p>如果要实现一个千万量级的Feed流产品，那么推送系统需要具备一些特点：</p>
+<ul>
+<li>具备千万TPS/QPS的能力。</li>
+<li>读写链路延迟敏感，读写直接会影响用户发布，刷新Feed流时的延迟，尤其是极其敏感的刷新时的延迟。</li>
+<li>Feed消息的必达性要求很高。</li>
+<li>主键自增功能，仍然是保证用户收件箱中的Feed ID是严格递增的，保证可以通过Scan(上次读取的最大ID —&gt;MAX)读取到最新未读消息。</li>
+<li>最好能为用户存储Timeline中所有的Feed。</li>
+</ul>
+<p>从上述特点来看，需要的推送系统最好是一个性能极佳，又可靠的有自增功能的NoSQL系统，所以，业内一般如果选择开源系统的话，会在选择了关系型数据库作为存储系统的基础上，选择开源Redis，这样就能覆盖上述的几个特征，也能保证Feed流系统正常运行起来，但是也会带来一些其他问题：</p>
+<ul>
+<li>纯内存系统，内存价格极高，整体成本就比较高了。</li>
+<li>属于单机系统，为了支持千万TPS和保证消息必达性，需要使用cluster和replica模式，结果就是不仅带来了运维的复杂性，而且带来了成本的机器增加，成本再次上升。</li>
+<li>成本上升了以后，就有架构师开始考虑是否可以节省一些成本，要节省成本只能是减少开源Redis里面存储的数据量，一般有两种做法，这两种做法都能减少存入Redis中的数据量：<ul>
+<li>只在开源Redis中存储Feed ID，不存储Feed内容。整体数据量会大量减少，但是在读取的时候需要先读Feed ID，然后在到存储系统里面去读取Feed内容，网络开销增长了一倍，而且是串行的，对用户的刷新延迟有较大影响。</li>
+<li>只对普通用户或者活跃用户使用推模式，对大V和非活跃用户直接使用拉模式。</li>
+</ul>
+</li>
+</ul>
+<p>上述两个方案虽然可以节省成本，但是是以牺牲用户体验为代价的，最终需要在成本和用户体验之间权衡。</p>
+<h4 id="使用TableStore作为推送系统"><a href="#使用TableStore作为推送系统" class="headerlink" title="使用TableStore作为推送系统"></a>使用TableStore作为推送系统</h4><p>除了使用开源系统外，还可以使用阿里云的表格存储（TableStore），有不少用户选择TableStore作为推送系统的原因无非下面几点：</p>
+<ul>
+<li>天然分布式，单表可支持千万级TPS/QPS。</li>
+<li>LSM存储引擎极大<code>优化写</code>，高性能实例极大<code>优化读</code>。</li>
+<li>写入成功即保证落盘成功，数据可靠性提供10个9的SLA保障。</li>
+<li>磁盘性数据库，费用比内存性的要低几个量级。</li>
+<li>单表可存储十万亿行以上的数据，价格又低，轻松保存用户Feed流中的所有Feed数据。</li>
+</ul>
+<p>上面说了使用开源Redis和阿里云TableStore的异同，如果使用开源可以用Redis，如果选择阿里云自研NoSQL数据库，可以使用TableStore。</p>
+<h1 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h1><p>下面我们来看一下使用TableStore的架构图，这里为了通用性，选用推拉结合的方式，推模式更加简单。</p>
+<p><img src="https://yqfile.alicdn.com/ac5465cc451372d20cafeca586a51b7560a46c1c.png" alt="feed_arch"></p>
+<h2 id="存储-1"><a href="#存储-1" class="headerlink" title="存储"></a>存储</h2><p>我们先来看中间黑色框中的部分，这部分是使用TableStore的数据，从左往右分别是：</p>
+<ul>
+<li>个人页Timeline：这个是每个用户的发件箱，也就是自己的个人页页面。</li>
+<li>关注页Timeline：这个是每个用户的收件箱，也就是自己的关注页页面，内容都是自己关注人发布的消息。</li>
+<li>关注列表：保存账号关系，比如朋友圈中的好友关系；微博中的关注列表等。</li>
+<li>虚拟关注列表：这个主要用来个性化和广告。</li>
+</ul>
+<h2 id="发布Feed流程"><a href="#发布Feed流程" class="headerlink" title="发布Feed流程"></a>发布Feed流程</h2><p>当你发布一条Feed消息的时候，流程是这样的：</p>
+<ol>
+<li>Feed消息先进入一个队列服务。</li>
+<li>先从关注列表中读取到自己的粉丝列表，以及判断自己是否是大V。</li>
+<li>将自己的Feed消息写入个人页Timeline（发件箱）。如果是大V，写入流程到此就结束了。</li>
+<li>如果是普通用户，还需要将自己的Feed消息写给自己的粉丝，如果有100个粉丝，那么就要写给100个用户，包括Feed内容和Feed ID。</li>
+<li>第三步和第四步可以合并在一起，使用BatchWriteRow接口一次性将多行数据写入TableStore。</li>
+<li>发布Feed的流程到此结束。</li>
+</ol>
+<h2 id="读取Feed流流程"><a href="#读取Feed流流程" class="headerlink" title="读取Feed流流程"></a>读取Feed流流程</h2><p>当刷新自己的Feed流的时候，流程是这样的：</p>
+<ol>
+<li>先去读取自己关注的大V列表</li>
+<li>去读取自己的收件箱，只需要一个GetRange读取一个范围即可，范围起始位置是上次读取到的最新Feed的ID，结束位置可以使当前时间，也可以是MAX，建议是MAX值。由于之前使用了主键自增功能，所以这里可以使用GetRange读取。</li>
+<li>如果有关注的大V，则再次并发读取每一个大V的发件箱，如果关注了10个大V，那么则需要10次访问。</li>
+<li>合并2和3步的结果，然后按时间排序，返回给用户。</li>
+</ol>
+<p>至此，使用推拉结合方式的发布，读取Feed流的流程都结束了。</p>
+<h2 id="更简单的推模式"><a href="#更简单的推模式" class="headerlink" title="更简单的推模式"></a>更简单的推模式</h2><p>如果只是用推模式了，则会更加简单：</p>
+<ul>
+<li>发布Feed：<ol>
+<li>不用区分是否大V，所有用户的流程都一样，都是三步。</li>
+</ol>
+</li>
+<li>读取Feed流：<ol>
+<li>不需要第一步，也不需要第三步，只需要第二步即可，将之前的2 + N(N是关注的大V个数) 次网络开销减少为 1 次网络开销。读取延时大幅降级。</li>
+</ol>
+</li>
+</ul>
+<h2 id="个性化和定向广告"><a href="#个性化和定向广告" class="headerlink" title="个性化和定向广告"></a>个性化和定向广告</h2><p>个性化和定向广告是两种很强烈的产品需求。个性化可以服务好用户，增大产品竞争力和用户粘性，而定向广告可以为产品增加盈利渠道，而且还可以不招来用户反感，那么这两种方式如何实现呢？ 在Feeds流里面这两种功能的实现方式差不多，我们以定向广告为例来说明：</p>
+<ol>
+<li>通过用户特征分析对用户分类，比如其中有一类是新生类：今年刚上大学的新生。（具体的用户特征分析可以依靠TableStore + MaxCompute，这里就不说了）。</li>
+<li>创建一个广告账号：新生广告</li>
+<li>让这些具有新生特征的用户虚拟关注新生广告账号。用户看不到这一层关注关系。</li>
+<li>从七月份开始就可以通过新生广告账号发送广告了。</li>
+<li>最终，每个用户可能会有多个特征，那么就可能虚拟关注多个广告账号。</li>
+</ol>
+<p>上面是定向广告的一种比较简单的实现方式，其他方式就不再赘述了。</p>
+<h2 id="收益"><a href="#收益" class="headerlink" title="收益"></a>收益</h2><p>上面我们详细说了使用TableStore作为存储和推送系统的架构，接下来我们看看新架构能给我们带来多大收益。</p>
+<ul>
+<li>只使用1种系统，架构、实现简单。不再需要访问多个系统，架构，开发，测试，运维都能节省大力人力时间。</li>
+<li>TableStore 主键自增列功能性能极优。由于架构的不同，不仅不需要表锁，行锁也不需要，所以性能要远远好于关系型数据库。</li>
+<li>可以保存所有的Feed。一是系统可以支持存储所有Feed，二是价格便宜，存的起。</li>
+<li>无须将Feed ID和内容分开存储。价格便宜，也就不需要再分开存储ID和内容了。</li>
+<li>全托管服务，无运维操作，更无需分库分表。</li>
+<li>磁盘型(SSD、Hybrid)数据库，成本低。</li>
+<li>可靠性10个9，数据更可靠，更不易丢失。</li>
+<li>大V和普通用户的切分阈值更高，读取大V的次数更少，整体延时更低。</li>
+</ul>
+<h2 id="一个设计缺陷"><a href="#一个设计缺陷" class="headerlink" title="一个设计缺陷"></a>一个设计缺陷</h2><p>如果使用大V/普通用户的切分方式，大V使用拉模式，普通用户使用推模式，那么这种架构就会存在一种很大的风险。<br>比如某个大V突然发了一个很有话题性的Feed，那么就有可能导致整个Feed产品中的所有用户都没法读取新内容了，原因是这样的：</p>
+<ul>
+<li>大V发送Feed消息。</li>
+<li>大V，使用拉模式。</li>
+<li>大V的活跃粉丝（用户群A）开始通过拉模式（架构图中读取的步骤3，简称读3）读取大V的新Feed。</li>
+<li>Feed内容太有话题性了，快速传播。</li>
+<li>未登录的大V粉丝（用户群B）开始登陆产品，登陆进去后自动刷新，再次通过读3步骤读取大V的Feed内容。</li>
+<li>非粉丝（用户群C）去大V的个人页Timeline里面去围观，再次需要读取大V个人的Timeline，同读3.</li>
+</ul>
+<p>结果就是，平时正常流量只有<code>用户群A</code>，结果现在却是<code>用户群A + 用户群B+ 用户群C</code>，流量增加了好几倍，甚至几十倍，导致读3路径的服务模块被打到server busy或者机器资源被打满，导致读取大V的读3路径无法返回请求，如果Feed产品中的用户都有关注大V，那么基本上所有用户都会卡死在读取大V的读3路径上，然后就没法刷新了。</p>
+<p>所以这里设计的时候就需要重点关心下面两点：</p>
+<ul>
+<li>单个模块的不可用，不应该阻止整个关键的读Feed流路径，如果大V的无法读取，但是普通用户的要能返回，等服务恢复后，再补齐大V的内容即可。</li>
+<li>当模块无法承受这么大流量的时候，模块不应该完全不可服务，而应该能继续提供最大的服务能力，超过的拒绝掉。</li>
+</ul>
+<p>那么如何优化呢？</p>
+<ul>
+<li>不使用大V/普通用户的优化方式，使用活跃用户/非活跃用户的优化方式。这样的话，就能把用户群A和部分用户群B分流到其他更分散的多个路径上去。而且，就算读3路径不可用，仍然对活跃用户无任何影响。</li>
+<li>完全使用推模式就可以彻底解决这个问题，但是会带来存储量增大，大V微博发送总时间增大，从发给第一个粉丝到发给最后一个粉丝可能要几分钟时间（一亿粉丝，100万行每秒，需要100秒），还要为最大并发预留好资源，如果使用表格存储，因为是云服务，则不需要考虑预留最大额度资源的问题。</li>
+</ul>
+<h1 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h1><p>接下来我们来实现一个消息广场的功能。很多App中都有动态或消息广场的功能，在消息广场中一般有两个Tab，一个是关注人，一个是广场，我们这里重点来看关注人。</p>
+<p>要实现的功能如下：</p>
+<ul>
+<li>用户之间可以相互关注</li>
+<li>用户可以发布新消息</li>
+<li>用户可以查看自己发布的消息列表</li>
+<li>用户可以查看自己关注的人的消息</li>
+</ul>
+<p>采取前面的方案：</p>
+<ul>
+<li>使用TableStore作为存储和推送系统</li>
+<li>采用Timeline的显示方式，希望用户可以认真看每条Feed</li>
+<li>采用推模式</li>
+</ul>
+<h2 id="角色"><a href="#角色" class="headerlink" title="角色"></a>角色</h2><p>接着，我们看看角色和每个角色需要的功能：</p>
+<ul>
+<li>发送者<ul>
+<li>发送状态：add_activity()</li>
+</ul>
+</li>
+<li>接收者<ul>
+<li>关注：follow()</li>
+<li>读取Feed流：get_activity()</li>
+</ul>
+</li>
+</ul>
+<p>Feed消息中至少需要包括下面内容：</p>
+<ul>
+<li>消息：<ul>
+<li>发送人：actor</li>
+<li>类型：verb，比如图片，视频，文本</li>
+<li>文本文字：message</li>
+</ul>
+</li>
+</ul>
+<h2 id="架构图-1"><a href="#架构图-1" class="headerlink" title="架构图"></a>架构图</h2><p><img src="https://yqfile.alicdn.com/778795c6c911b155561ad551dfda9d4afee7f842.png" alt="feed2"></p>
+<ul>
+<li>发布新消息<ul>
+<li>接口：add_activity()</li>
+<li>实现：<ul>
+<li>get_range接口调用关注列表，返回粉丝列表。</li>
+<li>batch_write_row接口将feed内容和ID批量写入个人页表（发件箱）和所有粉丝的关注页表（收件箱），如果量太大，可以多次写入。或者调用异步batch_write_row接口，目前C++ SDK和JAVA SDK提供异步接口。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>关注<ul>
+<li>接口：follow()</li>
+<li>实现：<ul>
+<li>put_row接口直接写入一行数据(关注人，粉丝)到关注列表和粉丝列表（粉丝，关注人）即可。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>获取Feed流消息<ul>
+<li>接口：get_activity()</li>
+<li>实现：<ul>
+<li>从客户端获取上次读取到的最新消息的ID：last_id</li>
+<li>使用get_range接口读取最新的消息，起始位置是last_id，结束位置是MAX。</li>
+<li>如果是读取个人页的内容，访问个人页表即可。如果是读取关注页的内容，访问关注页表即可。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="计划"><a href="#计划" class="headerlink" title="计划"></a>计划</h2><p>上面展示了如何使用表格存储TableStore的API来实现。这个虽然只用到几个接口，但是仍然需要学习表格存储的API和特性，还是有点费时间。</p>
+<p>为了更加易用性，我们接下来会提供Feeds流完整解决方案，提供一个LIB，接口直接是add_activity()，follow()和get_activity()类似的接口，使用上会更加简单和快捷。</p>
+<h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><p>前面讲述的都是Timeline类型的Feed流类型，但是还有一种Feed流类型比较常见，那就是新闻推荐，图片分享网站常用的Rank类型。<br>我们再来回顾下Rank类型擅长的领域：</p>
+<ul>
+<li>潜在Feed内容非常多，用户无法全部看完，也不需要全部看完，那么需要为用户选出她最想看的内容，典型的就是图片分享网站，新闻推荐网站等。</li>
+</ul>
+<p>我们先来看一种架构图：</p>
+<p><img src="https://yqfile.alicdn.com/996e90e2e725e16ef78e9803898eb5277dcb9f8a.png" alt="rank1"></p>
+<ul>
+<li>这种Rank方式比较轻量级，适用于推拉结合的场景。</li>
+<li>写流程基本一样</li>
+<li>读流程里面会先读取所有的Feed内容，这个和Timeline也一样，Timeline里面的话，这里会直接返回给用户，但是Rank类型需要在一个排序模块里面，按照某个属性值排序，然后将所有结果存入一个timeline cache中，并返回分数最高的N个结果，下次读取的时候再返回[N+1, 2N]的结果。</li>
+</ul>
+<p>再来看另外一种：<br><img src="https://yqfile.alicdn.com/f7b38cc6c04fdb16200bdcb559b55190d060df19.png" alt="rank2"></p>
+<ul>
+<li>这种比较重量级，适用于纯推模式。</li>
+<li>写流程也和Timeline一样。</li>
+<li>每个用户有两个收件箱：<ul>
+<li>一个是关注页Timeline，保存原始的Feed内容，用户无法直接查看这个收件箱。</li>
+<li>一个是rank timeline，保存为用户精选的Feed内容，用户直接查看这个收件箱。</li>
+</ul>
+</li>
+<li>写流程结束后还有一个数据处理的流程。个性化排序系统从原始Feed收件箱中获取到新的Feed 内容，按照用户的特征，Feed的特征计算出一个分数，每个Feed在不同用户的Timeline中可能分数不一样的，计算完成后再排序然后写入最终的rank timeline。</li>
+<li>这种方式可以真正为每个用户做到“千人千面”。</li>
+</ul>
+<p>上述两种方式是实现Rank的比较简单，常用的方式。</p>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>从上面的内容来看，表格存储(TableStore)在存储方面可以支持10PB级，推送方面可以支撑每秒千万的TPS/QPS，在Feed流系统中可以发挥很大的价值。</p>
+<p>目前，已经有不少著名公司在使用表格存储(TableStore)来构建他们自己的Feed流系统，最终为系统，产品，公司都带来了不少收益。</p>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined" rel="external nofollow noreferrer">MysticalYcc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://gschaos.club/Feed%E6%B5%81%E7%B3%BB%E7%BB%9F/">https://gschaos.club/Feed%E6%B5%81%E7%B3%BB%E7%BB%9F/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://gschaos.club" target="_blank">MysticalYcc</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%9E%B6%E6%9E%84/">架构</a></div><div class="post_share"><div class="social-share" data-image="https://gschaos.club/ico/img/jiyun-lee-ps1q-1.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/kafka%E9%85%8D%E7%BD%AE%E6%B3%A8%E6%84%8F%E7%82%B9/"><img class="prev-cover" src="https://gschaos.club/ico/img/wayne-wan-.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">kafka配置注意点</div></div></a></div><div class="next-post pull-right"><a href="/Kafka/"><img class="next-cover" src="https://gschaos.club/ico/img/chaofan-ye-03.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Kafka</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></article></main><footer id="footer" style="background-image: url(https://gschaos.club/ico/img/jiyun-lee-ps1q-1.jpg)"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2020 By MysticalYcc</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="icp"><a target="_blank" rel="noopener external nofollow noreferrer" href="http://www.beian.miit.gov.cn/state/outPortal/loginPortal.action"><img class="icp-icon" src="/img/icp.png"/><span>皖ICP备19015872号-1</span></a></div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',()=> {preloader.endLoading()})</script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const initData = {
+      el: '#vcomment',
+      appId: 'J2f6Gx43ptrGYdf1rHPAS5sJ-gzGzoHsz',
+      appKey: 'cSywIQR7CfBFaNI8iiPTYy41',
+      placeholder: 'Please leave your footprints',
+      avatar: 'monsterid',
+      meta: 'nick,mail,link'.split(','),
+      pageSize: '10',
+      lang: 'en',
+      recordIP: false,
+      serverURLs: '',
+      emojiCDN: '',
+      emojiMaps: "",
+      enableQQ: false,
+      path: window.location.pathname,
+    }
+
+    if (true) { 
+      initData.requiredFields= ('nick,mail'.split(','))
+    }
+
+    const valine = new Valine(initData)
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else $.getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js', initValine)
+}
+
+if ('Valine' === 'Valine' || !false) {
+  if (false) btf.loadComment(document.querySelector('#vcomment'),loadValine)
+  else setTimeout(() => loadValine(), 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.17.0/js/md5.min.js"></script><script>window.addEventListener('load', () => {
+  const changeContent = (content) => {
+    if (content === '') return content
+
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+    content = content.replace(/(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|jpeg|gif|png|webp)/g, '') // remove image link
+    content = content.replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi, '') // remove url
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const getIcon = (icon, mail) => {
+    if (icon) return icon 
+    let defaultIcon = ''
+    let iconUrl = `https://gravatar.loli.net/avatar/${md5(mail.toLowerCase()) + defaultIcon}`
+    return iconUrl
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    for (let i = 0; i < array.length; i++) {
+      result += '<div class=\'aside-list-item\'>'
+
+      if (true) {
+        result += `<a href='${array[i].url}' class="thumbnail"><img src='${getIcon(array[i].avatar, array[i].mail)}' alt='${array[i].nick}'></a>`
+      }
+
+      result += `<div class='content'>
+      <a class='comment' href='${array[i].url}'>${array[i].content}</a>
+      <div class='name'><span>${array[i].nick}</span><time> / ${btf.diffDate(array[i].date, true)}</time></div>
+      </div></div>`
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom.innerHTML= result
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const getValineData = () => {
+      let serverURL = ''
+      if (true) {
+        serverURL = 'https://j2f6gx43.lc-cn-n1-shared.com'
+      } else {
+        serverURL = 'https://J2f6Gx43.api.lncldglobal.com'
+      }
+
+    var settings = {
+      "url": `${serverURL}/1.1/classes/Comment?limit=6&order=-createdAt`,
+      "method": "GET",
+      "timeout": 0,
+      "headers": {
+        "X-LC-Id": 'J2f6Gx43ptrGYdf1rHPAS5sJ-gzGzoHsz',
+        "X-LC-Key": 'cSywIQR7CfBFaNI8iiPTYy41',
+        "Content-Type": "application/json"
+      },
+    }
+
+    $.ajax(settings).done((response) => {
+      var valineArray = []
+      response.results.forEach((e)=>{
+        valineArray.push({
+          'avatar': e.QQAvatar,
+          'content': changeContent(e.comment),
+          'mail': e.mail,
+          'nick': e.nick,
+          'url': e.url,
+          'date': e.createdAt,
+        })
+      })
+      
+      saveToLocal.set('leancloud-newest-comments', JSON.stringify(valineArray), 10/(60*24))
+      generateHtml(valineArray)
+
+    }).fail(()=>{
+      const $dom = document.querySelector('#card-newest-comments .aside-list')
+      $dom.innerHTML= "无法获取资料，请确认相关配置是否正确"
+    })
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('leancloud-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getValineData()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><div class="aplayer no-destroy" data-id="2920702828" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="false" muted></div><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = [
+  'title',
+  'meta[name=description]',
+  '#config_change',
+  '#body-wrap',
+  '#rightside-config-hide',
+  '#rightside-config-show',
+  '.js-pjax'
+]
+
+if (false) {
+  pjaxSelectors.unshift('meta[property="og:image"]', 'meta[property="og:title"]', 'meta[property="og:url"]')
+}
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  $('script[data-pjax]').each(function () {
+    $(this).parent().append($(this).remove())
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  if (typeof gtag === 'function') {
+    gtag('config', '', {'page_path': window.location.pathname});
+  }
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // Analytics
+  if (false) {
+    MtaH5.pgv()
+  }
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+
+document.addEventListener('pjax:send', function () {
+  typeof preloader === 'object' && preloader.initLoading()
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  $(window).off('scroll')
+
+  //reset readmode
+  $('body').hasClass('read-mode') && $('body').removeClass('read-mode')
+
+})</script></div></body></html>
